@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>jeffrey-io</groupId>
 	<artifactId>world-bootstrap</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.25-alpha</version>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

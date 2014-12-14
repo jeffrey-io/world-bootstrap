@@ -8,7 +8,6 @@ import io.jeffrey.zer.edits.ObjectDataMap;
 import io.jeffrey.zer.meta.FileSerializer;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.MetaClass;
-import io.jeffrey.zer.plugin.Model;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -18,45 +17,31 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
-public class Document implements FileSerializer, Model {
-    private final Camera                      camera;
-    public final Map<String, MetaClass>       classes;
-    public final int                          controlPointSize = 8;
-    public final int                          edgeWidthSize    = 4;
-    private boolean                           hasSomeSelection = false;
-    public final History                      history;
-    private int                               id;
-    public final ImageCache                   imageCache;
-    public final Map<String, LayerProperties> layers;
+public class Document extends ModeledDocument implements FileSerializer {
+    private final Camera    camera;
+    public final int        controlPointSize = 8;
+    public final int        edgeWidthSize    = 4;
+    private boolean         hasSomeSelection = false;
+    private int             id;
+    public final ImageCache imageCache;
 
-    ObjectMapper                              mapper           = new ObjectMapper();
-    public final Image                        ROTATE_ICON;
-    public final Image                        SCALE_ICON;
-    private final ArrayList<Thing>            things;
-    public final Image                        VERTEX_ICON;
-    public final Image                        VERTEX_ICON_SELECTED;
+    public final Image      ROTATE_ICON;
+    public final Image      SCALE_ICON;
+    public final Image      VERTEX_ICON;
+    public final Image      VERTEX_ICON_SELECTED;
 
     public Document(final Camera camera, final WorldData owner) {
         this.camera = camera;
-        things = new ArrayList<>();
         imageCache = new ImageCache();
-        history = new History();
-        classes = new TreeMap<>();
-        layers = new TreeMap<>();
-        layers.put("_", new LayerProperties("_", "Foreground"));
-        classes.put("_", new MetaClass("_", "Default"));
         id = 0;
         SCALE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_scale.png"));
         ROTATE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_rotate.png"));
@@ -66,10 +51,6 @@ public class Document implements FileSerializer, Model {
 
     public void addThing(final Thing thing) {
         things.add(thing);
-    }
-
-    @Override
-    public void begin() {
     }
 
     private HashMap<String, Object> convert2(final JsonNode node) {
@@ -114,24 +95,12 @@ public class Document implements FileSerializer, Model {
         }
     }
 
-    @Override
-    public void end() {
-    }
-
     public Set<GuideLine> getGuideLines(final String layerId) {
         // TODO: look up the layer properties
         // find guide lines
         final HashSet<GuideLine> lines = new HashSet<GuideLine>();
         // lines.add(new GuideLine().grow());
         return lines;
-    }
-
-    @Override
-    public String getJson(final String query) {
-        if (query.startsWith("#")) {
-
-        }
-        return "null";
     }
 
     public ArrayList<Thing> getThings() {
@@ -206,10 +175,6 @@ public class Document implements FileSerializer, Model {
     public String normalilze(final File input) {
         // System.out.println(input.toASCIIString() + ":" + owner.path().relativize(input).toASCIIString());
         return input.toURI().toASCIIString();
-    }
-
-    @Override
-    public void put(final String query, final String value) {
     }
 
     public void save(final File file) throws Exception {

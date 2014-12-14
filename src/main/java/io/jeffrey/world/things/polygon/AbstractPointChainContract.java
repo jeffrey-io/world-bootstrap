@@ -13,8 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Polygon;
 
 /**
- * Making life simple, this class acts as an easy way to document the
- * responsibilities AbstractPointChain.
+ * Making life simple, this class acts as an easy way to document the responsibilities AbstractPointChain.
  *
  * @author jeffrey
  *

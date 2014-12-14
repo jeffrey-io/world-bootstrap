@@ -10,20 +10,21 @@ public class OriginEnforcer implements GuideLineEnforcer {
 
     private final Thing target;
 
-    public OriginEnforcer(Thing target) {
+    public OriginEnforcer(final Thing target) {
         this.target = target;
     }
 
     @Override
     public void attemptSnapTo(final GuideLine line) {
-        VectorRegister5 reg = new VectorRegister5();
+        final VectorRegister5 reg = new VectorRegister5();
 
         reg.set_0(line.line.x_0, line.line.y_0);
         reg.set_1(line.line.x_1, line.line.y_1);
         reg.set_2(target.x(), target.y());
-        double d = Lines.minimalDistanceV2toLineContainingV0V1_Destructive(reg);
-        if (d < 0)
+        final double d = Lines.minimalDistanceV2toLineContainingV0V1_Destructive(reg);
+        if (d < 0) {
             return;
+        }
         if (d < line.distance) {
             target.x(reg.x_0);
             target.y(reg.y_0);

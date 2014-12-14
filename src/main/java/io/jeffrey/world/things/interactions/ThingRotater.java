@@ -12,11 +12,11 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  * @author jeffrey
  */
 public class ThingRotater implements ThingInteraction {
-    private static final double RADIANS_TO_DEGREES = 57.2957795;
-    private final double        angle;
-    private final VectorRegister3       origin;
-    private final double        startingAngle;
-    private final Thing         thing;
+    private static final double   RADIANS_TO_DEGREES = 57.2957795;
+    private final double          angle;
+    private final VectorRegister3 origin;
+    private final double          startingAngle;
+    private final Thing           thing;
 
     /**
      * @param initial

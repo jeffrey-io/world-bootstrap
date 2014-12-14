@@ -15,6 +15,7 @@ import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.ZERStage;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.MetaClass;
+import io.jeffrey.zer.plugin.Model;
 
 import java.io.File;
 import java.io.IOException;
@@ -259,6 +260,17 @@ public class WorldData extends SurfaceData {
     }
 
     @Override
+    public Model getModel() {
+        return document;
+    }
+
+    @Override
+    public File getPluginRoot() {
+        final File start = new File(System.getProperty("user.home"));
+        return new File(start, "world.js");
+    }
+
+    @Override
     public MouseInteraction getSelectionMovers(final AdjustedMouseEvent event) {
         document.history.capture();
         final HashSet<MouseInteraction> set = new HashSet<MouseInteraction>();
@@ -274,6 +286,14 @@ public class WorldData extends SurfaceData {
     }
 
     @Override
+    public String getTitle() {
+        if (file == null) {
+            return "Bootstrapping <New World>";
+        }
+        return file.getPath();
+    }
+
+    @Override
     public boolean isInSelectionSet(final AdjustedMouseEvent event) {
         for (final Thing thing : document.getThings()) {
             if (thing.isInCurrertSelection(event)) {
@@ -281,6 +301,20 @@ public class WorldData extends SurfaceData {
             }
         }
         return false;
+    }
+
+    private void paste(final double x, final double y) throws Exception {
+        final JsonNode arr = new ObjectMapper().readTree(Clipboard.getSystemClipboard().getString());
+        for (int k = 0; k < arr.size(); k++) {
+            final JsonNode thing = arr.get(k);
+            final HashMap<String, String> data = new HashMap<String, String>();
+            final Iterator<Entry<String, JsonNode>> fields = thing.getFields();
+            while (fields.hasNext()) {
+                final Entry<String, JsonNode> field = fields.next();
+                data.put(field.getKey(), field.getValue().asText());
+            }
+            paste(data, x, y);
+        }
     }
 
     private void paste(final HashMap<String, String> raw, final double x, final double y) {
@@ -293,20 +327,6 @@ public class WorldData extends SurfaceData {
         data.fields.put("y", Double.toString(ny));
         data.fields.put("id", newId);
         document.addThing(data.make(document));
-    }
-
-    private void paste(final double x, double y) throws Exception {
-        final JsonNode arr = new ObjectMapper().readTree(Clipboard.getSystemClipboard().getString());
-        for (int k = 0; k < arr.size(); k++) {
-            final JsonNode thing = arr.get(k);
-            final HashMap<String, String> data = new HashMap<String, String>();
-            final Iterator<Entry<String, JsonNode>> fields = thing.getFields();
-            while (fields.hasNext()) {
-                final Entry<String, JsonNode> field = fields.next();
-                data.put(field.getKey(), field.getValue().asText());
-            }
-            paste(data, x, y);
-        }
     }
 
     /**

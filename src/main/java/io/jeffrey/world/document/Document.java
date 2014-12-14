@@ -8,6 +8,7 @@ import io.jeffrey.zer.edits.ObjectDataMap;
 import io.jeffrey.zer.meta.FileSerializer;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.MetaClass;
+import io.jeffrey.zer.plugin.Model;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -29,7 +30,7 @@ import javafx.scene.paint.Color;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class Document implements FileSerializer {
+public class Document implements FileSerializer, Model {
     private final Camera                      camera;
     public final Map<String, MetaClass>       classes;
     public final int                          controlPointSize = 8;
@@ -67,6 +68,10 @@ public class Document implements FileSerializer {
         things.add(thing);
     }
 
+    @Override
+    public void begin() {
+    }
+
     private HashMap<String, Object> convert2(final JsonNode node) {
         final HashMap<String, Object> value = new HashMap<String, Object>();
         final Iterator<Entry<String, JsonNode>> fields = node.getFields();
@@ -91,12 +96,42 @@ public class Document implements FileSerializer {
         history.capture();
     }
 
+    public void draw(final GraphicsContext gc, final Camera camera) {
+        update();
+        sort();
+        gc.save();
+        gc.setLineWidth(2);
+        gc.setStroke(Color.RED);
+
+        gc.translate(camera.tX, camera.tY);
+        gc.scale(camera.scale, camera.scale);
+        for (final GuideLine line : getGuideLines("_")) {
+            gc.strokeLine(line.line.x_0, line.line.y_0, line.line.x_1, line.line.y_1);
+        }
+        gc.restore();
+        for (final Thing thing : getThings()) {
+            thing.render(gc, camera);
+        }
+    }
+
+    @Override
+    public void end() {
+    }
+
     public Set<GuideLine> getGuideLines(final String layerId) {
         // TODO: look up the layer properties
         // find guide lines
         final HashSet<GuideLine> lines = new HashSet<GuideLine>();
-        //lines.add(new GuideLine().grow());
+        // lines.add(new GuideLine().grow());
         return lines;
+    }
+
+    @Override
+    public String getJson(final String query) {
+        if (query.startsWith("#")) {
+
+        }
+        return "null";
     }
 
     public ArrayList<Thing> getThings() {
@@ -140,24 +175,6 @@ public class Document implements FileSerializer {
         }
     }
 
-    public void draw(final GraphicsContext gc, final Camera camera) {
-        update();
-        sort();
-        gc.save();
-        gc.setLineWidth(2);
-        gc.setStroke(Color.RED);
-
-        gc.translate(camera.tX, camera.tY);
-        gc.scale(camera.scale, camera.scale);
-        for (GuideLine line : getGuideLines("_")) {
-            gc.strokeLine(line.line.x_0, line.line.y_0, line.line.x_1, line.line.y_1);
-        }
-        gc.restore();
-        for (final Thing thing : getThings()) {
-            thing.render(gc, camera);
-        }
-    }
-
     private void loadLP(final JsonNode node) {
         final Iterator<Entry<String, JsonNode>> fields = node.getFields();
         while (fields.hasNext()) {
@@ -189,6 +206,10 @@ public class Document implements FileSerializer {
     public String normalilze(final File input) {
         // System.out.println(input.toASCIIString() + ":" + owner.path().relativize(input).toASCIIString());
         return input.toURI().toASCIIString();
+    }
+
+    @Override
+    public void put(final String query, final String value) {
     }
 
     public void save(final File file) throws Exception {

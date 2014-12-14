@@ -11,20 +11,20 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  */
 public class ThingMover implements ThingInteraction {
 
-    private final double             angle;
+    private final double angle;
 
-    private final Thing              target;
-    private final double             ix;
-    private final double             iy;
-    private final double             x;
-    private final double             y;
+    private final double ix;
+    private final double iy;
+    private final Thing  target;
+    private final double x;
+    private final double y;
 
     /**
      * @param initial
      *            the initial event in the thing space
      */
     public ThingMover(final AdjustedMouseEvent initial) {
-        this.target = (Thing) initial.userdata;
+        target = (Thing) initial.userdata;
         x = target.x();
         y = target.y();
         ix = initial.position.x_0;

@@ -25,6 +25,17 @@ import javafx.scene.shape.Polygon;
 
 public abstract class Thing extends ThingCore {
     /**
+     * does the thing the given (x,y) point in world space
+     *
+     * @param x
+     *            the x-coordinate
+     * @param y
+     *            the y-coordinate
+     * @return whether or not point is in the thing
+     */
+    VectorRegister3         threadUnsafeContainmentScratch = new VectorRegister8();
+
+    /**
      * cached allocation of the doodads
      */
     private ControlDoodad[] worldDoodads;
@@ -76,6 +87,16 @@ public abstract class Thing extends ThingCore {
     }
 
     /**
+     * take the given event, and bind it to this object
+     *
+     * @param event
+     */
+    public void adjustAndBindEvent(final AdjustedMouseEvent event) {
+        writeToTarget(event.position);
+        event.userdata = this;
+    }
+
+    /**
      * take the given selection window and test whether or not it intersects the thing
      *
      * @param window
@@ -86,7 +107,7 @@ public abstract class Thing extends ThingCore {
             return;
         }
         final double[] adjusted = window.rect();
-        VectorRegister3 scratch = new VectorRegister8();
+        final VectorRegister3 scratch = new VectorRegister8();
         for (int k = 0; k < 8; k += 2) {
             scratch.set_0(adjusted[k], adjusted[k + 1]);
             writeToTarget(scratch);
@@ -101,17 +122,6 @@ public abstract class Thing extends ThingCore {
             unselect();
         }
     }
-
-    /**
-     * does the thing the given (x,y) point in world space
-     *
-     * @param x
-     *            the x-coordinate
-     * @param y
-     *            the y-coordinate
-     * @return whether or not point is in the thing
-     */
-    VectorRegister3 threadUnsafeContainmentScratch = new VectorRegister8();
 
     public boolean contains(final double x, final double y) {
         threadUnsafeContainmentScratch.set_0(x, y);
@@ -206,7 +216,7 @@ public abstract class Thing extends ThingCore {
                 worldDoodads[k] = new ControlDoodad(Type.PointUnselected, 0.0, 0.0);
             }
         }
-        VectorRegister3 W = new VectorRegister3();
+        final VectorRegister3 W = new VectorRegister3();
         for (int k = 0; k < original.length; k++) {
             final ControlDoodad doodad = original[k];
             W.set_0(doodad.u, doodad.v);
@@ -229,55 +239,6 @@ public abstract class Thing extends ThingCore {
      * @return does the given polygon intersect this thing
      */
     protected abstract boolean intersect(Polygon p);
-
-    /**
-     * convert the given (_x,_y) at vector 0 in world space into target space and write to vector 1 (vector 2 is used as scratch space)
-     *
-     * @param _x
-     *            the x coordinate in thing/target space
-     * @param _y
-     *            the y coordinate in thing/target space
-     * @return a vector representing the point in world space
-     */
-    public void writeToTarget(VectorRegister3 reg) {
-        reg.copy_from_0_to_1();
-        reg.set_2(x.value(), y.value());
-        reg.sub_2_from_1();
-        reg.set_2(cx, cy);
-        reg.complex_mult_2_1();
-        // add sheer to vector register
-        reg.x_1 /= sx.value();
-        reg.y_1 /= sy.value();
-    }
-
-    /**
-     * convert the given (_x,_y) at vector 0 in thing/target space into world space and write to vector 1 (vector 2 is used as scratch space)
-     *
-     * @param _x
-     *            the x coordinate in thing/target space
-     * @param _y
-     *            the y coordinate in thing/target space
-     * @return a vector representing the point in world space
-     */
-    public void writeToWorld(VectorRegister3 reg) {
-        reg.copy_from_0_to_1();
-        // add sheer
-        reg.x_1 *= sx.value();
-        reg.y_1 *= sy.value();
-        reg.set_2(cx, -cy);
-        reg.complex_mult_2_1();
-        reg.set_2(x.value(), y.value());
-        reg.add_2_to_1();
-    }
-
-    /**
-     * take the given event, and bind it to this object
-     * @param event
-     */
-    public void adjustAndBindEvent(final AdjustedMouseEvent event) {
-        writeToTarget(event.position);
-        event.userdata = this;
-    }
 
     /**
      * is the given point in the selection?
@@ -422,12 +383,10 @@ public abstract class Thing extends ThingCore {
         return mi;
     }
 
-    protected abstract ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event);
-
     private MouseInteraction startInteractionReal(final AdjustedMouseEvent event) {
         adjustAndBindEvent(event);
         ThingInteraction interaction = null;
-        VectorRegister3 W = new VectorRegister3();
+        final VectorRegister3 W = new VectorRegister3();
         for (final ControlDoodad doodad : getDoodadsInThingSpace()) {
             if (locked.value()) {
                 break;
@@ -478,8 +437,50 @@ public abstract class Thing extends ThingCore {
         return new ThingInteractionToMouseIteractionAdapter(document.history, interaction, this);
     }
 
+    protected abstract ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event);
+
     /**
      * update any state before we render
      */
     public abstract void update();
+
+    /**
+     * convert the given (_x,_y) at vector 0 in world space into target space and write to vector 1 (vector 2 is used as scratch space)
+     *
+     * @param _x
+     *            the x coordinate in thing/target space
+     * @param _y
+     *            the y coordinate in thing/target space
+     * @return a vector representing the point in world space
+     */
+    public void writeToTarget(final VectorRegister3 reg) {
+        reg.copy_from_0_to_1();
+        reg.set_2(x.value(), y.value());
+        reg.sub_2_from_1();
+        reg.set_2(cx, cy);
+        reg.complex_mult_2_1();
+        // add sheer to vector register
+        reg.x_1 /= sx.value();
+        reg.y_1 /= sy.value();
+    }
+
+    /**
+     * convert the given (_x,_y) at vector 0 in thing/target space into world space and write to vector 1 (vector 2 is used as scratch space)
+     *
+     * @param _x
+     *            the x coordinate in thing/target space
+     * @param _y
+     *            the y coordinate in thing/target space
+     * @return a vector representing the point in world space
+     */
+    public void writeToWorld(final VectorRegister3 reg) {
+        reg.copy_from_0_to_1();
+        // add sheer
+        reg.x_1 *= sx.value();
+        reg.y_1 *= sy.value();
+        reg.set_2(cx, -cy);
+        reg.complex_mult_2_1();
+        reg.set_2(x.value(), y.value());
+        reg.add_2_to_1();
+    }
 }

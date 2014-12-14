@@ -53,7 +53,7 @@ public class TConnector extends AbstractPointChain {
         }
 
         private void update(final Document document) {
-            VectorRegister3 W = new VectorRegister3();
+            final VectorRegister3 W = new VectorRegister3();
             W.set_0(pnt.x, pnt.y);
             writeToTarget(W);
             currentThing = document.selectFirstVisible(W.x_1, W.y_1);
@@ -66,10 +66,10 @@ public class TConnector extends AbstractPointChain {
 
         private void updateFast() {
             if (currentThing != null) {
-                VectorRegister3 to = new VectorRegister8();
+                final VectorRegister3 to = new VectorRegister8();
                 to.set_0(currentThing.x(), currentThing.y());
                 currentThing.writeToTarget(to);
-                
+
                 pnt.x = to.x_1;
                 pnt.y = to.y_1;
                 cache.update();

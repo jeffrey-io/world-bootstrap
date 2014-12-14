@@ -5,8 +5,8 @@ import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.ControlDoodad;
-import io.jeffrey.world.things.core.ThingInteraction;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
+import io.jeffrey.world.things.core.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Syncable;
@@ -227,7 +227,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
      */
     @Override
     protected boolean doesPointApplyToSelection(final AdjustedMouseEvent event) {
-        VectorRegister3 W = new VectorRegister3();
+        final VectorRegister3 W = new VectorRegister3();
         if (document != null) {
             for (final SelectablePoint2 point : chain) {
                 if (point.selected) {
@@ -354,7 +354,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
      */
     @Override
     protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
-        VectorRegister3 W = new VectorRegister3();
+        final VectorRegister3 W = new VectorRegister3();
 
         for (final SelectablePoint2 point : chain) {
             W.set_0(point.x, point.y);
@@ -365,7 +365,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
             }
         }
         if (allowEdgeSelect()) {
-            VectorRegister3 reg = new VectorRegister3();
+            final VectorRegister3 reg = new VectorRegister3();
             for (final SelectablePoint2[] line : chain.lines(isPolygonLooped())) {
 
                 // transform the starting point to a temporary place
@@ -383,7 +383,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
 
                 // set where we are
                 reg.set_2(event.position.x_0, event.position.y_0);
-                double distance = Lines.minimalDistanceV2toLineSegmentV0V1_Destructive(reg);
+                final double distance = Lines.minimalDistanceV2toLineSegmentV0V1_Destructive(reg);
                 if (distance > 0) {
                     if (event.doodadDistance(reg.x_0, reg.y_0) <= document.edgeWidthSize) {
                         begin.selected = true;

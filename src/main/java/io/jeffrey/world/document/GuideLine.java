@@ -19,9 +19,13 @@ public class GuideLine {
         distance = 10;
     }
 
+    public void draw() {
+
+    }
+
     /**
      * make the guide line "infinite"; TODO: Define how big the box can be
-     * 
+     *
      * @return a guide line
      */
     public GuideLine grow() {
@@ -37,9 +41,5 @@ public class GuideLine {
         grown.line.set_1(cx + dx * 10000, cy + dy * 10000);
         grown.distance = distance;
         return grown;
-    }
-
-    public void draw() {
-
     }
 }

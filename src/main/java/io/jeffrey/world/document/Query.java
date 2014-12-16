@@ -11,24 +11,21 @@ import java.util.regex.Pattern;
 
 /**
  * defines the basics of the query language
- * 
+ *
  * @author jeffrey
  */
 public class Query {
 
-    private static final String COLON = Pattern.quote(":");
-    private static final String COMMA = Pattern.quote(",");
-
     /**
      * defines the various forms of queries
-     * 
+     *
      * @author jeffrey
      */
     public static enum QueryType {
-        ById(true), //
+        All(false), //
         ByClass(false), //
-        FieldFilter(true), //
-        All(false);
+        ById(true), //
+        FieldFilter(true);
 
         public final boolean singletonPossible;
 
@@ -36,41 +33,24 @@ public class Query {
          * @param singletonPossible
          *            is this query expected to return a singleton at some point
          */
-        private QueryType(boolean singletonPossible) {
+        private QueryType(final boolean singletonPossible) {
             this.singletonPossible = singletonPossible;
         }
     }
 
-    /**
-     * the type of the query
-     */
-    public final QueryType typ;
+    private static final String COLON = Pattern.quote(":");
 
-    /**
-     * the various arguments to the query
-     */
-    public final String[]  args;
-
-    /**
-     * is this query a singleton (i.e. produce exactly one element)
-     */
-    public final boolean   singleton;
-
-    private Query(final QueryType typ, String... args) {
-        this.typ = typ;
-        this.args = args;
-        this.singleton = args.length == 1 && typ.singletonPossible;
-    }
+    private static final String COMMA = Pattern.quote(",");
 
     /**
      * parse the query
-     * 
+     *
      * @param query
      *            the raw query to parse
      * @return a list of queries to apply
      */
     public static List<Query> parse(final String query) {
-        ArrayList<Query> parts = new ArrayList<>();
+        final ArrayList<Query> parts = new ArrayList<>();
         for (String queryPart : query.split(COLON)) {
             queryPart = queryPart.trim();
             if (queryPart.startsWith("#")) {
@@ -87,26 +67,50 @@ public class Query {
     }
 
     /**
+     * the various arguments to the query
+     */
+    public final String[]  args;
+
+    /**
+     * is this query a singleton (i.e. produce exactly one element)
+     */
+    public final boolean   singleton;
+
+    /**
+     * the type of the query
+     */
+    public final QueryType typ;
+
+    private Query(final QueryType typ, final String... args) {
+        this.typ = typ;
+        this.args = args;
+        singleton = args.length == 1 && typ.singletonPossible;
+    }
+
+    /**
      * Reduce the given state by applying the query as a filter
-     * @param old the old state
+     * 
+     * @param old
+     *            the old state
      * @return the new state that has been reduced to elements that apply
      */
-    public Map<String, Map<String, Edit>> applyAsFilter(Map<String, Map<String, Edit>> old) {
-        HashMap<String, Map<String, Edit>> result = new HashMap<String, Map<String, Edit>>();
+    public Map<String, Map<String, Edit>> applyAsFilter(final Map<String, Map<String, Edit>> old) {
+        final HashMap<String, Map<String, Edit>> result = new HashMap<String, Map<String, Edit>>();
 
         switch (typ) {
             case All:
                 // NO-OP
                 break;
             case ByClass:
-                for (Entry<String, Map<String, Edit>> entry : old.entrySet()) {
-                    Edit mc = entry.getValue().get("metaclass");
+                for (final Entry<String, Map<String, Edit>> entry : old.entrySet()) {
+                    final Edit mc = entry.getValue().get("metaclass");
                     boolean found = false;
                     if (mc != null) {
-                        String currentClass = mc.getAsText();
-                        for (String wantedClass : args) {
-                            if (currentClass.equals(wantedClass))
+                        final String currentClass = mc.getAsText();
+                        for (final String wantedClass : args) {
+                            if (currentClass.equals(wantedClass)) {
                                 found = true;
+                            }
                         }
                     }
                     if (found) {
@@ -115,20 +119,21 @@ public class Query {
                 }
                 break;
             case ById:
-                for (String id : args) {
-                    Map<String, Edit> existing = old.get(id);
+                for (final String id : args) {
+                    final Map<String, Edit> existing = old.get(id);
                     if (existing != null) {
                         result.put(id, existing);
                     }
                 }
                 break;
             case FieldFilter:
-                for (Entry<String, Map<String, Edit>> entry : old.entrySet()) {
-                    Map<String, Edit> next = new HashMap<String, Edit>();
-                    for (String nk : args) {
-                        Edit prev = entry.getValue().get(nk);
-                        if (prev != null)
+                for (final Entry<String, Map<String, Edit>> entry : old.entrySet()) {
+                    final Map<String, Edit> next = new HashMap<String, Edit>();
+                    for (final String nk : args) {
+                        final Edit prev = entry.getValue().get(nk);
+                        if (prev != null) {
                             next.put(nk, prev);
+                        }
                     }
                     result.put(entry.getKey(), next);
                 }

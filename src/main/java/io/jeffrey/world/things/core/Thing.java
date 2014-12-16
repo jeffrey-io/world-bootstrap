@@ -309,7 +309,7 @@ public abstract class Thing extends ThingCore {
      *            the event in world space
      */
     public void preInteract(final AdjustedMouseEvent event) {
-        if (!event.event.isAltDown()) {
+        if (!event.altdown) {
             unselect();
         }
     }

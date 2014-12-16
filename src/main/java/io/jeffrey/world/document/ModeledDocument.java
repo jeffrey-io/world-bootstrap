@@ -1,6 +1,7 @@
 package io.jeffrey.world.document;
 
 import io.jeffrey.world.things.core.Thing;
+import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.MetaClass;
@@ -29,6 +30,7 @@ public class ModeledDocument implements Model {
     public final Map<String, LayerProperties>    layers;
     protected final ObjectMapper                 mapper = new ObjectMapper();
 
+    public final Notifications                   notifications;
     protected final ArrayList<Thing>             things;
 
     public ModeledDocument() {
@@ -39,6 +41,7 @@ public class ModeledDocument implements Model {
         layers.put("_", new LayerProperties("_", "Foreground"));
         classes.put("_", new MetaClass("_", "Default"));
         cachedModel = new HashMap<String, Map<String, Edit>>();
+        notifications = new Notifications();
     }
 
     /**
@@ -67,37 +70,39 @@ public class ModeledDocument implements Model {
      */
     @Override
     public String getJson(final String query) {
-        final List<Query> parsed = Query.parse(query);
-        Map<String, Map<String, Edit>> result = cachedModel;
-        boolean expectingSingleton = true;
-        for (final Query part : parsed) {
-            if (!part.singleton) {
-                expectingSingleton = false;
-            }
-            result = part.applyAsFilter(result);
-        }
         try {
+            final List<Query> parsed = Query.parse(query);
+            Map<String, Map<String, Edit>> result = cachedModel;
+            boolean expectingSingleton = true;
+            for (final Query part : parsed) {
+                if (!part.singleton) {
+                    expectingSingleton = false;
+                }
+                result = part.applyAsFilter(result);
+            }
             return jsonify(result, expectingSingleton);
-        } catch (final Exception err) {
-            throw new RuntimeException(err);
+        } catch (final Exception failure) {
+            notifications.println(failure, "unable to perform query:", query);
+            throw new RuntimeException(failure);
         }
     }
 
     @Override
     public String invokeAndReturnJson(final String query, final String method) {
-        Collection<Thing> result = things;
-        final List<Query> parsed = Query.parse(query);
-        for (final Query part : parsed) {
-            result = part.applyAsFilter(result);
-        }
-        final HashMap<String, Object> toJson = new HashMap<>();
-        for (final Thing thing : result) {
-            toJson.put(thing.id(), thing.invoke(method));
-        }
         try {
+            Collection<Thing> result = things;
+            final List<Query> parsed = Query.parse(query);
+            for (final Query part : parsed) {
+                result = part.applyAsFilter(result);
+            }
+            final HashMap<String, Object> toJson = new HashMap<>();
+            for (final Thing thing : result) {
+                toJson.put(thing.id(), thing.invoke(method));
+            }
             return mapper.writeValueAsString(toJson);
-        } catch (final Exception err) {
-            throw new RuntimeException(err);
+        } catch (final Exception failure) {
+            notifications.println(failure, "unable to perform query:", query);
+            throw new RuntimeException(failure);
         }
     }
 

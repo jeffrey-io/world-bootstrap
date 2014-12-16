@@ -186,7 +186,8 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
                 try {
                     chain.set(txt);
                     return true;
-                } catch (final Exception er) {
+                } catch (final Exception failure) {
+                    document.notifications.println(failure, "unable to set the points list");
                     return false;
                 }
             }

@@ -183,7 +183,6 @@ public class TImage extends EdgedThing {
      */
     private void refresh() {
         img = cache.of(document.find(uri.value()));
-        // TODO: resolve the uri into the actual absolute file that we will then resolve to a real URI
         update(img);
     }
 

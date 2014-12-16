@@ -9,6 +9,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.MouseInteraction;
+import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SetMover;
 import io.jeffrey.zer.SurfaceData;
@@ -63,12 +64,11 @@ public class WorldData extends SurfaceData {
         if (file == null) {
             return;
         }
-        System.out.println("setting file: " + file);
         setFile(file);
         try {
             document.load(file);
-        } catch (final Exception err) {
-            err.printStackTrace();
+        } catch (final Exception failure) {
+            document.notifications.println(failure, "unable to open file", file.toString());
         }
     }
 
@@ -120,7 +120,9 @@ public class WorldData extends SurfaceData {
             if (file != null) {
                 try {
                     ImageIO.read(file);
-                } catch (final IOException e) {
+                } catch (final IOException failure) {
+                    document.notifications.println(failure, "unable to add image:", file.toString());
+                    return;
                 }
                 data.fields.put("uri", document.normalize(file));
             }
@@ -200,8 +202,8 @@ public class WorldData extends SurfaceData {
         if (action == SurfaceAction.Save) {
             try {
                 document.save(file);
-            } catch (final Exception err) {
-                err.printStackTrace();
+            } catch (final Exception failure) {
+                document.notifications.println(failure, "unable to save file:", file.toString());
             }
         }
         if (action == SurfaceAction.NewFile) {
@@ -263,6 +265,11 @@ public class WorldData extends SurfaceData {
     @Override
     public Model getModel() {
         return document;
+    }
+
+    @Override
+    public Notifications getNotifications() {
+        return document.notifications;
     }
 
     @Override

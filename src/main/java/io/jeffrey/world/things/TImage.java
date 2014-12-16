@@ -133,7 +133,8 @@ public class TImage extends EdgedThing {
      * {@inheritDoc}
      */
     @Override
-    protected void executeAction(final String action) {
+    protected Object executeAction(final String action) {
+        return false;
     }
 
     /**

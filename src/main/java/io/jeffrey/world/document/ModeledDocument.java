@@ -7,6 +7,7 @@ import io.jeffrey.zer.meta.MetaClass;
 import io.jeffrey.zer.plugin.Model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,24 @@ public class ModeledDocument implements Model {
         }
         try {
             return jsonify(result, expectingSingleton);
+        } catch (final Exception err) {
+            throw new RuntimeException(err);
+        }
+    }
+
+    @Override
+    public String invokeAndReturnJson(final String query, final String method) {
+        Collection<Thing> result = things;
+        final List<Query> parsed = Query.parse(query);
+        for (final Query part : parsed) {
+            result = part.applyAsFilter(result);
+        }
+        final HashMap<String, Object> toJson = new HashMap<>();
+        for (final Thing thing : result) {
+            toJson.put(thing.id(), thing.invoke(method));
+        }
+        try {
+            return mapper.writeValueAsString(toJson);
         } catch (final Exception err) {
             throw new RuntimeException(err);
         }

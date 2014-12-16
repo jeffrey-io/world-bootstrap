@@ -171,7 +171,7 @@ public abstract class Thing extends ThingCore {
      * @param action
      *            the action to execute
      */
-    protected abstract void executeAction(String action);
+    protected abstract Object executeAction(String action);
 
     /**
      * {@inheritDoc}
@@ -240,6 +240,54 @@ public abstract class Thing extends ThingCore {
      */
     protected abstract boolean intersect(Polygon p);
 
+    @Override
+    public Object invoke(final String action) {
+
+        if ("?".equals(action)) {
+            return getActions();
+        }
+
+        if ("reset.angle".equals(action)) {
+            angle(0);
+            return true;
+        }
+        if ("normalize.scale".equals(action)) {
+            final double s = (sx() + sy()) / 2.0;
+            sx(s);
+            sy(s);
+            return true;
+        }
+        if ("push.down".equals(action)) {
+            order.value(order.value() - 1.5);
+            return true;
+        }
+        if ("bring.up".equals(action)) {
+            order.value(order.value() + 1.5);
+            return true;
+        }
+        if ("delete".equals(action)) {
+            deleted.value(true);
+            return true;
+        }
+        if ("undelete".equals(action)) {
+            deleted.value(false);
+            return true;
+        }
+        if ("lock".equals(action)) {
+            locked.value(true);
+            return true;
+        }
+        if ("unlock".equals(action)) {
+            locked.value(false);
+            return true;
+        }
+        if ("unselect".equals(action)) {
+            unselect();
+            return true;
+        }
+        return executeAction(action);
+    }
+
     /**
      * is the given point in the selection?
      *
@@ -264,43 +312,6 @@ public abstract class Thing extends ThingCore {
      *            the event in targete space
      */
     protected abstract void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event);
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void perform(final String action) {
-        if ("reset.angle".equals(action)) {
-            angle(0);
-        }
-        if ("normalize.scale".equals(action)) {
-            final double s = (sx() + sy()) / 2.0;
-            sx(s);
-            sy(s);
-        }
-        if ("push.down".equals(action)) {
-            order.value(order.value() - 1.5);
-        }
-        if ("bring.up".equals(action)) {
-            order.value(order.value() + 1.5);
-        }
-        if ("delete".equals(action)) {
-            deleted.value(true);
-        }
-        if ("undelete".equals(action)) {
-            deleted.value(false);
-        }
-        if ("lock".equals(action)) {
-            locked.value(true);
-        }
-        if ("unlock".equals(action)) {
-            locked.value(false);
-        }
-        if ("unselect".equals(action)) {
-            unselect();
-        }
-        executeAction(action);
-    }
 
     /**
      * we are about to start a new interaction, what should we do?

@@ -105,7 +105,8 @@ public class TCircle extends Thing {
      * {@inheritDoc}
      */
     @Override
-    protected void executeAction(final String action) {
+    protected Object executeAction(final String action) {
+        return null;
     }
 
     /**

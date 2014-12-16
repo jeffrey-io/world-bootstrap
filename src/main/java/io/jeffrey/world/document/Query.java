@@ -1,9 +1,12 @@
 package io.jeffrey.world.document;
 
+import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.zer.edits.Edit;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -85,6 +88,51 @@ public class Query {
         this.typ = typ;
         this.args = args;
         singleton = args.length == 1 && typ.singletonPossible;
+    }
+
+    /**
+     * apply the query as a filter on a collection of things
+     */
+    public Collection<Thing> applyAsFilter(final Collection<Thing> old) {
+        final HashSet<Thing> result = new HashSet<>();
+
+        switch (typ) {
+            case All:
+                // NO-OP
+                break;
+            case ByClass:
+                for (final Thing thing : old) {
+                    boolean found = false;
+                    final String currentClass = thing.getMetaclass();
+                    for (final String wantedClass : args) {
+                        if (currentClass.equals(wantedClass)) {
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        result.add(thing);
+                    }
+                }
+                break;
+            case ById:
+                for (final Thing thing : old) {
+                    boolean found = false;
+                    final String currentId = thing.id();
+                    for (final String wantedId : args) {
+                        if (currentId.equals(wantedId)) {
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        result.add(thing);
+                    }
+                }
+                break;
+            case FieldFilter:
+                // NO-OP
+                break;
+        }
+        return result;
     }
 
     /**

@@ -257,16 +257,20 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
      * {@inheritDoc}
      */
     @Override
-    protected void executeAction(final String action) {
+    protected Object executeAction(final String action) {
         if ("self.center".equals(action)) {
             cache.center();
+            return true;
         }
         if ("apply.scale".equals(action)) {
             cache.apply_scale();
+            return true;
         }
         if (chain.act(action, isPolygonLooped())) {
             cache.update();
+            return true;
         }
+        return false;
     }
 
     /**
@@ -364,7 +368,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
                 return new VertexMover(new Vertex(point, this), event);
             }
         }
-        if (allowEdgeSelect()) {
+        if (allowEdgeSelect() && !vlock.value()) {
             final VectorRegister3 reg = new VectorRegister3();
             for (final SelectablePoint2[] line : chain.lines(isPolygonLooped())) {
 

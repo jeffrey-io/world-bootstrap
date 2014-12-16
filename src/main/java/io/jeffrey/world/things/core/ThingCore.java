@@ -195,6 +195,13 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     }
 
     /**
+     * @return the meta class of the thing
+     */
+    public String getMetaclass() {
+        return metaclass.value();
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

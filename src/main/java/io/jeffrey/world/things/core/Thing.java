@@ -3,7 +3,6 @@ package io.jeffrey.world.things.core;
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.document.GuideLine;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.interactions.ThingMover;
@@ -14,8 +13,10 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SelectionWindow;
+import io.jeffrey.zer.meta.GuideLine;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,7 +70,7 @@ public abstract class Thing extends ThingCore {
         adjustAndBindEvent(event);
         final HashSet<ThingInteraction> local = new HashSet<>();
         iterateMovers(local, event);
-        final Set<GuideLine> lines = document.getGuideLines(layer.getAsText());
+        final Collection<GuideLine> lines = document.getGuideLines(layer.getAsText());
 
         GuideLineEnforcer enforcer = null;
         if (lines.size() > 0) {
@@ -78,7 +79,7 @@ public abstract class Thing extends ThingCore {
         for (final ThingInteraction itRaw : local) {
             final ThingInteraction it;
             if (lines.size() > 0 && enforcer != null) {
-                it = new ThingSnapper(lines, enforcer, itRaw);
+                it = new ThingSnapper(document.camera, lines, enforcer, itRaw);
             } else {
                 it = itRaw;
             }
@@ -434,11 +435,11 @@ public abstract class Thing extends ThingCore {
             return null;
         }
         if (interaction instanceof ThingMover) {
-            final Set<GuideLine> lines = document.getGuideLines(layer.getAsText());
+            final Collection<GuideLine> lines = document.getGuideLines(layer.getAsText());
             if (lines.size() > 0) {
                 final GuideLineEnforcer enforcer = getGuideLineEnforcer();
                 if (enforcer != null) {
-                    interaction = new ThingSnapper(lines, enforcer, interaction);
+                    interaction = new ThingSnapper(document.camera, lines, enforcer, interaction);
                 }
             }
         }

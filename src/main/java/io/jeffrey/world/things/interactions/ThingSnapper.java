@@ -1,11 +1,12 @@
 package io.jeffrey.world.things.interactions;
 
-import io.jeffrey.world.document.GuideLine;
 import io.jeffrey.world.things.core.GuideLineEnforcer;
 import io.jeffrey.world.things.core.ThingInteraction;
 import io.jeffrey.zer.AdjustedMouseEvent;
+import io.jeffrey.zer.Camera;
+import io.jeffrey.zer.meta.GuideLine;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * Wrap a thing mover and snap the object to the guideline
@@ -13,9 +14,10 @@ import java.util.Set;
  * @author jeffrey
  */
 public class ThingSnapper implements ThingInteraction {
-    private final ThingInteraction  delegate;
-    private final Set<GuideLine>    lines;
-    private final GuideLineEnforcer link;
+    private final Camera                camera;
+    private final ThingInteraction      delegate;
+    private final Collection<GuideLine> lines;
+    private final GuideLineEnforcer     link;
 
     /**
      * @param lines
@@ -25,7 +27,8 @@ public class ThingSnapper implements ThingInteraction {
      * @param delegate
      *            the delegate interaction that is updating the object (we will snap after to prevent locking)
      */
-    public ThingSnapper(final Set<GuideLine> lines, final GuideLineEnforcer link, final ThingInteraction delegate) {
+    public ThingSnapper(final Camera camera, final Collection<GuideLine> lines, final GuideLineEnforcer link, final ThingInteraction delegate) {
+        this.camera = camera;
         this.lines = lines;
         this.link = link;
         this.delegate = delegate;
@@ -46,7 +49,7 @@ public class ThingSnapper implements ThingInteraction {
     public void moved(final AdjustedMouseEvent event) {
         delegate.moved(event);
         for (final GuideLine line : lines) {
-            link.attemptSnapTo(line);
+            link.attemptSnapTo(camera, line);
         }
     }
 

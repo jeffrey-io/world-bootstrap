@@ -2,9 +2,10 @@ package io.jeffrey.world.things.enforcer;
 
 import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
-import io.jeffrey.world.document.GuideLine;
 import io.jeffrey.world.things.core.GuideLineEnforcer;
 import io.jeffrey.world.things.core.Thing;
+import io.jeffrey.zer.Camera;
+import io.jeffrey.zer.meta.GuideLine;
 
 public class OriginEnforcer implements GuideLineEnforcer {
 
@@ -15,17 +16,16 @@ public class OriginEnforcer implements GuideLineEnforcer {
     }
 
     @Override
-    public void attemptSnapTo(final GuideLine line) {
+    public void attemptSnapTo(final Camera camera, final GuideLine line) {
         final VectorRegister5 reg = new VectorRegister5();
 
-        reg.set_0(line.line.x_0, line.line.y_0);
-        reg.set_1(line.line.x_1, line.line.y_1);
+        line.writeSegment(camera, reg);
         reg.set_2(target.x(), target.y());
         final double d = Lines.minimalDistanceV2toLineContainingV0V1_Destructive(reg);
         if (d < 0) {
             return;
         }
-        if (d < line.distance) {
+        if (d < line.distance.value()) {
             target.x(reg.x_0);
             target.y(reg.y_0);
         }

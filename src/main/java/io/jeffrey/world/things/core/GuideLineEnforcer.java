@@ -1,6 +1,7 @@
 package io.jeffrey.world.things.core;
 
-import io.jeffrey.world.document.GuideLine;
+import io.jeffrey.zer.Camera;
+import io.jeffrey.zer.meta.GuideLine;
 
 /**
  * Enforce the guidelines and interpret how to snap to
@@ -14,5 +15,5 @@ public interface GuideLineEnforcer {
      * @param line
      *            the line to snap to
      */
-    public void attemptSnapTo(GuideLine line);
+    public void attemptSnapTo(Camera camera, GuideLine line);
 }

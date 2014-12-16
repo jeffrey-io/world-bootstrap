@@ -1,11 +1,13 @@
 package io.jeffrey.world.document;
 
+import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.ObjectDataMap;
 import io.jeffrey.zer.meta.DocumentFileSystem;
+import io.jeffrey.zer.meta.GuideLine;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.MetaClass;
 
@@ -13,12 +15,12 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -27,7 +29,7 @@ import javafx.scene.paint.Color;
 import org.codehaus.jackson.JsonNode;
 
 public class Document extends ModeledDocument implements DocumentFileSystem {
-    private final Camera    camera;
+    public final Camera     camera;
     public final int        controlPointSize = 8;
     public final int        edgeWidthSize    = 4;
     private boolean         hasSomeSelection = false;
@@ -88,8 +90,10 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 
         gc.translate(camera.tX, camera.tY);
         gc.scale(camera.scale, camera.scale);
+        final VectorRegister2 seg = new VectorRegister2();
         for (final GuideLine line : getGuideLines("_")) {
-            gc.strokeLine(line.line.x_0, line.line.y_0, line.line.x_1, line.line.y_1);
+            line.writeSegment(camera, seg);
+            gc.strokeLine(seg.x_0, seg.y_0, seg.x_1, seg.y_1);
         }
         gc.restore();
         for (final Thing thing : getThings()) {
@@ -102,12 +106,12 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
         return new File(owner.path().resolve(path));
     }
 
-    public Set<GuideLine> getGuideLines(final String layerId) {
-        // TODO: look up the layer properties
-        // find guide lines
-        final HashSet<GuideLine> lines = new HashSet<GuideLine>();
-        // lines.add(new GuideLine().grow());
-        return lines;
+    public Collection<GuideLine> getGuideLines(final String layerId) {
+        final LayerProperties lp = layers.get(layerId);
+        if (lp != null) {
+            return lp.guides;
+        }
+        return new HashSet<>();
     }
 
     public ArrayList<Thing> getThings() {

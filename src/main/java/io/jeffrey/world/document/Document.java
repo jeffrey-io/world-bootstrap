@@ -210,7 +210,6 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
             store.add(tdata);
         }
         tree.put("things", store);
-        System.out.println(mapper.writeValueAsString(tree));
         Files.write(Paths.get(file.toURI()), mapper.writeValueAsBytes(tree));
     }
 
@@ -250,7 +249,6 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
             }
         }
         final String snapshot = mapper.writeValueAsString(store);
-        System.out.println("snapshot:" + snapshot);
         return snapshot;
     }
 

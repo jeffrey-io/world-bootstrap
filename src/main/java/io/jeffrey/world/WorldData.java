@@ -119,7 +119,10 @@ public class WorldData extends SurfaceData {
             final File file = chooser.showOpenDialog(null);
             if (file != null) {
                 try {
-                    ImageIO.read(file);
+                    if (ImageIO.read(file) == null) {
+                        document.notifications.println("unable to add image:", file.toString());
+                        return;
+                    }
                 } catch (final IOException failure) {
                     document.notifications.println(failure, "unable to add image:", file.toString());
                     return;

@@ -60,9 +60,10 @@ public class WorldData extends SurfaceData {
      */
     @Override
     public void actionOpen(final File file) {
-        if (file != null) {
+        if (file == null) {
             return;
         }
+        System.out.println("setting file: " + file);
         setFile(file);
         try {
             document.load(file);
@@ -121,7 +122,7 @@ public class WorldData extends SurfaceData {
                     ImageIO.read(file);
                 } catch (final IOException e) {
                 }
-                data.fields.put("uri", file.toURI().toString());
+                data.fields.put("uri", document.normalize(file));
             }
         }
 

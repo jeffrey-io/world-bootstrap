@@ -5,7 +5,7 @@ import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.ObjectDataMap;
-import io.jeffrey.zer.meta.FileSerializer;
+import io.jeffrey.zer.meta.DocumentFileSystem;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.MetaClass;
 
@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
 
 import org.codehaus.jackson.JsonNode;
 
-public class Document extends ModeledDocument implements FileSerializer {
+public class Document extends ModeledDocument implements DocumentFileSystem {
     private final Camera    camera;
     public final int        controlPointSize = 8;
     public final int        edgeWidthSize    = 4;
@@ -34,6 +34,7 @@ public class Document extends ModeledDocument implements FileSerializer {
     private int             id;
     public final ImageCache imageCache;
 
+    private final WorldData owner;
     public final Image      ROTATE_ICON;
     public final Image      SCALE_ICON;
     public final Image      VERTEX_ICON;
@@ -41,6 +42,7 @@ public class Document extends ModeledDocument implements FileSerializer {
 
     public Document(final Camera camera, final WorldData owner) {
         this.camera = camera;
+        this.owner = owner;
         imageCache = new ImageCache();
         id = 0;
         SCALE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_scale.png"));
@@ -93,6 +95,11 @@ public class Document extends ModeledDocument implements FileSerializer {
         for (final Thing thing : getThings()) {
             thing.render(gc, camera);
         }
+    }
+
+    @Override
+    public File find(final String path) {
+        return new File(owner.path().resolve(path));
     }
 
     public Set<GuideLine> getGuideLines(final String layerId) {
@@ -172,9 +179,8 @@ public class Document extends ModeledDocument implements FileSerializer {
     }
 
     @Override
-    public String normalilze(final File input) {
-        // System.out.println(input.toASCIIString() + ":" + owner.path().relativize(input).toASCIIString());
-        return input.toURI().toASCIIString();
+    public String normalize(final File input) {
+        return owner.path().relativize(input.toURI()).getPath();
     }
 
     public void save(final File file) throws Exception {

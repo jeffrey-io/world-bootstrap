@@ -89,8 +89,8 @@ public class Query {
 
     /**
      * Reduce the given state by applying the query as a filter
-     * 
-     * @param old
+     *
+     * @param oactionOpenld
      *            the old state
      * @return the new state that has been reduced to elements that apply
      */

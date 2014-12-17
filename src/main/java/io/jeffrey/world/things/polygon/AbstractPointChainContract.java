@@ -2,7 +2,7 @@ package io.jeffrey.world.things.polygon;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.core.Thing;
+import io.jeffrey.world.things.core.EdgedThing;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.Edit;
 
@@ -18,7 +18,7 @@ import javafx.scene.shape.Polygon;
  * @author jeffrey
  *
  */
-public abstract class AbstractPointChainContract extends Thing {
+public abstract class AbstractPointChainContract extends EdgedThing {
 
     protected AbstractPointChainContract(final Document document, final ThingData node) {
         super(document, node);

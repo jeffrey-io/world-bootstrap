@@ -360,6 +360,7 @@ public abstract class Thing extends ThingCore {
                 }
             }
         }
+
         gc.save();
         gc.translate(camera.tX, camera.tY);
         gc.scale(camera.scale, camera.scale);

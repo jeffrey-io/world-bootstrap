@@ -9,6 +9,7 @@ import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.EdgedThing;
 import io.jeffrey.world.things.core.GuideLineEnforcer;
 import io.jeffrey.world.things.core.ThingInteraction;
+import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.ImageCache;
@@ -49,8 +50,8 @@ public class TImage extends EdgedThing {
         super(document, node);
         cache = document.imageCache;
         doodads = new ControlDoodad[8];
-        this.sx(node.getDouble("sx", 0.1).value());
-        this.sy(node.getDouble("sy", 0.1).value());
+        this.sx(node.getDouble("sx", 0.25).value());
+        this.sy(node.getDouble("sy", 0.25).value());
         uri = node.getString("uri", "");
         refresh();
     }
@@ -106,26 +107,41 @@ public class TImage extends EdgedThing {
     public double[] edges() {
         final double[] edges = new double[16];
         final VectorRegister3 W = new VectorRegister8();
+
         W.set_0(-rect.getWidth() / 2, -rect.getHeight() / 2);
         writeToWorld(W);
         W.extract_1(edges, 0);
         W.set_0(rect.getWidth() / 2, -rect.getHeight() / 2);
         writeToWorld(W);
         W.extract_1(edges, 2);
+
+        /*
+         * W.set_0(rect.getWidth() / 2, -rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 4); W.set_0(rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 6);
+         *
+         * W.set_0(rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 8); W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 10);
+         *
+         * W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 12); W.set_0(-rect.getWidth() / 2, -rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 14);
+         */
+
         edges[4] = edges[2];
         edges[5] = edges[3];
+
         W.set_0(rect.getWidth() / 2, rect.getHeight() / 2);
         writeToWorld(W);
         W.extract_1(edges, 6);
+
         edges[8] = edges[6];
         edges[9] = edges[7];
+
         W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2);
         writeToWorld(W);
         W.extract_1(edges, 10);
+
         edges[12] = edges[10];
         edges[13] = edges[11];
         edges[14] = edges[0];
         edges[15] = edges[1];
+
         return edges;
     }
 
@@ -148,8 +164,7 @@ public class TImage extends EdgedThing {
 
     @Override
     protected GuideLineEnforcer getGuideLineEnforcer() {
-        return null;
-        // return new EdgeEnforcer(this);
+        return new EdgeEnforcer(this);
     }
 
     /**

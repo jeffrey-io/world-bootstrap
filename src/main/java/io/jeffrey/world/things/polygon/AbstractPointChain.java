@@ -1,6 +1,7 @@
 package io.jeffrey.world.things.polygon;
 
 import io.jeffrey.vector.VectorRegister3;
+import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
@@ -258,6 +259,21 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
      * {@inheritDoc}
      */
     @Override
+    public double[] edges() {
+        final VectorRegister5 W = new VectorRegister5();
+        final double[] targetEdges = chain.edges(isPolygonLooped());
+        for (int k = 0; k + 1 < targetEdges.length; k += 2) {
+            W.inject_0(targetEdges, k);
+            writeToWorld(W);
+            W.extract_1(targetEdges, k);
+        }
+        return targetEdges;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected Object executeAction(final String action) {
         if ("self.center".equals(action)) {
             cache.center();
@@ -424,4 +440,5 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     public void sync() {
         cache.update();
     }
+
 }

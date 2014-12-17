@@ -151,6 +151,27 @@ public class PointChain implements Iterable<SelectablePoint2> {
     }
 
     /**
+     * turn the chain into a list of lines that form the edges
+     *
+     * @param asLoop
+     *            is the chain a polygon?
+     * @return an array of all edges (x0,y0,x1,y1,x1,y1,x2,y2,...)
+     */
+    public double[] edges(final boolean asLoop) {
+        final int n = points.size() + (asLoop ? 0 : -1);
+        final double[] values = new double[n * 4];
+        for (int k = 0; k < n; k++) {
+            final SelectablePoint2 a = points.get(k);
+            final SelectablePoint2 b = points.get((k + 1) % points.size());
+            values[k * 4 + 0] = a.x;
+            values[k * 4 + 1] = a.y;
+            values[k * 4 + 2] = b.x;
+            values[k * 4 + 3] = b.y;
+        }
+        return values;
+    }
+
+    /**
      * Helper: index the points to update the points' cachedIndex
      */
     private void index() {

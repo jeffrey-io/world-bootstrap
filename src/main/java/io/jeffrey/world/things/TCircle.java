@@ -130,6 +130,10 @@ public class TCircle extends Thing {
         return Shape.intersect(CIRCLE, p).getBoundsInLocal().getWidth() > 0;
     }
 
+    @Override
+    public void invalidate() {
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -170,5 +174,4 @@ public class TCircle extends Thing {
     @Override
     public void update() {
     }
-
 }

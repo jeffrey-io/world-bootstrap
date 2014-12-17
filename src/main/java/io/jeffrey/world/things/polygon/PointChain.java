@@ -1,10 +1,10 @@
 package io.jeffrey.world.things.polygon;
 
-import io.jeffrey.world.things.polygon.actions.FractureSplit;
 import io.jeffrey.world.things.polygon.actions.ColinearReduction;
 import io.jeffrey.world.things.polygon.actions.EdgeCollapseAll;
 import io.jeffrey.world.things.polygon.actions.EdgeCollapseKeepEnds;
 import io.jeffrey.world.things.polygon.actions.EdgeSplit;
+import io.jeffrey.world.things.polygon.actions.FractureSplit;
 import io.jeffrey.world.things.polygon.actions.SmoothSplit;
 import io.jeffrey.world.things.polygon.actions.UniformEdgeSplit;
 
@@ -41,26 +41,6 @@ public class PointChain implements Iterable<SelectablePoint2> {
      */
     public PointChain(final String raw) {
         points = parse(raw);
-    }
-
-    /**
-     * apply the given index removal to the points
-     * 
-     * @param removal
-     *            what to remove
-     */
-    public void apply(IndexRemoval removal) {
-        removal.removeAll(points);
-    }
-
-    /**
-     * apply the given point addition
-     * 
-     * @param addition
-     *            what to add
-     */
-    public void apply(PointAddition addition) {
-        addition.insert(points);
     }
 
     /**
@@ -106,6 +86,26 @@ public class PointChain implements Iterable<SelectablePoint2> {
             return true;
         }
         return false;
+    }
+
+    /**
+     * apply the given index removal to the points
+     *
+     * @param removal
+     *            what to remove
+     */
+    public void apply(final IndexRemoval removal) {
+        removal.removeAll(points);
+    }
+
+    /**
+     * apply the given point addition
+     *
+     * @param addition
+     *            what to add
+     */
+    public void apply(final PointAddition addition) {
+        addition.insert(points);
     }
 
     /**

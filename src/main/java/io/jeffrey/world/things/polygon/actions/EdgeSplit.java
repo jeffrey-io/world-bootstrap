@@ -1,14 +1,14 @@
 package io.jeffrey.world.things.polygon.actions;
 
-import java.util.Random;
-
 import io.jeffrey.world.things.polygon.PointAddition;
 import io.jeffrey.world.things.polygon.PointChain;
 import io.jeffrey.world.things.polygon.SelectablePoint2;
 
+import java.util.Random;
+
 /**
  * Split an edge in two
- * 
+ *
  * @author jeffrey
  *
  */
@@ -19,8 +19,8 @@ public class EdgeSplit {
      * @param asLoop
      *            is it a loop
      */
-    public static void perform(PointChain chain, boolean asLoop, boolean randomly) {
-        Random rng = new Random();
+    public static void perform(final PointChain chain, final boolean asLoop, final boolean randomly) {
+        final Random rng = new Random();
         final PointAddition adder = new PointAddition();
         for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
             for (int j = 0; j < segment.length - 1; j++) {
@@ -28,7 +28,7 @@ public class EdgeSplit {
                 if (randomly) {
                     factorB = rng.nextDouble();
                 }
-                double nfactor = 1.0 - factorB;
+                final double nfactor = 1.0 - factorB;
                 final SelectablePoint2 p1 = segment[j];
                 final SelectablePoint2 p2 = segment[j + 1];
                 final SelectablePoint2 newPoint = new SelectablePoint2(p1.x * factorB + p2.x * nfactor, p1.y * factorB + p2.y * nfactor);

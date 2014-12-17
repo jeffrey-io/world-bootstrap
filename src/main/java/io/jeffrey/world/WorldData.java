@@ -156,6 +156,11 @@ public class WorldData extends SurfaceData {
         return true;
     }
 
+    @Override
+    public void capture() {
+        document.history.capture();
+    }
+
     private void copy() throws Exception {
         final ClipboardContent content = new ClipboardContent();
         content.putString(document.snapshotSelection());
@@ -249,6 +254,7 @@ public class WorldData extends SurfaceData {
         final HashSet<Editable> edits = new HashSet<Editable>();
         for (final Thing thing : document.getThings()) {
             if (thing.selected()) {
+                document.history.register(thing);
                 edits.add(thing);
             }
         }
@@ -360,6 +366,14 @@ public class WorldData extends SurfaceData {
             theta += dangle;
         }
         return PointChain.pack(values);
+    }
+
+    @Override
+    public void ready() {
+        document.history.capture();
+        for (final Thing thing : document.getThings()) {
+            document.history.register(thing);
+        }
     }
 
     @Override

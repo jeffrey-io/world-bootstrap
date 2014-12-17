@@ -8,7 +8,7 @@ import io.jeffrey.world.things.polygon.SelectablePoint2;
 
 /**
  * This will attempt to smooth the polygon
- * 
+ *
  * @author jeffrey
  *
  */
@@ -19,8 +19,8 @@ public class SmoothSplit {
      * @param asLoop
      *            is it a loop
      */
-    public static void perform(PointChain chain, boolean asLoop) {
-        VectorRegister8 temp = new VectorRegister8();
+    public static void perform(final PointChain chain, final boolean asLoop) {
+        final VectorRegister8 temp = new VectorRegister8();
         final PointAddition adder = new PointAddition();
         for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
             for (int j = 1; j < segment.length - 2; j++) {

@@ -6,7 +6,7 @@ import io.jeffrey.world.things.polygon.SelectablePoint2;
 
 /**
  * Algorithm to remove vertices that are not needed
- * 
+ *
  * @author jeffrey
  */
 public class ColinearReduction {
@@ -16,7 +16,7 @@ public class ColinearReduction {
      * @param asLoop
      *            is it a loop
      */
-    public static void perform(PointChain chain, boolean asLoop) {
+    public static void perform(final PointChain chain, final boolean asLoop) {
         final IndexRemoval remover = new IndexRemoval();
         for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
             for (int k = 1; k < segment.length - 1; k++) {

@@ -310,6 +310,11 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         return isSelected;
     }
 
+    @Override
+    public void invalidate() {
+        cache.update();
+    }
+
     /**
      * {@inheritDoc}
      */

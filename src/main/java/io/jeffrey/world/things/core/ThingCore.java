@@ -210,6 +210,11 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     }
 
     /**
+     * indicate that the data has changed with force
+     */
+    public abstract void invalidate();
+
+    /**
      * @return the thing's layer
      */
     public LayerProperties layer() {

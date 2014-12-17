@@ -11,7 +11,7 @@ public class UniformEdgeSplit {
      * @param asLoop
      *            is it a loop
      */
-    public static void perform(PointChain chain, boolean asLoop) {
+    public static void perform(final PointChain chain, final boolean asLoop) {
         double distance = 0;
         int c = 0;
         for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {

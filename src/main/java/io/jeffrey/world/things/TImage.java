@@ -161,6 +161,11 @@ public class TImage extends EdgedThing {
         return Shape.intersect(rect, p).getBoundsInLocal().getWidth() > 0;
     }
 
+    @Override
+    public void invalidate() {
+        refresh();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -234,5 +239,4 @@ public class TImage extends EdgedThing {
         doodads[6] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, -rect.getHeight() / 2);
         doodads[7] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, rect.getHeight() / 2);
     }
-
 }

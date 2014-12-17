@@ -1,12 +1,17 @@
 package io.jeffrey.world.things.polygon.actions;
 
-import java.util.Random;
-
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.polygon.PointAddition;
 import io.jeffrey.world.things.polygon.PointChain;
 import io.jeffrey.world.things.polygon.SelectablePoint2;
 
+import java.util.Random;
+
+/**
+ * Introduce a bit of randomness
+ *
+ * @author jeffrey
+ */
 public class FractureSplit {
     /**
      * @param chain
@@ -14,9 +19,9 @@ public class FractureSplit {
      * @param asLoop
      *            is it a loop
      */
-    public static void perform(PointChain chain, boolean asLoop) {
-        Random rng = new Random();
-        VectorRegister8 reg = new VectorRegister8();
+    public static void perform(final PointChain chain, final boolean asLoop) {
+        final Random rng = new Random();
+        final VectorRegister8 reg = new VectorRegister8();
         reg.set_5(0, -1);
 
         final PointAddition adder = new PointAddition();
@@ -38,7 +43,8 @@ public class FractureSplit {
                 reg.copy_from_1_to_6();
                 reg.sub_0_from_6();
 
-                double l = (reg.length_6() / Math.sqrt(13)) * (rng.nextDouble() - 0.5);;
+                final double l = reg.length_6() / Math.sqrt(13) * (rng.nextDouble() - 0.5);
+                ;
 
                 reg.normalize_6();
                 reg.complex_mult_5_6();

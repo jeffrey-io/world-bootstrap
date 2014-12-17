@@ -73,6 +73,7 @@ public class History {
             for (final Entry<String, String> task : redo.entrySet()) {
                 links.get(task.getKey()).set(task.getValue());
             }
+            thing.invalidate();
         }
 
         public void doUndo() {
@@ -80,6 +81,7 @@ public class History {
             for (final Entry<String, String> task : undo.entrySet()) {
                 links.get(task.getKey()).set(task.getValue());
             }
+            thing.invalidate();
         }
     }
 

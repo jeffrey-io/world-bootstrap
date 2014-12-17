@@ -1,5 +1,13 @@
 package io.jeffrey.world.things.polygon;
 
+import io.jeffrey.world.things.polygon.actions.FractureSplit;
+import io.jeffrey.world.things.polygon.actions.ColinearReduction;
+import io.jeffrey.world.things.polygon.actions.EdgeCollapseAll;
+import io.jeffrey.world.things.polygon.actions.EdgeCollapseKeepEnds;
+import io.jeffrey.world.things.polygon.actions.EdgeSplit;
+import io.jeffrey.world.things.polygon.actions.SmoothSplit;
+import io.jeffrey.world.things.polygon.actions.UniformEdgeSplit;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +44,26 @@ public class PointChain implements Iterable<SelectablePoint2> {
     }
 
     /**
+     * apply the given index removal to the points
+     * 
+     * @param removal
+     *            what to remove
+     */
+    public void apply(IndexRemoval removal) {
+        removal.removeAll(points);
+    }
+
+    /**
+     * apply the given point addition
+     * 
+     * @param addition
+     *            what to add
+     */
+    public void apply(PointAddition addition) {
+        addition.insert(points);
+    }
+
+    /**
      * Perform the given action on the point chain
      *
      * @param action
@@ -46,100 +74,35 @@ public class PointChain implements Iterable<SelectablePoint2> {
      */
     public boolean act(final String action, final boolean asLoop) {
         if ("edge.colinear".equals(action)) {
-            final IndexRemoval remover = new IndexRemoval();
-            for (final SelectablePoint2[] segment : selectedSegments(asLoop)) {
-                for (int k = 1; k < segment.length - 1; k++) {
-                    double dx0 = segment[k].x - segment[k - 1].x;
-                    double dy0 = segment[k].y - segment[k - 1].y;
-                    double dx1 = segment[k + 1].x - segment[k - 1].x;
-                    double dy1 = segment[k + 1].y - segment[k - 1].y;
-                    final double len0 = Math.sqrt(dx0 * dx0 + dy0 * dy0);
-                    final double len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
-                    dx0 /= len0;
-                    dy0 /= len0;
-                    dx1 /= len1;
-                    dy1 /= len1;
-                    final double dp = dx0 * dx1 + dy0 * dy1;
-                    if (Math.abs(dp - 1) < 1E-8) {
-                        remover.denote(segment[k].cachedIndex);
-                    }
-                }
-            }
-            remover.removeAll(points);
+            ColinearReduction.perform(this, asLoop);
             return true;
         }
         if ("edge.uniform".equals(action)) {
-            double distance = 0;
-            int c = 0;
-            for (final SelectablePoint2[] segment : selectedSegments(asLoop)) {
-                for (int k = 0; k < segment.length - 1; k++) {
-                    final double dx = segment[k + 1].x - segment[k].x;
-                    final double dy = segment[k + 1].y - segment[k].y;
-                    distance += Math.sqrt(dx * dx + dy * dy);
-                    c++;
-                }
-            }
-            if (c > 0) {
-                distance /= c;
-                final PointAddition adder = new PointAddition();
-                for (final SelectablePoint2[] segment : selectedSegments(asLoop)) {
-                    for (int j = 0; j < segment.length - 1; j++) {
-                        final SelectablePoint2 p1 = segment[j];
-                        final SelectablePoint2 p2 = segment[j + 1];
-                        final double dx = p2.x - p1.x;
-                        final double dy = p2.y - p1.y;
-                        final double local = Math.sqrt(dx * dx + dy * dy);
-                        if (local > distance) {
-                            final SelectablePoint2 newPoint = new SelectablePoint2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-                            newPoint.cachedIndex = p1.cachedIndex + 1;
-                            newPoint.selected = true;
-                            adder.denote(newPoint);
-                        }
-                    }
-                    c++;
-                }
-                adder.insert(points);
-                return true;
-            }
+            UniformEdgeSplit.perform(this, asLoop);
+            return true;
         }
         if ("edge.split".equals(action)) {
-            final PointAddition adder = new PointAddition();
-            for (final SelectablePoint2[] segment : selectedSegments(asLoop)) {
-                for (int j = 0; j < segment.length - 1; j++) {
-                    final SelectablePoint2 p1 = segment[j];
-                    final SelectablePoint2 p2 = segment[j + 1];
-                    final SelectablePoint2 newPoint = new SelectablePoint2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-                    newPoint.cachedIndex = p1.cachedIndex + 1;
-                    newPoint.selected = true;
-                    adder.denote(newPoint);
-                }
-            }
-            adder.insert(points);
+            EdgeSplit.perform(this, asLoop, false);
+            return true;
+        }
+        if ("edge.fracture".equals(action)) {
+            FractureSplit.perform(this, asLoop);
+            return true;
+        }
+        if ("edge.smooth".equals(action)) {
+            SmoothSplit.perform(this, asLoop);
+            return true;
+        }
+        if ("edge.split.random".equals(action)) {
+            EdgeSplit.perform(this, asLoop, true);
             return true;
         }
         if ("edge.collapse.1".equals(action)) {
-            final IndexRemoval remover = new IndexRemoval();
-            for (final SelectablePoint2[] segments : selectedSegments(asLoop)) {
-                for (int j = 1; j < segments.length - 1; j++) {
-                    remover.denote(segments[j].cachedIndex);
-                }
-            }
-            remover.removeAll(points);
+            EdgeCollapseKeepEnds.perform(this, asLoop);
             return true;
         }
-
         if ("edge.collapse.2".equals(action)) {
-            final IndexRemoval remover = new IndexRemoval();
-            for (final SelectablePoint2[] segments : selectedSegments(asLoop)) {
-                for (int j = 1; j < segments.length; j++) {
-                    segments[0].x += segments[j].x;
-                    segments[0].y += segments[j].y;
-                    remover.denote(segments[j].cachedIndex);
-                }
-                segments[0].x /= segments.length;
-                segments[0].y /= segments.length;
-            }
-            remover.removeAll(points);
+            EdgeCollapseAll.perform(this, asLoop);
             return true;
         }
         return false;
@@ -177,8 +140,11 @@ public class PointChain implements Iterable<SelectablePoint2> {
         }
         if (canSplit) {
             actions.add("edge.split");
+            actions.add("edge.split.random");
             actions.add("edge.collapse.1");
             actions.add("edge.collapse.2");
+            actions.add("edge.fracture");
+            actions.add("edge.smooth");
             actions.add("edge.uniform");
             actions.add("edge.colinear");
         }

@@ -1,6 +1,6 @@
 package io.jeffrey.world.things.core;
 
-import io.jeffrey.world.document.History;
+import io.jeffrey.world.document.history.History;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;
 

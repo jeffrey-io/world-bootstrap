@@ -1,8 +1,8 @@
 package io.jeffrey.world.things.core;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.document.HistoryEditTrap;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;

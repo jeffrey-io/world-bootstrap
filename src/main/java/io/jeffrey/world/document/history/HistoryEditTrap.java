@@ -1,4 +1,4 @@
-package io.jeffrey.world.document;
+package io.jeffrey.world.document.history;
 
 import io.jeffrey.world.things.core.ThingCore;
 import io.jeffrey.zer.edits.Edit;

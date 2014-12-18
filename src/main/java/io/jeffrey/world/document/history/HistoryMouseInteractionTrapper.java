@@ -1,4 +1,4 @@
-package io.jeffrey.world.document;
+package io.jeffrey.world.document.history;
 
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;

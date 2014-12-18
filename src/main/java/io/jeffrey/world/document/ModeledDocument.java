@@ -1,5 +1,6 @@
 package io.jeffrey.world.document;
 
+import io.jeffrey.world.document.history.History;
 import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.edits.Edit;

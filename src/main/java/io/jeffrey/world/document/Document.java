@@ -54,7 +54,13 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     }
 
     public void addThing(final Thing thing) {
+        history.capture();
         things.add(thing);
+        thing.invoke("delete");
+        history.register(thing);
+        thing.invoke("undelete");
+        thing.select();
+        history.capture();
     }
 
     private HashMap<String, Object> convert2(final JsonNode node) {
@@ -75,7 +81,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
         history.capture();
         for (final Thing thing : things) {
             if (thing.selected()) {
-                thing.delete();
+                thing.invoke("delete");
             }
         }
         history.capture();
@@ -196,7 +202,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     public void save(final File file) throws Exception {
         final HashMap<String, Object> tree = new HashMap<String, Object>();
         tree.put("view", camera.pack());
-
+        tree.put("history", history.pack());
         final HashMap<String, Object> layersPacked = new HashMap<>();
         final HashMap<String, Object> metaClassesPacked = new HashMap<>();
         for (final Entry<String, MetaClass> mc : classes.entrySet()) {

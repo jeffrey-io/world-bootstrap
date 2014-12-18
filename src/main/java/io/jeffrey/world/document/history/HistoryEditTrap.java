@@ -7,7 +7,6 @@ import io.jeffrey.zer.edits.Edit;
  * When the edit changes, we capture changes
  *
  * @author jeffrey
- *
  */
 public class HistoryEditTrap extends Edit {
 

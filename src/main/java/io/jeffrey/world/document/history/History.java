@@ -4,25 +4,24 @@ import io.jeffrey.world.things.core.ThingCore;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Stack;
+import java.util.Map;
 
 /**
  * Very simple history of changes
  *
  * @author jeffrey
- *
  */
 public class History {
 
-    private final Stack<Change>          applied;
-    private final Stack<Change>          changes;
+    private final ChangeStack            applied;
+    private final ChangeStack            changes;
 
     private String                       focusOn = "";
     private final HashMap<String, Watch> watching;
 
     public History() {
-        changes = new Stack<>();
-        applied = new Stack<>();
+        applied = new ChangeStack();
+        changes = new ChangeStack();
         watching = new HashMap<String, Watch>();
     }
 
@@ -31,11 +30,11 @@ public class History {
     }
 
     public boolean canRedo() {
-        return applied.size() > 0;
+        return applied.available();
     }
 
     public boolean canUndo() {
-        return changes.size() > 0;
+        return changes.available();
     }
 
     public void capture() {
@@ -47,7 +46,9 @@ public class History {
             }
         }
         if (transitions.size() > 0) {
-            changes.push(new Change(transitions));
+            final Change change = new Change(transitions);
+            changes.push(change);
+            change.branch(applied.clearAndCopy());
         }
         watching.clear();
     }
@@ -66,12 +67,18 @@ public class History {
         watching.put(thing.id(), new Watch(thing));
     }
 
+    public Map<String, Object> pack() {
+        final HashMap<String, Object> packed = new HashMap<String, Object>();
+        packed.put("applied", applied.pack());
+        packed.put("changes", changes.pack());
+        return packed;
+    }
+
     public void redo() {
-        if (applied.size() > 0) {
+        if (applied.available()) {
             final Change c = applied.pop();
             c.redo();
             changes.push(c);
-            applied.clear(); // TODO: indicate that we are branching
         }
     }
 
@@ -83,7 +90,7 @@ public class History {
     }
 
     public void undo() {
-        if (changes.size() > 0) {
+        if (changes.available()) {
             final Change c = changes.pop();
             c.undo();
             applied.push(c);

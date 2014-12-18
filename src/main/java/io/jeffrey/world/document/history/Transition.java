@@ -8,8 +8,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * A transition on a single object
+ *
+ * @author jeffrey
+ */
 public class Transition {
-    final boolean                 keep;
+    final boolean                         keep;
     private final HashMap<String, String> redo;
     private final ThingCore               thing;
     private final HashMap<String, String> undo;
@@ -38,16 +43,6 @@ public class Transition {
         keep = undo.size() > 0 || redo.size() > 0;
     }
 
-    public Map<String, Object> pack() {
-        if (!keep)
-            return null;
-        HashMap<String, Object> packed = new HashMap<>();
-        packed.put("id", thing.id());
-        packed.put("undo", undo);
-        packed.put("redo", redo);
-        return packed;
-    }
-
     public void doRedo() {
         final Map<String, Edit> links = thing.getLinks(false);
         for (final Entry<String, String> task : redo.entrySet()) {
@@ -62,5 +57,16 @@ public class Transition {
             links.get(task.getKey()).set(task.getValue());
         }
         thing.invalidate();
+    }
+
+    public Map<String, Object> pack() {
+        if (!keep) {
+            return null;
+        }
+        final HashMap<String, Object> packed = new HashMap<>();
+        packed.put("id", thing.id());
+        packed.put("undo", undo);
+        packed.put("redo", redo);
+        return packed;
     }
 }

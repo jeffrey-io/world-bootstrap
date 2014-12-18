@@ -144,7 +144,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     /**
      * delete the element
      */
-    public void delete() {
+    protected void delete() {
         document.history.register(this);
         unselect();
         deleted.value(true);

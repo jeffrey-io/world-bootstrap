@@ -4,6 +4,11 @@ import io.jeffrey.world.things.core.ThingCore;
 
 import java.util.HashMap;
 
+/**
+ * Watch a thing by copying and it then build the transition
+ *
+ * @author jeffrey
+ */
 public class Watch {
     private final HashMap<String, String> before;
     private final ThingCore               thing;
@@ -14,6 +19,9 @@ public class Watch {
         thing.saveTo(before);
     }
 
+    /**
+     * @return convert the watch into a Transition if it makes sense
+     */
     public Transition commit() {
         final HashMap<String, String> after = new HashMap<String, String>();
         thing.saveTo(after);

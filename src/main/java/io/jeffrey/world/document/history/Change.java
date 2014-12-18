@@ -1,9 +1,14 @@
 package io.jeffrey.world.document.history;
 
+import io.jeffrey.world.things.core.ThingCore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.codehaus.jackson.JsonNode;
 
 /**
  * An atomic group change
@@ -11,7 +16,24 @@ import java.util.Set;
  * @author jeffrey
  */
 public class Change {
+    public static Change fromJsonNode(final JsonNode node, final Map<String, ThingCore> lookup) {
+        final JsonNode changesPacked = node.get("changes");
+        final JsonNode alternatePacked = node.get("alternate");
+        final Set<Transition> transitions = new HashSet<>();
+        for (int k = 0; k < changesPacked.size(); k++) {
+            transitions.add(Transition.fromJsonNode(changesPacked.get(k), lookup));
+        }
+        final Change result = new Change(transitions);
+        for (int k = 0; k < alternatePacked.size(); k++) {
+            final ChangeStack alt = new ChangeStack();
+            alt.load(alternatePacked.get(k), lookup);
+            result.branch(alt);
+        }
+        return result;
+    }
+
     private final ArrayList<ChangeStack> alternate;
+
     private final Set<Transition>        changes;
 
     public Change(final Set<Transition> changes) {

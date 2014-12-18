@@ -1,6 +1,11 @@
 package io.jeffrey.world.document.history;
 
+import io.jeffrey.world.things.core.ThingCore;
+
 import java.util.ArrayList;
+import java.util.Map;
+
+import org.codehaus.jackson.JsonNode;
 
 /**
  * This mimics the needed contract for Stack<Change> but supports random reading and packing
@@ -19,6 +24,10 @@ public class ChangeStack {
         return changes.size() > 0;
     }
 
+    public void clear() {
+        changes.clear();
+    }
+
     public ChangeStack clearAndCopy() {
         final ChangeStack copy = new ChangeStack();
         for (final Change c : changes) {
@@ -26,6 +35,16 @@ public class ChangeStack {
         }
         changes.clear();
         return copy;
+    }
+
+    public void load(final JsonNode node, final Map<String, ThingCore> lookup) {
+        if (node == null) {
+            return;
+        }
+        changes.clear();
+        for (int cK = 0; cK < node.size(); cK++) {
+            changes.add(Change.fromJsonNode(node.get(cK), lookup));
+        }
     }
 
     public ArrayList<Object> pack() {

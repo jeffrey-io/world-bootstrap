@@ -3,6 +3,7 @@ package io.jeffrey.world.document;
 import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.core.Thing;
+import io.jeffrey.world.things.core.ThingCore;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.ObjectDataMap;
@@ -143,6 +144,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
         loadLP(tree.get("layers"));
 
         final JsonNode thingsToLoad = tree.get("things");
+        final HashMap<String, ThingCore> lookup = new HashMap<String, ThingCore>();
         for (int k = 0; k < thingsToLoad.size(); k++) {
             final HashMap<String, Object> tdata = new HashMap<String, Object>();
             final JsonNode thing = thingsToLoad.get(k);
@@ -160,9 +162,12 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
                     tdata.put(key, value.asText());
                 }
             }
-            things.add(new ThingData(tdata).make(this));
-            // maybe pre-load?
+            final Thing thingToAdd = new ThingData(tdata).make(this);
+            things.add(thingToAdd);
+            System.out.println("map:" + thingToAdd.id() + " to " + thingToAdd);
+            lookup.put(thingToAdd.id(), thingToAdd);
         }
+        history.load(tree.get("history"), lookup);
     }
 
     private void loadLP(final JsonNode node) {

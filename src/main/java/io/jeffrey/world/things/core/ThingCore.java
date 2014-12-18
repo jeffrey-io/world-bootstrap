@@ -28,7 +28,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     protected double                        cy                 = 0.0;
     protected final EditBoolean             deleted;
     protected final Document                document;
-    protected final String                  id;
+    protected final EditString              id;
     protected final EditString              layer;
     protected final EditBoolean             locked;
     protected final EditString              metaclass;
@@ -52,7 +52,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     public ThingCore(final Document document, final ThingData node) {
         this.document = document;
 
-        id = node.getString("id", UUID.randomUUID().toString()).value();
+        id = node.getString("id", UUID.randomUUID().toString());
         type = node.getString("_type", null);
 
         x = node.getDouble("x", 0.0);
@@ -156,6 +156,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     @Override
     public Map<String, Edit> getLinks(final boolean withHistory) {
         final HashMap<String, Edit> links = new HashMap<>();
+        links.put("id", id);
         links.put("_type", type);
         links.put("x", x);
         links.put("y", y);
@@ -206,7 +207,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
      */
     @Override
     public String id() {
-        return id;
+        return id.value();
     }
 
     /**

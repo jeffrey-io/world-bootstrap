@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonNode;
+
 /**
  * Very simple history of changes
  *
@@ -65,6 +67,15 @@ public class History {
             capture();
         }
         watching.put(thing.id(), new Watch(thing));
+    }
+
+    public void load(final JsonNode node, final Map<String, ThingCore> lookup) {
+        applied.clear();
+        changes.clear();
+        focusOn = "";
+        watching.clear();
+        applied.load(node.get("applied"), lookup);
+        changes.load(node.get("changes"), lookup);
     }
 
     public Map<String, Object> pack() {

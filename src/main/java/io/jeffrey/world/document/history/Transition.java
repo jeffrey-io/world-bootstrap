@@ -5,8 +5,11 @@ import io.jeffrey.zer.edits.Edit;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.codehaus.jackson.JsonNode;
 
 /**
  * A transition on a single object
@@ -14,10 +17,36 @@ import java.util.Map.Entry;
  * @author jeffrey
  */
 public class Transition {
+    public static Transition fromJsonNode(final JsonNode node, final Map<String, ThingCore> lookup) {
+        final String id = node.get("id").asText();
+        System.out.println("id:" + id + " ::" + node.toString());
+        return new Transition(true, lookup.get(id), mapOf(node.get("redo")), mapOf(node.get("undo")));
+    }
+
+    private static HashMap<String, String> mapOf(final JsonNode node) {
+        final HashMap<String, String> map = new HashMap<>();
+        final Iterator<Entry<String, JsonNode>> it = node.getFields();
+        while (it.hasNext()) {
+            final Entry<String, JsonNode> entry = it.next();
+            map.put(entry.getKey(), entry.getValue().asText());
+        }
+        return map;
+    }
+
     final boolean                         keep;
     private final HashMap<String, String> redo;
+
     private final ThingCore               thing;
+
     private final HashMap<String, String> undo;
+
+    private Transition(final boolean keep, final ThingCore thing, final HashMap<String, String> redo, final HashMap<String, String> undo) {
+        System.out.println("Making:" + thing + "," + redo + "," + undo);
+        this.keep = keep;
+        this.thing = thing;
+        this.redo = redo;
+        this.undo = undo;
+    }
 
     public Transition(final ThingCore thing, final HashMap<String, String> before, final HashMap<String, String> after) {
         this.thing = thing;

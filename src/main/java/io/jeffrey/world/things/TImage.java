@@ -117,9 +117,9 @@ public class TImage extends EdgedThing {
 
         /*
          * W.set_0(rect.getWidth() / 2, -rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 4); W.set_0(rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 6);
-         *
+         * 
          * W.set_0(rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 8); W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 10);
-         *
+         * 
          * W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 12); W.set_0(-rect.getWidth() / 2, -rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 14);
          */
 

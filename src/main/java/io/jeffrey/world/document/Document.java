@@ -103,6 +103,10 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 
     @Override
     public File find(final String path) {
+        final File direct = new File(path);
+        if (direct.exists()) {
+            return direct;
+        }
         return new File(owner.path().resolve(path));
     }
 
@@ -184,7 +188,9 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 
     @Override
     public String normalize(final File input) {
-        return owner.path().relativize(input.toURI()).getPath();
+        final String result = owner.path().relativize(input.toURI()).getPath();
+        notifications.println("normalizing: ", input.getPath(), " to ", result);
+        return result;
     }
 
     public void save(final File file) throws Exception {

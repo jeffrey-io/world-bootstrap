@@ -284,7 +284,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
             cache.apply_scale();
             return true;
         }
-        if (chain.act(action, isPolygonLooped())) {
+        if (chain.act(action, isPolygonLooped(), document, this)) {
             cache.update();
             return true;
         }

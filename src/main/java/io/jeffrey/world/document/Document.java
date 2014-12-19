@@ -1,6 +1,5 @@
 package io.jeffrey.world.document;
 
-import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.WorldData;

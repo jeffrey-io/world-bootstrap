@@ -383,7 +383,7 @@ public class WorldData extends SurfaceData {
     }
 
     @Override
-    public MouseInteraction startSurfaceInteraction(final AdjustedMouseEvent event) {
+    public MouseInteraction startSurfaceInteraction(final AdjustedMouseEvent event, double width, double height) {
         document.history.capture();
         for (int k = document.getThings().size() - 1; k >= 0; k--) {
             final Thing thing = document.getThings().get(k);

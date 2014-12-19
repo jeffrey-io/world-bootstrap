@@ -41,7 +41,6 @@ public class Transition {
     private final HashMap<String, String> undo;
 
     private Transition(final boolean keep, final ThingCore thing, final HashMap<String, String> redo, final HashMap<String, String> undo) {
-        System.out.println("Making:" + thing + "," + redo + "," + undo);
         this.keep = keep;
         this.thing = thing;
         this.redo = redo;

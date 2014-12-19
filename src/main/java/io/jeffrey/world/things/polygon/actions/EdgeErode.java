@@ -30,7 +30,6 @@ public class EdgeErode {
 		for (int k = 0; k < sp.length; k++) {
 			cut[k] = false;
 		}
-		System.out.println("CUTOFF:" + cutoff);
 		int at = 0;
 		for (int k = 1; k < sp.length; k++) {
 			double dx = sp[k].x - sp[at].x;
@@ -38,7 +37,6 @@ public class EdgeErode {
 			double d = Math.sqrt(dx * dx + dy * dy);
 			if (d <= cutoff) {
 				cut[k] = true;
-				System.out.println("Cut " + k);
 			} else {
 				at = k;
 			}

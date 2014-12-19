@@ -180,7 +180,6 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 			}
 			final Thing thingToAdd = new ThingData(tdata).make(this);
 			things.add(thingToAdd);
-			System.out.println("map:" + thingToAdd.id() + " to " + thingToAdd);
 			lookup.put(thingToAdd.id(), thingToAdd);
 		}
 		history.load(tree.get("history"), lookup);

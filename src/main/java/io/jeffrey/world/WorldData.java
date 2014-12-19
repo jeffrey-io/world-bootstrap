@@ -168,8 +168,8 @@ public class WorldData extends SurfaceData {
     }
 
     @Override
-    public void draw(final GraphicsContext gc, final Camera camera) {
-        document.draw(gc, camera);
+    public void draw(final GraphicsContext gc, final Camera camera, double width, double height) {
+        document.draw(gc, camera, width, height);
     }
 
     @Override

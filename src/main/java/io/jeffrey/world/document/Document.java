@@ -1,6 +1,8 @@
 package io.jeffrey.world.document;
 
 import io.jeffrey.vector.VectorRegister2;
+import io.jeffrey.vector.VectorRegister6;
+import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.world.things.core.ThingCore;
@@ -104,7 +106,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 		history.capture();
 	}
 
-	public void draw(final GraphicsContext gc, final Camera camera) {
+	public void draw(final GraphicsContext gc, final Camera camera, double width, double height) {
 		update();
 		sort();
 		gc.save();
@@ -113,8 +115,9 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 
 		gc.translate(camera.tX, camera.tY);
 		gc.scale(camera.scale, camera.scale);
-		final VectorRegister2 seg = new VectorRegister2();
-		for (final GuideLine line : getGuideLines("_")) {
+		final VectorRegister6 seg = new VectorRegister6();
+		Collection<GuideLine> lines = getGuideLines("_");
+		for (final GuideLine line : lines) {
 			line.writeSegment(camera, seg);
 			gc.strokeLine(seg.x_0, seg.y_0, seg.x_1, seg.y_1);
 		}
@@ -122,6 +125,29 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 		for (final Thing thing : getThings()) {
 			thing.render(gc, camera);
 		}
+		double left = camera.projX(controlPointSize);
+		double top = camera.projY(controlPointSize);
+		double right = camera.projX(width-controlPointSize);
+		double bottom = camera.projY(height-controlPointSize);
+		double[] guideControls = new double[] { left, top, right, top, right,
+				bottom, left, bottom, left, top };
+		
+		gc.save();
+		for (int c = 0; c + 3 < guideControls.length; c += 2) {
+			for (final GuideLine line : lines) {
+				line.writeSegment(camera, seg);
+				seg.set_2(guideControls[c], guideControls[c + 1]);
+				seg.set_3(guideControls[c + 2], guideControls[c + 3]);
+				if(Lines.doLinesIntersect_Destructively(seg, true, true)) {
+					gc.drawImage(VERTEX_ICON,
+							-controlPointSize + camera.x(seg.x_0),
+							-controlPointSize + camera.y(seg.y_0),
+							2 * controlPointSize,
+							2 * controlPointSize);
+				}
+			}
+		}
+		gc.restore();
 	}
 
 	@Override
@@ -217,7 +243,6 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 	@Override
 	public String normalize(final File input) {
 		final String result = owner.path().relativize(input.toURI()).getPath();
-		notifications.println("normalizing: ", input.getPath(), " to ", result);
 		return result;
 	}
 

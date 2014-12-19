@@ -87,6 +87,14 @@ public class TCircle extends Thing {
         return doesContainTargetPoint(event.position.x_1, event.position.y_1);
     }
 
+    @Override
+    public  Color queryTargetColor(double x, double y) {
+    	if(doesContainTargetPoint(x, y)) {
+    		return Color.valueOf(color.getAsText());
+    	}
+    	return null;
+    }
+    
     /**
      * {@inheritDoc}
      */

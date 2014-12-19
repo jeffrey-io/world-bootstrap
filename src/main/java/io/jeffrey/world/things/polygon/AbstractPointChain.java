@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 /**
@@ -441,4 +442,12 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         cache.update();
     }
 
+    @Override
+    public  Color queryTargetColor(double x, double y) {
+    	if(doesContainTargetPoint(x, y)) {
+    		return Color.valueOf(color.getAsText());
+    	}
+    	return null;
+    }
+    
 }

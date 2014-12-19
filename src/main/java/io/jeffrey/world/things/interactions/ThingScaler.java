@@ -24,8 +24,8 @@ public class ThingScaler implements ThingInteraction {
         thing = (Thing) initial.userdata;
         sx = thing.sx();
         sy = thing.sy();
-        ix = initial.position.x_0;
-        iy = initial.position.y_0;
+        ix = initial.position.x_1;
+        iy = initial.position.y_1;
     }
 
     /**
@@ -42,8 +42,11 @@ public class ThingScaler implements ThingInteraction {
      */
     @Override
     public void moved(final AdjustedMouseEvent event) {
-        final double mx = event.position.x_0 / ix;
-        final double my = event.position.y_0 / iy;
+    	thing.sx(sx);
+    	thing.sy(sy);
+    	thing.adjustAndBindEvent(event);
+        final double mx = event.position.x_1 / ix;
+        final double my = event.position.y_1 / iy;
         double nsx = sx * mx;
         double nsy = sy * my;
         if (event.altdown || thing.aspectLocked()) {

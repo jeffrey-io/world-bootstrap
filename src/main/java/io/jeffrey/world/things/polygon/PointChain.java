@@ -2,8 +2,9 @@ package io.jeffrey.world.things.polygon;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.core.Thing;
+import io.jeffrey.world.things.polygon.actions.CleanEdges;
 import io.jeffrey.world.things.polygon.actions.ColinearReduction;
-import io.jeffrey.world.things.polygon.actions.ColorSeek;
+import io.jeffrey.world.things.polygon.actions.NormalGrowth;
 import io.jeffrey.world.things.polygon.actions.EdgeCollapseAll;
 import io.jeffrey.world.things.polygon.actions.EdgeCollapseKeepEnds;
 import io.jeffrey.world.things.polygon.actions.EdgeErode;
@@ -54,18 +55,38 @@ public class PointChain implements Iterable<SelectablePoint2> {
 	 *            the action to execute
 	 * @param asLoop
 	 *            should the chain be treated as a loop
-	 *            @param document the owning document
-	 *            @parm thing the things
+	 * @param document
+	 *            the owning document
+	 * @parm thing the things
 	 * @return true if the cache needs to be updated becauses the points where
 	 *         updated
 	 */
-	public boolean act(final String action, final boolean asLoop, Document document, Thing thing) {
+	public boolean act(final String action, final boolean asLoop,
+			Document document, Thing thing) {
 		if ("edge.colinear".equals(action)) {
 			ColinearReduction.perform(this, asLoop);
 			return true;
 		}
-		if("color.seek".equals(action)) {
-			ColorSeek.perform(thing, document, this, asLoop);
+		if ("color.seek".equals(action)) {
+			NormalGrowth.seekColor(thing, document, this, asLoop);
+			return true;
+		}
+
+		if ("normal.contract".equals(action)) {
+			NormalGrowth.contract(this, asLoop);
+			return true;
+		}
+		if ("random.normal.contract".equals(action)) {
+			NormalGrowth.contractRandomly(this, asLoop);
+			return true;
+		}
+
+		if ("normal.growth".equals(action)) {
+			NormalGrowth.expand(this, asLoop);
+			return true;
+		}
+		if ("random.normal.growth".equals(action)) {
+			NormalGrowth.expandRandomly(this, asLoop);
 			return true;
 		}
 		if ("edge.uniform".equals(action)) {
@@ -98,6 +119,10 @@ public class PointChain implements Iterable<SelectablePoint2> {
 		}
 		if ("edge.collapse.2".equals(action)) {
 			EdgeCollapseAll.perform(this, asLoop);
+			return true;
+		}
+		if ("clean.edges".equals(action)) {
+			CleanEdges.perform(this, asLoop);
 			return true;
 		}
 		return false;
@@ -166,6 +191,11 @@ public class PointChain implements Iterable<SelectablePoint2> {
 			actions.add("edge.uniform");
 			actions.add("edge.colinear");
 			actions.add("color.seek");
+			actions.add("clean.edges");
+			actions.add("normal.growth");
+			actions.add("random.normal.growth");
+			actions.add("normal.contract");
+			actions.add("random.normal.contract");
 		}
 	}
 
@@ -253,6 +283,10 @@ public class PointChain implements Iterable<SelectablePoint2> {
 		return points;
 	}
 
+	public Iterable<SelectablePoint2[]> selectedSegments(final boolean asLoop) {
+		return selectedSegments(asLoop, false);
+	}
+
 	/**
 	 * Commplex: look at all the selected points and return them as a set of
 	 * connected segment.
@@ -262,7 +296,8 @@ public class PointChain implements Iterable<SelectablePoint2> {
 	 * @return an iterable over point arrays where each point array is a chain
 	 *         of connected and selected points
 	 */
-	public Iterable<SelectablePoint2[]> selectedSegments(final boolean asLoop) {
+	public Iterable<SelectablePoint2[]> selectedSegments(final boolean asLoop,
+			boolean keepEnds) {
 		index();
 		return new Iterable<SelectablePoint2[]>() {
 			@Override
@@ -286,6 +321,12 @@ public class PointChain implements Iterable<SelectablePoint2> {
 							% points.size());
 					if (point.selected && next.selected) {
 						final ArrayList<SelectablePoint2> segment = new ArrayList<SelectablePoint2>();
+						if (keepEnds) {
+							if (k + offset > 0 || asLoop) {
+								segment.add(points.get((k + offset - 1 + points
+										.size()) % points.size()));
+							}
+						}
 						segment.add(point);
 						while (k < sz) {
 							final SelectablePoint2 middle = points.get((k
@@ -298,6 +339,13 @@ public class PointChain implements Iterable<SelectablePoint2> {
 							}
 							k++;
 						}
+						if (keepEnds) {
+							if (k < sz || asLoop) {
+								segment.add(points.get((k + offset + 1)
+										% points.size()));
+							}
+						}
+
 						all.add(segment.toArray(new SelectablePoint2[segment
 								.size()]));
 					}

@@ -6,6 +6,7 @@ import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
+import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingRotater;
 import io.jeffrey.world.things.interactions.ThingScaler;

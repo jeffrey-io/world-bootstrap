@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.core;
+package io.jeffrey.world.things.core.guides;
 
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.meta.GuideLine;

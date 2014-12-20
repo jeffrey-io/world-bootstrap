@@ -2,7 +2,7 @@ package io.jeffrey.world.things;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.core.GuideLineEnforcer;
+import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
 import io.jeffrey.zer.AdjustedMouseEvent;

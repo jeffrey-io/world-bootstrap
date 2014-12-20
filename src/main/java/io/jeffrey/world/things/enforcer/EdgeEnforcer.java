@@ -3,7 +3,7 @@ package io.jeffrey.world.things.enforcer;
 import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.things.core.EdgedThing;
-import io.jeffrey.world.things.core.GuideLineEnforcer;
+import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.meta.GuideLine;
 

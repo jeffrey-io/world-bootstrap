@@ -1,7 +1,7 @@
 package io.jeffrey.world.things.interactions;
 
-import io.jeffrey.world.things.core.GuideLineEnforcer;
 import io.jeffrey.world.things.core.ThingInteraction;
+import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.meta.GuideLine;

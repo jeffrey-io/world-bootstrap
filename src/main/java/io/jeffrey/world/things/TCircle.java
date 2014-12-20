@@ -4,7 +4,7 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
-import io.jeffrey.world.things.core.GuideLineEnforcer;
+import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.world.things.core.ThingInteraction;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;

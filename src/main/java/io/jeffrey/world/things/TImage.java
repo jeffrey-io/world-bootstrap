@@ -14,6 +14,7 @@ import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.Edit;
+import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class TImage extends EdgedThing {
 	private Image img = null;
 	private Rectangle rect = null;
 	private final EditString uri;
+	private final EditBoolean urilock;
 
 	/**
 	 * @param document
@@ -53,6 +55,7 @@ public class TImage extends EdgedThing {
 		this.sx(node.getDouble("sx", 0.25).value());
 		this.sy(node.getDouble("sy", 0.25).value());
 		uri = node.getString("uri", "");
+		urilock = node.getBoolean("urilock", false);
 		refresh();
 	}
 	
@@ -218,6 +221,7 @@ public class TImage extends EdgedThing {
 	@Override
 	protected void populateLinks(final HashMap<String, Edit> links) {
 		links.put("uri", uri);
+		links.put("urilock", urilock);
 	}
 
 	/**

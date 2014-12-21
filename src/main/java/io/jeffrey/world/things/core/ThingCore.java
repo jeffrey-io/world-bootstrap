@@ -43,6 +43,12 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     protected final EditDouble              x;
     protected final EditDouble              y;
 
+    protected final EditBoolean             locklock;
+    protected final EditBoolean             lockmeta;
+    protected final EditBoolean             nometa;
+    protected final EditBoolean lockcolor;
+    protected final EditBoolean layerlock;
+    
     /**
      * @param document
      *            the owning document
@@ -76,7 +82,13 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
         slock = node.getBoolean("slock", false);
         alock = node.getBoolean("alock", false);
         aspect = node.getBoolean("aspect", true);
-
+        
+        locklock = node.getBoolean("locklock", false);
+        lockmeta = node.getBoolean("lockmeta", false);
+        nometa = node.getBoolean("nometa", false);
+        lockcolor = node.getBoolean("lockcolor", false);
+        layerlock = node.getBoolean("layerlock", false);
+        
         for (final String key : node.fields.keySet()) {
             if (key.startsWith("metadata_")) {
                 metadata.put(key.substring(9), node.getString(key, null));
@@ -176,9 +188,15 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
         links.put("alock", alock);
         links.put("aspect", aspect);
 
+        links.put("locklock", locklock);
+        links.put("lockmeta", lockmeta);
+        links.put("nometa", nometa);
+        
         if (supportsColor()) {
             links.put("color", color);
+            links.put("lockcolor", lockcolor);
         }
+        links.put("layerlock", layerlock);
         links.put("metaclass", metaclass);
         for (final Entry<String, EditString> e : metadata.entrySet()) {
             links.put("metadata_" + e.getKey(), e.getValue());

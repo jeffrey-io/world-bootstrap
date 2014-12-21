@@ -133,7 +133,13 @@ public class WorldData extends SurfaceData {
 							"unable to add image:", file.toString());
 					return;
 				}
+				if(!file.isFile())
+					return;
+				if(!file.exists())
+					return;
 				data.fields.put("uri", document.normalize(file));
+			} else {
+				return;
 			}
 		}
 
@@ -177,7 +183,10 @@ public class WorldData extends SurfaceData {
 	@Override
 	public void draw(final GraphicsContext gc, final Camera camera,
 			double width, double height) {
-		document.draw(gc, camera, width, height);
+		String layerId = "";
+		LayerProperties lp = getActiveLayer();
+		if(lp != null) layerId = lp.id();
+		document.draw(gc, camera, width, height, layerId);
 	}
 
 	@Override
@@ -414,7 +423,10 @@ public class WorldData extends SurfaceData {
 		double top = camera.projY(document.controlPointSize);
 		double right = camera.projX(width - document.controlPointSize);
 		double bottom = camera.projY(height - document.controlPointSize);
-		Collection<GuideLine> lines = document.getGuideLines("_");
+		String layerId = "";
+		LayerProperties lp = getActiveLayer();
+		if(lp != null) layerId = lp.id();
+		Collection<GuideLine> lines = document.getGuideLines(layerId);
 		Picker picker = new Picker(left, right, top, bottom);
 
 		MouseInteraction lineIt = null;

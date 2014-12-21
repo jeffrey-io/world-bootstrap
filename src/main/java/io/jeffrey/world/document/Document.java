@@ -105,7 +105,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 		history.capture();
 	}
 
-	public void draw(final GraphicsContext gc, final Camera camera, double width, double height) {
+	public void draw(final GraphicsContext gc, final Camera camera, double width, double height, String activeLayer) {
 		update();
 		sort();
 		gc.save();
@@ -115,7 +115,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 		gc.translate(camera.tX, camera.tY);
 		gc.scale(camera.scale, camera.scale);
 		final VectorRegister6 seg = new VectorRegister6();
-		Collection<GuideLine> lines = getGuideLines("_");
+		Collection<GuideLine> lines = getGuideLines(activeLayer);
 		for (final GuideLine line : lines) {
 			line.writeSegment(camera, seg);
 			gc.strokeLine(seg.x_0, seg.y_0, seg.x_1, seg.y_1);

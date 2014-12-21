@@ -2,7 +2,6 @@ package io.jeffrey.world.things.core.guides;
 
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
-import io.jeffrey.world.document.Document;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.meta.GuideLine;

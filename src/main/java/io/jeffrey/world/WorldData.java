@@ -142,6 +142,17 @@ public class WorldData extends SurfaceData {
 				return;
 			}
 		}
+		
+		if(data == null) {
+			Map<String, String> temp = document.templates.get(type);
+			data = document.newData(temp.get("_type"));
+			for(Entry<String, String> en : temp.entrySet()) {
+				data.fields.put(en.getKey(), en.getValue());
+			}
+			data.fields.put("x", at_x);
+			data.fields.put("y", at_y);
+			data.fields.put("locklock", "true");
+		}
 
 		if (data != null) {
 			document.addThing(data.make(document));
@@ -260,6 +271,9 @@ public class WorldData extends SurfaceData {
 		adds.add("Hexagon");
 		adds.add("Path");
 		adds.add("Connector");
+		for(String template : document.templates.keySet()) {
+			adds.add(template);
+		}
 		return adds;
 	}
 

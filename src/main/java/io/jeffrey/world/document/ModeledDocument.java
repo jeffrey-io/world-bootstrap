@@ -33,6 +33,8 @@ public class ModeledDocument implements Model {
 
     public final Notifications                   notifications;
     protected final ArrayList<Thing>             things;
+    
+    public final Map<String, Map<String,String>> templates;
 
     public ModeledDocument() {
         history = new History();
@@ -43,6 +45,7 @@ public class ModeledDocument implements Model {
         classes.put("_", new MetaClass("_", "Default"));
         cachedModel = new HashMap<String, Map<String, Edit>>();
         notifications = new Notifications();
+        this.templates = new HashMap<String, Map<String,String>>();
     }
 
     /**

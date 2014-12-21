@@ -15,12 +15,15 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SelectionWindow;
+import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.GuideLine;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -216,6 +219,9 @@ public abstract class Thing extends ThingCore {
 		if (selected()) {
 			actions.add("unselect");
 		}
+		if(!locklock.value()) {
+			actions.add("templatize");
+		}
 		describePossibleActions(actions);
 		return actions;
 	}
@@ -304,6 +310,14 @@ public abstract class Thing extends ThingCore {
 		}
 		if ("unselect".equals(action)) {
 			unselect();
+			return true;
+		}
+		if ("templatize".equals(action)) {
+			HashMap<String, String> template = new HashMap<String, String>();
+			for (Entry<String, Edit> link : getLinks(false).entrySet()) {
+				template.put(link.getKey(), link.getValue().getAsText());
+			}
+			document.templates.put(name.getAsText(), template);
 			return true;
 		}
 		return executeAction(action);

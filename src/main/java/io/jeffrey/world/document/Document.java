@@ -43,7 +43,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 	public final Image SCALE_ICON;
 	public final Image VERTEX_ICON;
 	public final Image VERTEX_ICON_SELECTED;
-
+	
 	public Color query(double x, double y, Thing skip) {
 		for (Thing thing : things) {
 			if (thing == skip)

@@ -12,6 +12,11 @@ public class SelectablePoint2 {
     public int     cachedIndex;
 
     /**
+     * was the point already selected
+     */
+    public boolean alreadySelected = false;
+    
+    /**
      * is the point selected
      */
     public boolean selected = false;

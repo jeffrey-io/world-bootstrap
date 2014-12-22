@@ -452,6 +452,14 @@ public class WorldData extends SurfaceData {
 		}
 		return lineIt;
 	}
+	
+	@Override
+	public void initiateSelectionWindow() {
+		System.out.println("INIT");
+		for (final Thing thing : document.getThings()) {
+			thing.preSelectionWindow();
+		}
+	}
 
 	@Override
 	public void updateSelectionWindow(final SelectionWindow window) {

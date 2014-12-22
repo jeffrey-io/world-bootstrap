@@ -10,6 +10,7 @@ import io.jeffrey.world.things.core.ThingInteraction;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
+import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.edits.Edit;
 
 import java.util.ArrayList;
@@ -55,6 +56,13 @@ public class TCircle extends Thing {
         doodads.add(new ControlDoodad(Type.Scale, -0.7, -0.7));
         this.doodads = doodads.toArray(new ControlDoodad[doodads.size()]);
     }
+	
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	protected void cacheSelection() {
+	}
 
     /**
      * {@inheritDoc}
@@ -134,7 +142,7 @@ public class TCircle extends Thing {
      * {@inheritDoc}
      */
     @Override
-    protected boolean intersect(final Polygon p) {
+    protected boolean selectionIntersect(Polygon p, Mode mode) {
         return Shape.intersect(CIRCLE, p).getBoundsInLocal().getWidth() > 0;
     }
 

@@ -13,6 +13,7 @@ import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.ImageCache;
+import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
@@ -195,7 +196,7 @@ public class TImage extends EdgedThing {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected boolean intersect(final Polygon p) {
+	protected boolean selectionIntersect(Polygon p, Mode mode) {
 		refresh();
 		return Shape.intersect(rect, p).getBoundsInLocal().getWidth() > 0;
 	}
@@ -285,5 +286,12 @@ public class TImage extends EdgedThing {
 				-rect.getHeight() / 2);
 		doodads[7] = new ControlDoodad(Type.Scale, rect.getWidth() / 2,
 				rect.getHeight() / 2);
+	}
+	
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	protected void cacheSelection() {
 	}
 }

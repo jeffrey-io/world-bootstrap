@@ -15,6 +15,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SelectionWindow;
+import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.GuideLine;
 
@@ -114,6 +115,15 @@ public abstract class Thing extends ThingCore {
 		writeToTarget(event.position);
 		event.userdata = this;
 	}
+	
+	private boolean alreadySelected = false;
+	
+	protected abstract void cacheSelection();
+	
+	public void preSelectionWindow() {
+		alreadySelected = selected.value();
+		cacheSelection();
+	}
 
 	/**
 	 * take the given selection window and test whether or not it intersects the
@@ -135,10 +145,11 @@ public abstract class Thing extends ThingCore {
 			adjusted[k + 1] = scratch.y_1;
 		}
 		final Polygon polygon = new Polygon(adjusted);
-		final boolean touches = intersect(polygon);
-		if (touches) {
+		final boolean touches = selectionIntersect(polygon, window.mode);
+		final boolean shouldSelect = window.mode.selected(alreadySelected, touches);
+		if (shouldSelect) {
 			selected.value(true);
-		} else {
+		} else {		
 			unselect();
 		}
 	}
@@ -265,7 +276,7 @@ public abstract class Thing extends ThingCore {
 	 * @param p
 	 * @return does the given polygon intersect this thing
 	 */
-	protected abstract boolean intersect(Polygon p);
+	protected abstract boolean selectionIntersect(Polygon p, Mode mode);
 
 	@Override
 	public Object invoke(final String action) {

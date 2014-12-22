@@ -11,6 +11,7 @@ import io.jeffrey.world.things.core.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Syncable;
+import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.edits.AbstractEditList;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditBoolean;
@@ -306,9 +307,10 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
      * {@inheritDoc}
      */
     @Override
-    protected boolean intersect(final Polygon p) {
+    protected boolean selectionIntersect(Polygon p, Mode mode) {
         boolean doUpdate = false;
         boolean isSelected = doesPolygonIntersect(p);
+        boolean anySelected = false;
         for (final SelectablePoint2 point : chain) {
             final boolean old = point.selected;
             if (p.contains(point.x, point.y)) {
@@ -317,12 +319,19 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
             } else {
                 point.selected = false;
             }
+            point.selected = mode.selected(point.alreadySelected, point.selected);
             if (old != point.selected) {
                 doUpdate = true;
+            }
+            if(point.selected) {
+            	anySelected = true;
             }
         }
         if (doUpdate) {
             cache.update();
+        }
+        if(mode == Mode.Subtract && anySelected) {
+        	return false;
         }
         return isSelected;
     }
@@ -449,5 +458,15 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     	}
     	return null;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	protected void cacheSelection() {
+		for(SelectablePoint2 point : chain) {
+			point.alreadySelected = point.selected;
+		}
+	}
     
 }

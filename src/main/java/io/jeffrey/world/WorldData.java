@@ -455,7 +455,6 @@ public class WorldData extends SurfaceData {
 	
 	@Override
 	public void initiateSelectionWindow() {
-		System.out.println("INIT");
 		for (final Thing thing : document.getThings()) {
 			thing.preSelectionWindow();
 		}

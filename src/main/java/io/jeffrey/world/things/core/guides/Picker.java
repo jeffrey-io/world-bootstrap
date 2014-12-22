@@ -43,8 +43,6 @@ public class Picker {
 		}
 
 		if (found) {
-
-			System.out.println("Found: " + writeAt);
 			for (PickState state : guideSelectBuffer) {
 				if (!state.selected) {
 					return new Updator(line, state.x, state.y);

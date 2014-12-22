@@ -19,7 +19,6 @@ import org.codehaus.jackson.JsonNode;
 public class Transition {
     public static Transition fromJsonNode(final JsonNode node, final Map<String, ThingCore> lookup) {
         final String id = node.get("id").asText();
-        System.out.println("id:" + id + " ::" + node.toString());
         return new Transition(true, lookup.get(id), mapOf(node.get("redo")), mapOf(node.get("undo")));
     }
 

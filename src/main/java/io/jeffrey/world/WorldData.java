@@ -46,7 +46,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class WorldData extends SurfaceData {
 	private final Camera camera;
-	private final Document document;
+	public final Document document;
 
 	private File file;
 

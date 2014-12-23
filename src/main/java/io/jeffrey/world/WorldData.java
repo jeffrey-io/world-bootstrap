@@ -1,5 +1,6 @@
 package io.jeffrey.world;
 
+import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryMouseInteractionTrapper;
@@ -219,6 +220,13 @@ public class WorldData extends SurfaceData {
 				} else {
 					thing.select();
 				}
+			}
+		}
+		boolean onlySelected = action == SurfaceAction.ZoomSelection;
+		if (action == SurfaceAction.ZoomAll || onlySelected) {
+			VectorRegister2 bounds = new VectorRegister2();
+			if (document.populateBounds(bounds, onlySelected) > 0) {
+				camera.zoom(bounds, context);
 			}
 		}
 		if (action == SurfaceAction.Copy) {

@@ -1,8 +1,10 @@
 package io.jeffrey.world.document;
 
+import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.WorldData;
+import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.world.things.core.ThingCore;
 import io.jeffrey.zer.Camera;
@@ -43,7 +45,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 	public final Image SCALE_ICON;
 	public final Image VERTEX_ICON;
 	public final Image VERTEX_ICON_SELECTED;
-	
+
 	public Color query(double x, double y, Thing skip) {
 		for (Thing thing : things) {
 			if (thing == skip)
@@ -53,6 +55,29 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 				return color;
 		}
 		return null;
+	}
+
+	public int populateBounds(VectorRegister2 reg, boolean onlySelected) {
+		int n = 0;
+		for (Thing thing : things) {
+			if (thing.deleted())
+				continue;
+			if (!thing.selected() && onlySelected)
+				continue;
+			for (ControlDoodad doodad : thing.getDoodadsInWorldSpace()) {
+				if (n == 0) {
+					reg.set_0(doodad.u, doodad.v);
+					reg.set_1(doodad.u, doodad.v);
+				}
+				reg.x_0 = Math.min(reg.x_0, doodad.u);
+				reg.x_1 = Math.max(reg.x_1, doodad.u);
+
+				reg.y_0 = Math.min(reg.y_0, doodad.v);
+				reg.y_1 = Math.max(reg.y_1, doodad.v);
+				n++;
+			}
+		}
+		return n;
 	}
 
 	public Document(final Camera camera, final WorldData owner) {
@@ -105,7 +130,8 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 		history.capture();
 	}
 
-	public void draw(final GraphicsContext gc, final Camera camera, double width, double height, String activeLayer) {
+	public void draw(final GraphicsContext gc, final Camera camera,
+			double width, double height, String activeLayer) {
 		update();
 		sort();
 		gc.save();
@@ -126,23 +152,22 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 		}
 		double left = camera.projX(controlPointSize);
 		double top = camera.projY(controlPointSize);
-		double right = camera.projX(width-controlPointSize);
-		double bottom = camera.projY(height-controlPointSize);
+		double right = camera.projX(width - controlPointSize);
+		double bottom = camera.projY(height - controlPointSize);
 		double[] guideControls = new double[] { left, top, right, top, right,
 				bottom, left, bottom, left, top };
-		
+
 		gc.save();
 		for (int c = 0; c + 3 < guideControls.length; c += 2) {
 			for (final GuideLine line : lines) {
 				line.writeSegment(camera, seg);
 				seg.set_2(guideControls[c], guideControls[c + 1]);
 				seg.set_3(guideControls[c + 2], guideControls[c + 3]);
-				if(Lines.doLinesIntersect_Destructively(seg, true, true)) {
+				if (Lines.doLinesIntersect_Destructively(seg, true, true)) {
 					gc.drawImage(VERTEX_ICON,
 							-controlPointSize + camera.x(seg.x_0),
 							-controlPointSize + camera.y(seg.y_0),
-							2 * controlPointSize,
-							2 * controlPointSize);
+							2 * controlPointSize, 2 * controlPointSize);
 				}
 			}
 		}

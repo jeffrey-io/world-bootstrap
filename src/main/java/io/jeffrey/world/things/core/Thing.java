@@ -545,6 +545,11 @@ public abstract class Thing extends ThingCore {
 		reg.x_1 /= sx.value();
 		reg.y_1 /= sy.value();
 	}
+	
+	public boolean deleted() {
+		return deleted.value();
+	}
+	
 
 	/**
 	 * convert the given (_x,_y) at vector 0 in thing/target space into world

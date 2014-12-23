@@ -6,8 +6,6 @@ import io.jeffrey.world.things.polygon.PointAddition;
 import io.jeffrey.world.things.polygon.PointChain;
 import io.jeffrey.world.things.polygon.SelectablePoint2;
 
-import java.util.Random;
-
 public class CleanEdges {
 	/**
 	 * @param chain

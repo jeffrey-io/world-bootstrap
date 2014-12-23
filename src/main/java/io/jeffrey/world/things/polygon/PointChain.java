@@ -4,6 +4,7 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.world.things.polygon.actions.CleanEdges;
 import io.jeffrey.world.things.polygon.actions.ColinearReduction;
+import io.jeffrey.world.things.polygon.actions.DeleteVertices;
 import io.jeffrey.world.things.polygon.actions.NormalGrowth;
 import io.jeffrey.world.things.polygon.actions.EdgeCollapseAll;
 import io.jeffrey.world.things.polygon.actions.EdgeCollapseKeepEnds;
@@ -11,6 +12,7 @@ import io.jeffrey.world.things.polygon.actions.EdgeErode;
 import io.jeffrey.world.things.polygon.actions.EdgeSplit;
 import io.jeffrey.world.things.polygon.actions.FractureSplit;
 import io.jeffrey.world.things.polygon.actions.SmoothSplit;
+import io.jeffrey.world.things.polygon.actions.Springize;
 import io.jeffrey.world.things.polygon.actions.UniformEdgeSplit;
 
 import java.util.ArrayList;
@@ -125,6 +127,14 @@ public class PointChain implements Iterable<SelectablePoint2> {
 			CleanEdges.perform(this, asLoop);
 			return true;
 		}
+		if("delete.vertices".equals(action)) {
+			DeleteVertices.perform(this, asLoop);
+			return true;
+		}
+		if("springize".equals(action)) {
+			Springize.perform(this, asLoop);
+			return true;
+		}
 		return false;
 	}
 
@@ -172,10 +182,14 @@ public class PointChain implements Iterable<SelectablePoint2> {
 		boolean canSplit = false;
 		final int n = points.size();
 		final int m = asLoop ? n : n - 1;
+		boolean canDeleteVertices = false;
 		for (int k = 0; k < m && !canSplit; k++) {
 			final SelectablePoint2 p1 = points.get(k);
 			final SelectablePoint2 p2 = k + 1 < n ? points.get(k + 1) : points
 					.get(0);
+			if(p1.selected || p2.selected) {
+				canDeleteVertices = true;
+			}
 			if (p1.selected && p2.selected) {
 				canSplit = true;
 			}
@@ -196,6 +210,10 @@ public class PointChain implements Iterable<SelectablePoint2> {
 			actions.add("random.normal.growth");
 			actions.add("normal.contract");
 			actions.add("random.normal.contract");
+			actions.add("springize");
+		}
+		if(canDeleteVertices) {
+			actions.add("delete.vertices");
 		}
 	}
 

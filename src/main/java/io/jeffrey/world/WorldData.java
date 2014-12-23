@@ -13,6 +13,7 @@ import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SetMover;
+import io.jeffrey.zer.SurfaceContext;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.ZERStage;
 import io.jeffrey.zer.meta.GuideLine;
@@ -77,8 +78,10 @@ public class WorldData extends SurfaceData {
 	}
 
 	@Override
-	public void add(final String type, final double at_x, final double at_y) {
+	public void add(final String type, SurfaceContext context) {
 		ThingData data = null;
+		final double at_x = context.cursor_x;
+		final double at_y = context.cursor_y;
 		if ("Circle".equals(type)) {
 			data = document.newData("circle");
 			data.fields.put("x", at_x);
@@ -192,17 +195,18 @@ public class WorldData extends SurfaceData {
 	}
 
 	@Override
-	public void draw(final GraphicsContext gc, final Camera camera,
-			double width, double height) {
+	public void draw(final GraphicsContext gc, final SurfaceContext context) {
 		String layerId = "";
 		LayerProperties lp = getActiveLayer();
 		if(lp != null) layerId = lp.id();
-		document.draw(gc, camera, width, height, layerId);
+		document.draw(gc, camera, context.width, context.height, layerId);
 	}
 
 	@Override
-	public void execute(final SurfaceAction action, final double at_x,
-			final double at_y) throws Exception {
+	public void execute(final SurfaceAction action, final SurfaceContext context) throws Exception {
+
+		final double at_x = context.cursor_x;
+		final double at_y = context.cursor_y;
 		if (action == SurfaceAction.SelectAll) {
 			for (final Thing thing : document.getThings()) {
 				thing.select();

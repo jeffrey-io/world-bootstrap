@@ -1,5 +1,7 @@
 package io.jeffrey.world;
 
+import io.jeffrey.zer.SurfaceContext;
+
 import java.io.File;
 
 import javax.imageio.ImageIO;
@@ -28,9 +30,13 @@ public class Iconify extends Application {
 		canvas.setHeight(96);
 
 		WorldData data = new WorldData();
+		SurfaceContext context = new SurfaceContext(data.document.camera);
 		GraphicsContext ctx = canvas.getGraphicsContext2D();
-		data.add("Circle", 0, 0);
-		data.draw(ctx, data.document.camera, 96, 96);
+		context.width = 96;
+		context.height = 96;
+
+		data.add("Circle", context);
+		data.draw(ctx, context);
 
 		SnapshotParameters sp = new SnapshotParameters();
 		sp.setFill(Color.TRANSPARENT);

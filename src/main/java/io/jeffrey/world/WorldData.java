@@ -10,6 +10,7 @@ import io.jeffrey.world.things.polygon.PointChain;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.Editable;
+import io.jeffrey.zer.IconResolver;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.SelectionWindow;
@@ -52,10 +53,18 @@ public class WorldData extends SurfaceData {
 
 	private File file;
 
+	private IconResolver resolver;
+	
 	public WorldData() {
 		camera = new Camera();
 		document = new Document(camera, this);
 		file = null;
+		resolver = new Iconify(this);
+	}
+	
+	@Override
+	public IconResolver getIconResolver() {
+		return resolver;
 	}
 
 	/**

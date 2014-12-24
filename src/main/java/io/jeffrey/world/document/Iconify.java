@@ -1,5 +1,6 @@
-package io.jeffrey.world;
+package io.jeffrey.world.document;
 
+import io.jeffrey.world.WorldData;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.IconResolver;
 import io.jeffrey.zer.SurfaceContext;

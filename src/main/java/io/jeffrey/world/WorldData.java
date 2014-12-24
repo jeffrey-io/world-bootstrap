@@ -2,6 +2,7 @@ package io.jeffrey.world;
 
 import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.world.document.Document;
+import io.jeffrey.world.document.Iconify;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryMouseInteractionTrapper;
 import io.jeffrey.world.things.core.Thing;
@@ -441,7 +442,7 @@ public class WorldData extends SurfaceData {
 
 	@Override
 	public MouseInteraction startSurfaceInteraction(
-			final AdjustedMouseEvent event, double width, double height) {
+			final AdjustedMouseEvent event, SurfaceContext context) {
 		document.history.capture();
 		for (int k = document.getThings().size() - 1; k >= 0; k--) {
 			final Thing thing = document.getThings().get(k);
@@ -456,8 +457,8 @@ public class WorldData extends SurfaceData {
 		}
 		double left = camera.projX(document.controlPointSize);
 		double top = camera.projY(document.controlPointSize);
-		double right = camera.projX(width - document.controlPointSize);
-		double bottom = camera.projY(height - document.controlPointSize);
+		double right = camera.projX(context.width - document.controlPointSize);
+		double bottom = camera.projY(context.height - document.controlPointSize);
 		String layerId = "";
 		LayerProperties lp = getActiveLayer();
 		if(lp != null) layerId = lp.id();

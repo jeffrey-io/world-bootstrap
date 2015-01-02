@@ -23,24 +23,12 @@ import java.util.Map.Entry;
  *
  */
 public class ThingEditor {
-	private static final String[] booleans = new String[] { "vlock", "slock",
-			"alock", "aspect", "locked", "deleted", "selected", "urilock",
-			"lockmeta", "nometa", "lockcolor", "layerlock" };
+    private static final String[] booleans = new String[] { "vlock", "slock", "alock", "aspect", "locked", "deleted", "selected", "urilock", "lockmeta", "nometa", "lockcolor", "layerlock" };
 
-	private static boolean isNotLocked(Map<String, Edit> fields, String name) {
-		Edit f = fields.get(name);
-		if (f == null)
-			return true;
-		String v = f.getAsText();
-		if ("yes".equals(v))
-			return false;
-		return true;
-	}
-
-	/**
-	 * build the user interface to the side editor
-	 */
-	public static void buildUserInterface(final Document document, final SurfaceData data, final Editable editable, final SurfaceItemEditorBuilder builder, final Syncable parent) {
+    /**
+     * build the user interface to the side editor
+     */
+    public static void buildUserInterface(final Document document, final SurfaceData data, final Editable editable, final SurfaceItemEditorBuilder builder, final Syncable parent) {
         final Map<String, Edit> fields = editable.getLinks(true);
 
         if (containAll(fields, "name")) {
@@ -67,12 +55,11 @@ public class ThingEditor {
 
         if (containAll(fields, "layer", "order")) {
             builder.startBorder("Layer");
-			if (isNotLocked(fields, "layerlock")) {
-				builder.addCombo(true, "Layer", fields.get("layer"),
-						data.getLayers(), LayerPropertiesEditor.class, parent);
-			}
-			final SurfaceFourColumnGrid al = builder.startFourColumnGrid();
-			al.add("Order", fields.get("order"));
+            if (isNotLocked(fields, "layerlock")) {
+                builder.addCombo(true, "Layer", fields.get("layer"), data.getLayers(), LayerPropertiesEditor.class, parent);
+            }
+            final SurfaceFourColumnGrid al = builder.startFourColumnGrid();
+            al.add("Order", fields.get("order"));
             builder.endBorder();
         }
 
@@ -82,100 +69,109 @@ public class ThingEditor {
             builder.endBorder();
         }
 
-		if (isNotLocked(fields, "urilock")) {
-			if (containAll(fields, "uri")) {
-				builder.startBorder("Image Properties");
-				builder.addFile("Choose Image", "URI", fields.get("uri"),
-						document);
-				builder.endBorder();
-			}
-		}
-
-		if (isNotLocked(fields, "locklock")) {
-			builder.startBorder("Properties");
-			for (final String boolName : booleans) {
-				final Edit boolEdit = fields.get(boolName);
-				if (boolEdit != null) {
-					builder.addBoolean(boolEdit.name(), 
-							new Edit() {
-								
-								@Override
-								protected boolean setByText(String txt) {
-									String old = boolEdit.getAsText();
-									boolean result = boolEdit.set(txt);
-									if(!old.equals(txt)) {
-										parent.sync();
-									}
-									return result;
-								}
-								
-								@Override
-								public String name() {
-									return boolEdit.name();
-								}
-								
-								@Override
-								public String getAsText() {
-									return boolEdit.getAsText();
-								}
-							});
-				}
-			}
-			builder.endBorder();
-		}
-
-		if (fields.containsKey("from") && fields.containsKey("to")) {
-			builder.startBorder("Connectivity");
-			final SurfaceFourColumnGrid pg = builder.startFourColumnGrid();
-			pg.add("From", fields.get("from"), "To", fields.get("to"));
-			builder.endBorder();
-		}
-
-		if (isNotLocked(fields, "vlock")) {
-			if (fields.containsKey("points")) {
-				builder.startBorder("Vertices");
-				final Edit ed = fields.get("points");
-				final SurfaceFourColumnGrid al = builder.startFourColumnGrid();
-				if (ed instanceof AbstractEditList) {
-					final ArrayList<Edit> coords = ((AbstractEditList) ed).edits;
-					for (int k = 0; k + 1 < coords.size(); k += 2) {
-						final Edit _X = coords.get(k);
-						final Edit _Y = coords.get(k + 1);
-						al.add("X" + _X.name(), _X, "Y" + _Y.name(), _Y);
-					}
-				}
-				builder.endBorder();
-			}
-		}
-
-		if(isNotLocked(fields, "nometa")) {
-        if (fields.containsKey("metaclass")) {
-            builder.startBorder("Meta Data");
-            if(isNotLocked(fields, "lockmeta")) {
-                    builder.addCombo(true, "Meta Class", fields.get("metaclass"), data.getMetaClasses(), MetaClassEditor.class, parent);
+        if (isNotLocked(fields, "urilock")) {
+            if (containAll(fields, "uri")) {
+                builder.startBorder("Image Properties");
+                builder.addFile("Choose Image", "URI", fields.get("uri"), document);
+                builder.endBorder();
             }
-            final MetaClass cls = data.getMetaClasses().get(fields.get("metaclass").getAsText());
-            if (cls != null) {
-                final SurfaceFourColumnGrid al = builder.startFourColumnGrid();
-                for (final Entry<String, String> field : cls.fields.entrySet()) {
-                    al.add(field.getKey(), editable.metadataOf(field.getKey(), field.getValue()));
+        }
+
+        if (isNotLocked(fields, "locklock")) {
+            builder.startBorder("Properties");
+            for (final String boolName : booleans) {
+                final Edit boolEdit = fields.get(boolName);
+                if (boolEdit != null) {
+                    builder.addBoolean(boolEdit.name(), new Edit() {
+
+                        @Override
+                        public String getAsText() {
+                            return boolEdit.getAsText();
+                        }
+
+                        @Override
+                        public String name() {
+                            return boolEdit.name();
+                        }
+
+                        @Override
+                        protected boolean setByText(final String txt) {
+                            final String old = boolEdit.getAsText();
+                            final boolean result = boolEdit.set(txt);
+                            if (!old.equals(txt)) {
+                                parent.sync();
+                            }
+                            return result;
+                        }
+                    });
                 }
             }
             builder.endBorder();
         }
-		}
+
+        if (fields.containsKey("from") && fields.containsKey("to")) {
+            builder.startBorder("Connectivity");
+            final SurfaceFourColumnGrid pg = builder.startFourColumnGrid();
+            pg.add("From", fields.get("from"), "To", fields.get("to"));
+            builder.endBorder();
+        }
+
+        if (isNotLocked(fields, "vlock")) {
+            if (fields.containsKey("points")) {
+                builder.startBorder("Vertices");
+                final Edit ed = fields.get("points");
+                final SurfaceFourColumnGrid al = builder.startFourColumnGrid();
+                if (ed instanceof AbstractEditList) {
+                    final ArrayList<Edit> coords = ((AbstractEditList) ed).edits;
+                    for (int k = 0; k + 1 < coords.size(); k += 2) {
+                        final Edit _X = coords.get(k);
+                        final Edit _Y = coords.get(k + 1);
+                        al.add("X" + _X.name(), _X, "Y" + _Y.name(), _Y);
+                    }
+                }
+                builder.endBorder();
+            }
+        }
+
+        if (isNotLocked(fields, "nometa")) {
+            if (fields.containsKey("metaclass")) {
+                builder.startBorder("Meta Data");
+                if (isNotLocked(fields, "lockmeta")) {
+                    builder.addCombo(true, "Meta Class", fields.get("metaclass"), data.getMetaClasses(), MetaClassEditor.class, parent);
+                }
+                final MetaClass cls = data.getMetaClasses().get(fields.get("metaclass").getAsText());
+                if (cls != null) {
+                    final SurfaceFourColumnGrid al = builder.startFourColumnGrid();
+                    for (final Entry<String, String> field : cls.fields.entrySet()) {
+                        al.add(field.getKey(), editable.metadataOf(field.getKey(), field.getValue()));
+                    }
+                }
+                builder.endBorder();
+            }
+        }
     }
 
-	/**
-	 * Do the given fields contain all the fields that we need to exist
-	 */
-	private static boolean containAll(final Map<String, Edit> fields,
-			final String... fieldsThatMustExist) {
-		for (final String field : fieldsThatMustExist) {
-			if (!fields.containsKey(field)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    /**
+     * Do the given fields contain all the fields that we need to exist
+     */
+    private static boolean containAll(final Map<String, Edit> fields, final String... fieldsThatMustExist) {
+        for (final String field : fieldsThatMustExist) {
+            if (!fields.containsKey(field)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isNotLocked(final Map<String, Edit> fields, final String name) {
+        final Edit f = fields.get(name);
+        if (f == null) {
+            return true;
+        }
+        final String v = f.getAsText();
+        if ("yes".equals(v)) {
+            return false;
+        }
+        return true;
+    }
 }

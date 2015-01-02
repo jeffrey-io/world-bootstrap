@@ -4,9 +4,9 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
-import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.world.things.core.ThingInteraction;
+import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
@@ -56,13 +56,13 @@ public class TCircle extends Thing {
         doodads.add(new ControlDoodad(Type.Scale, -0.7, -0.7));
         this.doodads = doodads.toArray(new ControlDoodad[doodads.size()]);
     }
-	
+
     /**
      * {@inheritDoc}
      */
-	@Override
-	protected void cacheSelection() {
-	}
+    @Override
+    protected void cacheSelection() {
+    }
 
     /**
      * {@inheritDoc}
@@ -95,14 +95,6 @@ public class TCircle extends Thing {
         return doesContainTargetPoint(event.position.x_1, event.position.y_1);
     }
 
-    @Override
-    public  Color queryTargetColor(double x, double y) {
-    	if(doesContainTargetPoint(x, y)) {
-    		return Color.valueOf(color.getAsText());
-    	}
-    	return null;
-    }
-    
     /**
      * {@inheritDoc}
      */
@@ -138,14 +130,6 @@ public class TCircle extends Thing {
         return new OriginEnforcer(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean selectionIntersect(Polygon p, Mode mode) {
-        return Shape.intersect(CIRCLE, p).getBoundsInLocal().getWidth() > 0;
-    }
-
     @Override
     public void invalidate() {
     }
@@ -163,6 +147,22 @@ public class TCircle extends Thing {
      */
     @Override
     protected void populateLinks(final HashMap<String, Edit> links) {
+    }
+
+    @Override
+    public Color queryTargetColor(final double x, final double y) {
+        if (doesContainTargetPoint(x, y)) {
+            return Color.valueOf(color.getAsText());
+        }
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean selectionIntersect(final Polygon p, final Mode mode) {
+        return Shape.intersect(CIRCLE, p).getBoundsInLocal().getWidth() > 0;
     }
 
     /**

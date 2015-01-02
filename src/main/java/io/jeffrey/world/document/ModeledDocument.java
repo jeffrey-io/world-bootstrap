@@ -25,16 +25,16 @@ import org.codehaus.jackson.map.ObjectMapper;
  *
  */
 public class ModeledDocument implements Model {
-    private final Map<String, Map<String, Edit>> cachedModel;
-    public final Map<String, MetaClass>          classes;
-    public final History                         history;
-    public final Map<String, LayerProperties>    layers;
-    protected final ObjectMapper                 mapper = new ObjectMapper();
+    private final Map<String, Map<String, Edit>>  cachedModel;
+    public final Map<String, MetaClass>           classes;
+    public final History                          history;
+    public final Map<String, LayerProperties>     layers;
+    protected final ObjectMapper                  mapper = new ObjectMapper();
 
-    public final Notifications                   notifications;
-    protected final ArrayList<Thing>             things;
-    
-    public final Map<String, Map<String,String>> templates;
+    public final Notifications                    notifications;
+    public final Map<String, Map<String, String>> templates;
+
+    protected final ArrayList<Thing>              things;
 
     public ModeledDocument() {
         history = new History();
@@ -45,7 +45,7 @@ public class ModeledDocument implements Model {
         classes.put("_", new MetaClass("_", "Default"));
         cachedModel = new HashMap<String, Map<String, Edit>>();
         notifications = new Notifications();
-        this.templates = new HashMap<String, Map<String,String>>();
+        templates = new HashMap<String, Map<String, String>>();
     }
 
     /**

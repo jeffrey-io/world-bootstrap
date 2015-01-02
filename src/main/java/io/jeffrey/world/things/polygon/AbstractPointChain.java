@@ -10,8 +10,8 @@ import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import io.jeffrey.zer.Syncable;
 import io.jeffrey.zer.SelectionWindow.Mode;
+import io.jeffrey.zer.Syncable;
 import io.jeffrey.zer.edits.AbstractEditList;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditBoolean;
@@ -206,6 +206,16 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
      * {@inheritDoc}
      */
     @Override
+    protected void cacheSelection() {
+        for (final SelectablePoint2 point : chain) {
+            point.alreadySelected = point.selected;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void clearSelection() {
         for (final SelectablePoint2 point : chain) {
             point.selected = false;
@@ -303,39 +313,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         return cache.doodads;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean selectionIntersect(Polygon p, Mode mode) {
-        boolean doUpdate = false;
-        boolean isSelected = doesPolygonIntersect(p);
-        boolean anySelected = false;
-        for (final SelectablePoint2 point : chain) {
-            final boolean old = point.selected;
-            if (p.contains(point.x, point.y)) {
-                point.selected = true;
-                isSelected = true;
-            } else {
-                point.selected = false;
-            }
-            point.selected = mode.selected(point.alreadySelected, point.selected);
-            if (old != point.selected) {
-                doUpdate = true;
-            }
-            if(point.selected) {
-            	anySelected = true;
-            }
-        }
-        if (doUpdate) {
-            cache.update();
-        }
-        if(mode == Mode.Subtract && anySelected) {
-        	return false;
-        }
-        return isSelected;
-    }
-
     @Override
     public void invalidate() {
         cache.update();
@@ -383,6 +360,47 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         links.put("points", pointsEditList);
         links.put("vlock", vlock);
         populatePolygonalEditLinks(links);
+    }
+
+    @Override
+    public Color queryTargetColor(final double x, final double y) {
+        if (doesContainTargetPoint(x, y)) {
+            return Color.valueOf(color.getAsText());
+        }
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean selectionIntersect(final Polygon p, final Mode mode) {
+        boolean doUpdate = false;
+        boolean isSelected = doesPolygonIntersect(p);
+        boolean anySelected = false;
+        for (final SelectablePoint2 point : chain) {
+            final boolean old = point.selected;
+            if (p.contains(point.x, point.y)) {
+                point.selected = true;
+                isSelected = true;
+            } else {
+                point.selected = false;
+            }
+            point.selected = mode.selected(point.alreadySelected, point.selected);
+            if (old != point.selected) {
+                doUpdate = true;
+            }
+            if (point.selected) {
+                anySelected = true;
+            }
+        }
+        if (doUpdate) {
+            cache.update();
+        }
+        if (mode == Mode.Subtract && anySelected) {
+            return false;
+        }
+        return isSelected;
     }
 
     /**
@@ -451,22 +469,4 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         cache.update();
     }
 
-    @Override
-    public  Color queryTargetColor(double x, double y) {
-    	if(doesContainTargetPoint(x, y)) {
-    		return Color.valueOf(color.getAsText());
-    	}
-    	return null;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-	@Override
-	protected void cacheSelection() {
-		for(SelectablePoint2 point : chain) {
-			point.alreadySelected = point.selected;
-		}
-	}
-    
 }

@@ -30,25 +30,25 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     protected final Document                document;
     protected final EditString              id;
     protected final EditString              layer;
+    protected final EditBoolean             layerlock;
+    protected final EditBoolean             lockcolor;
     protected final EditBoolean             locked;
+    protected final EditBoolean             locklock;
+    protected final EditBoolean             lockmeta;
     protected final EditString              metaclass;
     protected final Map<String, EditString> metadata;
     protected final EditString              name;
+    protected final EditBoolean             nometa;
     protected final EditDouble              order;
     protected final EditBoolean             selected;
     protected final EditBoolean             slock;
+
     protected final EditDouble              sx;
     protected final EditDouble              sy;
     protected final EditString              type;
     protected final EditDouble              x;
     protected final EditDouble              y;
 
-    protected final EditBoolean             locklock;
-    protected final EditBoolean             lockmeta;
-    protected final EditBoolean             nometa;
-    protected final EditBoolean lockcolor;
-    protected final EditBoolean layerlock;
-    
     /**
      * @param document
      *            the owning document
@@ -82,13 +82,13 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
         slock = node.getBoolean("slock", false);
         alock = node.getBoolean("alock", false);
         aspect = node.getBoolean("aspect", true);
-        
+
         locklock = node.getBoolean("locklock", false);
         lockmeta = node.getBoolean("lockmeta", false);
         nometa = node.getBoolean("nometa", false);
         lockcolor = node.getBoolean("lockcolor", false);
         layerlock = node.getBoolean("layerlock", false);
-        
+
         for (final String key : node.fields.keySet()) {
             if (key.startsWith("metadata_")) {
                 metadata.put(key.substring(9), node.getString(key, null));
@@ -191,7 +191,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
         links.put("locklock", locklock);
         links.put("lockmeta", lockmeta);
         links.put("nometa", nometa);
-        
+
         if (supportsColor()) {
             links.put("color", color);
             links.put("lockcolor", lockcolor);

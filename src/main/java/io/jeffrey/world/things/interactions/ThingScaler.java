@@ -42,9 +42,9 @@ public class ThingScaler implements ThingInteraction {
      */
     @Override
     public void moved(final AdjustedMouseEvent event) {
-    	thing.sx(sx);
-    	thing.sy(sy);
-    	thing.adjustAndBindEvent(event);
+        thing.sx(sx);
+        thing.sy(sy);
+        thing.adjustAndBindEvent(event);
         final double mx = event.position.x_1 / ix;
         final double my = event.position.y_1 / iy;
         double nsx = sx * mx;

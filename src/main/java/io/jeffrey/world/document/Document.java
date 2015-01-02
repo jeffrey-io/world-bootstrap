@@ -33,338 +33,330 @@ import javafx.scene.paint.Color;
 import org.codehaus.jackson.JsonNode;
 
 public class Document extends ModeledDocument implements DocumentFileSystem {
-	public final Camera camera;
-	public final int controlPointSize = 8;
-	public final int edgeWidthSize = 4;
-	private boolean hasSomeSelection = false;
-	private int id;
-	public final ImageCache imageCache;
+    public final Camera     camera;
+    public final int        controlPointSize = 8;
+    public final int        edgeWidthSize    = 4;
+    private boolean         hasSomeSelection = false;
+    private int             id;
+    public final ImageCache imageCache;
 
-	private final WorldData owner;
-	public final Image ROTATE_ICON;
-	public final Image SCALE_ICON;
-	public final Image VERTEX_ICON;
-	public final Image VERTEX_ICON_SELECTED;
+    private final WorldData owner;
+    public final Image      ROTATE_ICON;
+    public final Image      SCALE_ICON;
+    public final Image      VERTEX_ICON;
+    public final Image      VERTEX_ICON_SELECTED;
 
-	public Color query(double x, double y, Thing skip) {
-		for (Thing thing : things) {
-			if (thing == skip)
-				continue;
-			Color color = thing.query(x, y);
-			if (color != null)
-				return color;
-		}
-		return null;
-	}
+    public Document(final Camera camera, final WorldData owner) {
+        this.camera = camera;
+        this.owner = owner;
+        imageCache = new ImageCache();
+        id = 0;
+        SCALE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_scale.png"));
+        ROTATE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_rotate.png"));
+        VERTEX_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex.png"));
+        VERTEX_ICON_SELECTED = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex_selected.png"));
+    }
 
-	public int populateBounds(VectorRegister2 reg, boolean onlySelected) {
-		int n = 0;
-		for (Thing thing : things) {
-			if (thing.deleted())
-				continue;
-			if (!thing.selected() && onlySelected)
-				continue;
-			for (ControlDoodad doodad : thing.getDoodadsInWorldSpace()) {
-				if (n == 0) {
-					reg.set_0(doodad.u, doodad.v);
-					reg.set_1(doodad.u, doodad.v);
-				}
-				reg.x_0 = Math.min(reg.x_0, doodad.u);
-				reg.x_1 = Math.max(reg.x_1, doodad.u);
+    public void addThing(final Thing thing) {
+        history.capture();
+        things.add(thing);
+        thing.invoke("delete");
+        history.register(thing);
+        thing.invoke("undelete");
+        thing.select();
+        history.capture();
+    }
 
-				reg.y_0 = Math.min(reg.y_0, doodad.v);
-				reg.y_1 = Math.max(reg.y_1, doodad.v);
-				n++;
-			}
-		}
-		return n;
-	}
+    private HashMap<String, Object> convert2(final JsonNode node) {
+        final HashMap<String, Object> value = new HashMap<String, Object>();
+        final Iterator<Entry<String, JsonNode>> fields = node.getFields();
+        while (fields.hasNext()) {
+            final Entry<String, JsonNode> field = fields.next();
+            if (field.getValue().isDouble()) {
+                value.put(field.getKey(), field.getValue().getDoubleValue());
+            } else {
+                value.put(field.getKey(), field.getValue().getTextValue());
+            }
+        }
+        return value;
+    }
 
-	public Document(final Camera camera, final WorldData owner) {
-		this.camera = camera;
-		this.owner = owner;
-		imageCache = new ImageCache();
-		id = 0;
-		SCALE_ICON = new Image(
-				ClassLoader.getSystemResourceAsStream("icon_scale.png"));
-		ROTATE_ICON = new Image(
-				ClassLoader.getSystemResourceAsStream("icon_rotate.png"));
-		VERTEX_ICON = new Image(
-				ClassLoader.getSystemResourceAsStream("icon_vertex.png"));
-		VERTEX_ICON_SELECTED = new Image(
-				ClassLoader
-						.getSystemResourceAsStream("icon_vertex_selected.png"));
-	}
+    public void deleteSelection() {
+        history.capture();
+        for (final Thing thing : things) {
+            if (thing.selected()) {
+                thing.invoke("delete");
+            }
+        }
+        history.capture();
+    }
 
-	public void addThing(final Thing thing) {
-		history.capture();
-		things.add(thing);
-		thing.invoke("delete");
-		history.register(thing);
-		thing.invoke("undelete");
-		thing.select();
-		history.capture();
-	}
+    public void draw(final GraphicsContext gc, final Camera camera, final double width, final double height, final String activeLayer) {
+        update();
+        sort();
+        gc.save();
+        gc.setLineWidth(2);
+        gc.setStroke(Color.RED);
 
-	private HashMap<String, Object> convert2(final JsonNode node) {
-		final HashMap<String, Object> value = new HashMap<String, Object>();
-		final Iterator<Entry<String, JsonNode>> fields = node.getFields();
-		while (fields.hasNext()) {
-			final Entry<String, JsonNode> field = fields.next();
-			if (field.getValue().isDouble()) {
-				value.put(field.getKey(), field.getValue().getDoubleValue());
-			} else {
-				value.put(field.getKey(), field.getValue().getTextValue());
-			}
-		}
-		return value;
-	}
+        gc.translate(camera.tX, camera.tY);
+        gc.scale(camera.scale, camera.scale);
+        final VectorRegister6 seg = new VectorRegister6();
+        final Collection<GuideLine> lines = getGuideLines(activeLayer);
+        for (final GuideLine line : lines) {
+            line.writeSegment(camera, seg);
+            gc.strokeLine(seg.x_0, seg.y_0, seg.x_1, seg.y_1);
+        }
+        gc.restore();
+        for (final Thing thing : getThings()) {
+            thing.render(gc, camera);
+        }
+        final double left = camera.projX(controlPointSize);
+        final double top = camera.projY(controlPointSize);
+        final double right = camera.projX(width - controlPointSize);
+        final double bottom = camera.projY(height - controlPointSize);
+        final double[] guideControls = new double[] { left, top, right, top, right, bottom, left, bottom, left, top };
 
-	public void deleteSelection() {
-		history.capture();
-		for (final Thing thing : things) {
-			if (thing.selected()) {
-				thing.invoke("delete");
-			}
-		}
-		history.capture();
-	}
+        gc.save();
+        for (int c = 0; c + 3 < guideControls.length; c += 2) {
+            for (final GuideLine line : lines) {
+                line.writeSegment(camera, seg);
+                seg.set_2(guideControls[c], guideControls[c + 1]);
+                seg.set_3(guideControls[c + 2], guideControls[c + 3]);
+                if (Lines.doLinesIntersect_Destructively(seg, true, true)) {
+                    gc.drawImage(VERTEX_ICON, -controlPointSize + camera.x(seg.x_0), -controlPointSize + camera.y(seg.y_0), 2 * controlPointSize, 2 * controlPointSize);
+                }
+            }
+        }
+        gc.restore();
+    }
 
-	public void draw(final GraphicsContext gc, final Camera camera,
-			double width, double height, String activeLayer) {
-		update();
-		sort();
-		gc.save();
-		gc.setLineWidth(2);
-		gc.setStroke(Color.RED);
+    @Override
+    public File find(final String path) {
+        final File direct = new File(path);
+        if (direct.exists()) {
+            return direct;
+        }
+        return new File(owner.path().resolve(path));
+    }
 
-		gc.translate(camera.tX, camera.tY);
-		gc.scale(camera.scale, camera.scale);
-		final VectorRegister6 seg = new VectorRegister6();
-		Collection<GuideLine> lines = getGuideLines(activeLayer);
-		for (final GuideLine line : lines) {
-			line.writeSegment(camera, seg);
-			gc.strokeLine(seg.x_0, seg.y_0, seg.x_1, seg.y_1);
-		}
-		gc.restore();
-		for (final Thing thing : getThings()) {
-			thing.render(gc, camera);
-		}
-		double left = camera.projX(controlPointSize);
-		double top = camera.projY(controlPointSize);
-		double right = camera.projX(width - controlPointSize);
-		double bottom = camera.projY(height - controlPointSize);
-		double[] guideControls = new double[] { left, top, right, top, right,
-				bottom, left, bottom, left, top };
+    public Collection<GuideLine> getGuideLines(final String layerId) {
+        final LayerProperties lp = layers.get(layerId);
+        if (lp != null) {
+            return lp.guides;
+        }
+        return new HashSet<>();
+    }
 
-		gc.save();
-		for (int c = 0; c + 3 < guideControls.length; c += 2) {
-			for (final GuideLine line : lines) {
-				line.writeSegment(camera, seg);
-				seg.set_2(guideControls[c], guideControls[c + 1]);
-				seg.set_3(guideControls[c + 2], guideControls[c + 3]);
-				if (Lines.doLinesIntersect_Destructively(seg, true, true)) {
-					gc.drawImage(VERTEX_ICON,
-							-controlPointSize + camera.x(seg.x_0),
-							-controlPointSize + camera.y(seg.y_0),
-							2 * controlPointSize, 2 * controlPointSize);
-				}
-			}
-		}
-		gc.restore();
-	}
+    public ArrayList<Thing> getThings() {
+        return things;
+    }
 
-	@Override
-	public File find(final String path) {
-		final File direct = new File(path);
-		if (direct.exists()) {
-			return direct;
-		}
-		return new File(owner.path().resolve(path));
-	}
+    public boolean hasSelection() {
+        return hasSomeSelection;
+    }
 
-	public Collection<GuideLine> getGuideLines(final String layerId) {
-		final LayerProperties lp = layers.get(layerId);
-		if (lp != null) {
-			return lp.guides;
-		}
-		return new HashSet<>();
-	}
+    public void load(final File file) throws Exception {
+        final byte[] data = Files.readAllBytes(Paths.get(file.toURI()));
+        final JsonNode tree = mapper.readTree(data);
 
-	public ArrayList<Thing> getThings() {
-		return things;
-	}
+        // load the view
+        camera.sync(new ObjectDataMap(convert2(tree.get("view"))));
 
-	public boolean hasSelection() {
-		return hasSomeSelection;
-	}
+        loadMC(tree.get("metaclasses"));
+        loadLP(tree.get("layers"));
 
-	public void load(final File file) throws Exception {
-		final byte[] data = Files.readAllBytes(Paths.get(file.toURI()));
-		final JsonNode tree = mapper.readTree(data);
+        final JsonNode thingsToLoad = tree.get("things");
+        final HashMap<String, ThingCore> lookup = new HashMap<String, ThingCore>();
+        for (int k = 0; k < thingsToLoad.size(); k++) {
+            final HashMap<String, Object> tdata = new HashMap<String, Object>();
+            final JsonNode thing = thingsToLoad.get(k);
+            final Iterator<String> fields = thing.getFieldNames();
+            while (fields.hasNext()) {
+                final String key = fields.next();
+                final JsonNode value = thing.get(key);
+                if (value.isBoolean()) {
+                    tdata.put(key, value.asBoolean());
+                } else if (value.isDouble()) {
+                    tdata.put(key, value.asDouble());
+                } else if (value.isInt()) {
+                    tdata.put(key, value.asInt());
+                } else if (value.isTextual()) {
+                    tdata.put(key, value.asText());
+                }
+            }
+            final Thing thingToAdd = new ThingData(tdata).make(this);
+            things.add(thingToAdd);
+            lookup.put(thingToAdd.id(), thingToAdd);
+        }
+        history.load(tree.get("history"), lookup);
+    }
 
-		// load the view
-		camera.sync(new ObjectDataMap(convert2(tree.get("view"))));
+    private void loadLP(final JsonNode node) {
+        final Iterator<Entry<String, JsonNode>> fields = node.getFields();
+        while (fields.hasNext()) {
+            final Entry<String, JsonNode> field = fields.next();
+            final LayerProperties lp = new LayerProperties(field.getKey(), field.getValue().get("name").getTextValue());
+            lp.unpack(new ObjectDataMap(convert2(field.getValue())));
+            layers.put(lp.id(), lp);
+        }
+    }
 
-		loadMC(tree.get("metaclasses"));
-		loadLP(tree.get("layers"));
+    private void loadMC(final JsonNode node) {
+        final Iterator<Entry<String, JsonNode>> fields = node.getFields();
+        while (fields.hasNext()) {
+            final Entry<String, JsonNode> field = fields.next();
+            final MetaClass cls = new MetaClass(field.getKey(), field.getValue().get("name").getTextValue());
+            cls.inject(new ObjectDataMap(convert2(field.getValue())));
+            classes.put(field.getKey(), cls);
+        }
+    }
 
-		final JsonNode thingsToLoad = tree.get("things");
-		final HashMap<String, ThingCore> lookup = new HashMap<String, ThingCore>();
-		for (int k = 0; k < thingsToLoad.size(); k++) {
-			final HashMap<String, Object> tdata = new HashMap<String, Object>();
-			final JsonNode thing = thingsToLoad.get(k);
-			final Iterator<String> fields = thing.getFieldNames();
-			while (fields.hasNext()) {
-				final String key = fields.next();
-				final JsonNode value = thing.get(key);
-				if (value.isBoolean()) {
-					tdata.put(key, value.asBoolean());
-				} else if (value.isDouble()) {
-					tdata.put(key, value.asDouble());
-				} else if (value.isInt()) {
-					tdata.put(key, value.asInt());
-				} else if (value.isTextual()) {
-					tdata.put(key, value.asText());
-				}
-			}
-			final Thing thingToAdd = new ThingData(tdata).make(this);
-			things.add(thingToAdd);
-			lookup.put(thingToAdd.id(), thingToAdd);
-		}
-		history.load(tree.get("history"), lookup);
-	}
+    public ThingData newData(final String type) {
+        final ThingData data = new ThingData(type);
+        data.fields.put("id", type.substring(0, 1).toUpperCase() + id);
+        id++;
+        return data;
+    }
 
-	private void loadLP(final JsonNode node) {
-		final Iterator<Entry<String, JsonNode>> fields = node.getFields();
-		while (fields.hasNext()) {
-			final Entry<String, JsonNode> field = fields.next();
-			final LayerProperties lp = new LayerProperties(field.getKey(),
-					field.getValue().get("name").getTextValue());
-			lp.unpack(new ObjectDataMap(convert2(field.getValue())));
-			layers.put(lp.id(), lp);
-		}
-	}
+    @Override
+    public String normalize(final File input) {
+        final String result = owner.path().relativize(input.toURI()).getPath();
+        return result;
+    }
 
-	private void loadMC(final JsonNode node) {
-		final Iterator<Entry<String, JsonNode>> fields = node.getFields();
-		while (fields.hasNext()) {
-			final Entry<String, JsonNode> field = fields.next();
-			final MetaClass cls = new MetaClass(field.getKey(), field
-					.getValue().get("name").getTextValue());
-			cls.inject(new ObjectDataMap(convert2(field.getValue())));
-			classes.put(field.getKey(), cls);
-		}
-	}
+    public int populateBounds(final VectorRegister2 reg, final boolean onlySelected) {
+        int n = 0;
+        for (final Thing thing : things) {
+            if (thing.deleted()) {
+                continue;
+            }
+            if (!thing.selected() && onlySelected) {
+                continue;
+            }
+            for (final ControlDoodad doodad : thing.getDoodadsInWorldSpace()) {
+                if (n == 0) {
+                    reg.set_0(doodad.u, doodad.v);
+                    reg.set_1(doodad.u, doodad.v);
+                }
+                reg.x_0 = Math.min(reg.x_0, doodad.u);
+                reg.x_1 = Math.max(reg.x_1, doodad.u);
 
-	public ThingData newData(final String type) {
-		final ThingData data = new ThingData(type);
-		data.fields.put("id", type.substring(0, 1).toUpperCase() + id);
-		id++;
-		return data;
-	}
+                reg.y_0 = Math.min(reg.y_0, doodad.v);
+                reg.y_1 = Math.max(reg.y_1, doodad.v);
+                n++;
+            }
+        }
+        return n;
+    }
 
-	@Override
-	public String normalize(final File input) {
-		final String result = owner.path().relativize(input.toURI()).getPath();
-		return result;
-	}
+    public Color query(final double x, final double y, final Thing skip) {
+        for (final Thing thing : things) {
+            if (thing == skip) {
+                continue;
+            }
+            final Color color = thing.query(x, y);
+            if (color != null) {
+                return color;
+            }
+        }
+        return null;
+    }
 
-	public void save(final File file) throws Exception {
-		final HashMap<String, Object> tree = new HashMap<String, Object>();
-		tree.put("view", camera.pack());
-		tree.put("history", history.pack());
-		final HashMap<String, Object> layersPacked = new HashMap<>();
-		final HashMap<String, Object> metaClassesPacked = new HashMap<>();
-		for (final Entry<String, MetaClass> mc : classes.entrySet()) {
-			metaClassesPacked.put(mc.getKey(), mc.getValue().pack());
-		}
-		for (final Entry<String, LayerProperties> mc : layers.entrySet()) {
-			layersPacked.put(mc.getKey(), mc.getValue().pack());
-		}
+    public void save(final File file) throws Exception {
+        final HashMap<String, Object> tree = new HashMap<String, Object>();
+        tree.put("view", camera.pack());
+        tree.put("history", history.pack());
+        final HashMap<String, Object> layersPacked = new HashMap<>();
+        final HashMap<String, Object> metaClassesPacked = new HashMap<>();
+        for (final Entry<String, MetaClass> mc : classes.entrySet()) {
+            metaClassesPacked.put(mc.getKey(), mc.getValue().pack());
+        }
+        for (final Entry<String, LayerProperties> mc : layers.entrySet()) {
+            layersPacked.put(mc.getKey(), mc.getValue().pack());
+        }
 
-		tree.put("layers", layersPacked);
-		tree.put("metaclasses", metaClassesPacked);
+        tree.put("layers", layersPacked);
+        tree.put("metaclasses", metaClassesPacked);
 
-		final ArrayList<Object> store = new ArrayList<Object>();
-		for (final Thing t : things) {
-			final HashMap<String, String> tdata = new HashMap<String, String>();
-			t.saveTo(tdata);
-			store.add(tdata);
-		}
-		tree.put("things", store);
-		Files.write(Paths.get(file.toURI()), mapper.writeValueAsBytes(tree));
-	}
+        final ArrayList<Object> store = new ArrayList<Object>();
+        for (final Thing t : things) {
+            final HashMap<String, String> tdata = new HashMap<String, String>();
+            t.saveTo(tdata);
+            store.add(tdata);
+        }
+        tree.put("things", store);
+        Files.write(Paths.get(file.toURI()), mapper.writeValueAsBytes(tree));
+    }
 
-	public Thing selectFirstVisible(final double x, final double y) {
-		for (final Thing thing : things) {
-			if (thing.contains(x, y)) {
-				return thing;
-			}
-		}
-		return null;
-	}
+    public Thing selectFirstVisible(final double x, final double y) {
+        for (final Thing thing : things) {
+            if (thing.contains(x, y)) {
+                return thing;
+            }
+        }
+        return null;
+    }
 
-	public String snapshotSelection() throws Exception {
-		final ArrayList<Object> store = new ArrayList<Object>();
-		double x = 0;
-		double y = 0;
-		int c = 0;
-		for (final Thing t : things) {
-			if (t.selected()) {
-				x += t.x();
-				y += t.y();
-				c++;
-			}
-		}
-		if (c == 0) {
-			return null;
-		}
-		x /= c;
-		y /= c;
-		for (final Thing t : things) {
-			if (t.selected()) {
-				final HashMap<String, String> tdata = new HashMap<String, String>();
-				t.saveTo(tdata);
-				tdata.put("x", Double.toString(t.x() - x));
-				tdata.put("y", Double.toString(t.y() - y));
-				store.add(tdata);
-			}
-		}
-		final String snapshot = mapper.writeValueAsString(store);
-		return snapshot;
-	}
+    public String snapshotSelection() throws Exception {
+        final ArrayList<Object> store = new ArrayList<Object>();
+        double x = 0;
+        double y = 0;
+        int c = 0;
+        for (final Thing t : things) {
+            if (t.selected()) {
+                x += t.x();
+                y += t.y();
+                c++;
+            }
+        }
+        if (c == 0) {
+            return null;
+        }
+        x /= c;
+        y /= c;
+        for (final Thing t : things) {
+            if (t.selected()) {
+                final HashMap<String, String> tdata = new HashMap<String, String>();
+                t.saveTo(tdata);
+                tdata.put("x", Double.toString(t.x() - x));
+                tdata.put("y", Double.toString(t.y() - y));
+                store.add(tdata);
+            }
+        }
+        final String snapshot = mapper.writeValueAsString(store);
+        return snapshot;
+    }
 
-	public void sort() {
-		if (things.size() == 0) {
-			return;
-		}
-		things.sort(new Comparator<Thing>() {
-			@Override
-			public int compare(final Thing o1, final Thing o2) {
-				return o1.compareTo(o2);
-			}
-		});
-		int layerAt = things.get(0).layerZ();
-		int newOrder = 0;
-		for (final Thing thing : things) {
-			if (thing.layerZ() != layerAt) {
-				layerAt = thing.layerZ();
-				newOrder = 0;
-			}
-			newOrder++;
-			thing.order(newOrder);
-		}
-	}
+    public void sort() {
+        if (things.size() == 0) {
+            return;
+        }
+        things.sort(new Comparator<Thing>() {
+            @Override
+            public int compare(final Thing o1, final Thing o2) {
+                return o1.compareTo(o2);
+            }
+        });
+        int layerAt = things.get(0).layerZ();
+        int newOrder = 0;
+        for (final Thing thing : things) {
+            if (thing.layerZ() != layerAt) {
+                layerAt = thing.layerZ();
+                newOrder = 0;
+            }
+            newOrder++;
+            thing.order(newOrder);
+        }
+    }
 
-	public void update() {
-		hasSomeSelection = false;
-		for (final Thing thing : things) {
-			if (thing.selected()) {
-				hasSomeSelection = true;
-			}
-			thing.update();
-		}
-	}
+    public void update() {
+        hasSomeSelection = false;
+        for (final Thing thing : things) {
+            if (thing.selected()) {
+                hasSomeSelection = true;
+            }
+            thing.update();
+        }
+    }
 
 }

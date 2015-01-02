@@ -7,19 +7,19 @@ package io.jeffrey.world.things.polygon;
  */
 public class SelectablePoint2 {
     /**
+     * was the point already selected
+     */
+    public boolean alreadySelected = false;
+
+    /**
      * a cached index for consumers to use for optimization
      */
     public int     cachedIndex;
 
     /**
-     * was the point already selected
-     */
-    public boolean alreadySelected = false;
-    
-    /**
      * is the point selected
      */
-    public boolean selected = false;
+    public boolean selected        = false;
 
     /**
      * the x coordinate

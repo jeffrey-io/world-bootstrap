@@ -26,16 +26,6 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-		<dependency>
-			<groupId>io.jeffrey</groupId>
-			<artifactId>zer</artifactId>
-			<version>0.5-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jeffrey</groupId>
-			<artifactId>vector-register</artifactId>
-			<version>0.5-SNAPSHOT</version>
-		</dependency>		
 	</dependencies>
 	<build>
 		<plugins>

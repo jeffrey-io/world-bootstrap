@@ -187,6 +187,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       protected boolean setByText(final String txt) {
         try {
           chain.set(txt);
+          cache.update();
           return true;
         } catch (final Exception failure) {
           document.notifications.println(failure, "unable to set the points list");
@@ -200,7 +201,11 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     chain = new PointChain(node.getString("points", "0,-1,1,1,-1,1").value());
     cache.update();
   }
-
+  
+  public Edit getPointsLinks() {
+    return pointsEditList;
+  }
+  
   /**
    * {@inheritDoc}
    */

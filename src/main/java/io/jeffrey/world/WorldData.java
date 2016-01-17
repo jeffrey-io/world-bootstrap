@@ -97,6 +97,12 @@ public class WorldData extends SurfaceData {
       data.fields.put("y", at_y);
       data.fields.put("points", polyCircle(0, 2 * Math.PI / 3, 3));
     }
+    if ("Turtle".equals(type)) {
+      data = document.newData("turtle");
+      data.fields.put("x", at_x);
+      data.fields.put("y", at_y);
+      data.fields.put("points", polyCircle(0, 2 * Math.PI / 3, 3));
+    }    
     if ("Box".equals(type)) {
       data = document.newData("polygon");
       data.fields.put("x", at_x);
@@ -286,6 +292,7 @@ public class WorldData extends SurfaceData {
     adds.add("Hexagon");
     adds.add("Path");
     adds.add("Connector");
+    adds.add("Turtle");
     for (final String template : document.templates.keySet()) {
       adds.add(template);
     }

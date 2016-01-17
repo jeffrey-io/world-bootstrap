@@ -3,23 +3,31 @@ package io.jeffrey.world.things.descriptive;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TurtlePolygon {
-
-  public static void compile(final String script) {
-    final double dx = 1.0;
-    final double dy = 0.0;
+public class TurtleCompiler {
+  
+  public static String compile(final String script) {
+    Turtle turtle = new Turtle();
     for (final String[] statement : tokenizeLines(script)) {
       final String command = statement[0];
+      if (statement.length != 2) {
+        throw new IllegalStateException("NO!");
+      }
       switch (command) {
-        case "walk":
-          if (statement.length != 2) {
-            throw new IllegalStateException("NO!");
-          }
-          final double amount = Double.parseDouble(statement[1]);
+        case "forward":
+          turtle.forward(Double.parseDouble(statement[1]));
+          break;
+        case "back":
+          turtle.forward(- Double.parseDouble(statement[1]));
+          break;
         case "left":
+          turtle.turn(-Double.parseDouble(statement[1]));
+          break;
         case "right":
+          turtle.turn(Double.parseDouble(statement[1]));
+          break;
       }
     }
+    return turtle.toString();
   }
 
   private static String[] tokenizeLine(final String line) {
@@ -35,7 +43,7 @@ public class TurtlePolygon {
 
   private static List<String[]> tokenizeLines(final String script) {
     final ArrayList<String[]> commands = new ArrayList<>();
-    final String[] lines = script.split("\n");
+    final String[] lines = script.replaceAll(";","\n").split("\n");
     for (String line : lines) {
       line = line.trim().toLowerCase();
       if (line.length() == 0) {

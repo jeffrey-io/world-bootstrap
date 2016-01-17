@@ -38,6 +38,14 @@ public class ThingEditor {
       pg.add("Name", fields.get("name"));
       builder.endBorder();
     }
+
+    if (containAll(fields, "script")) {
+      builder.startBorder("Script");
+      final SurfaceFourColumnGrid pg = builder.startFourColumnGrid();
+      pg.add("script", fields.get("script"));
+      builder.endBorder();
+    }
+
     if (containAll(fields, "x", "y", "sx", "sy", "angle")) {
       builder.startBorder("Geometry");
       final SurfaceFourColumnGrid pg = builder.startFourColumnGrid();

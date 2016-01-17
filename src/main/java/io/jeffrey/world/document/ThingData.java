@@ -8,6 +8,7 @@ import io.jeffrey.world.things.TConnector;
 import io.jeffrey.world.things.TImage;
 import io.jeffrey.world.things.TPath;
 import io.jeffrey.world.things.TPolygon;
+import io.jeffrey.world.things.TTurtle;
 import io.jeffrey.world.things.core.Thing;
 import io.jeffrey.zer.edits.ObjectDataMap;
 
@@ -28,6 +29,9 @@ public class ThingData extends ObjectDataMap {
     }
     if (fields.get("_type").equals("polygon")) {
       return new TPolygon(document, this);
+    }
+    if (fields.get("_type").equals("turtle")) {
+      return new TTurtle(document, this);
     }
     if (fields.get("_type").equals("path")) {
       return new TPath(document, this);

@@ -12,152 +12,152 @@ import java.util.Set;
  */
 public class ObjectDataMap {
 
-    public final Map<String, Object> fields;
+  public final Map<String, Object> fields;
 
-    public ObjectDataMap(final Map<String, Object> fields) {
-        this.fields = fields;
+  public ObjectDataMap(final Map<String, Object> fields) {
+    this.fields = fields;
+  }
+
+  /**
+   * Get a bound boolean
+   *
+   * @param name
+   *          the name of the boolean
+   * @param def
+   *          the default value should it not exist
+   * @return a editable link to the boolean
+   */
+  public EditBoolean getBoolean(final String name, final boolean def) {
+    return new EditBoolean(name, lookup(name, def)) {
+      @Override
+      public boolean setByText(final String txt) {
+        fields.put(name, txt);
+        return super.setByText(txt);
+      }
+    };
+  }
+
+  /**
+   * Get a bound double
+   *
+   * @param name
+   *          the name of the double
+   * @param def
+   *          the default value should it not exist
+   * @return a editable link to the double
+   */
+  public EditDouble getDouble(final String name, final double def) {
+    return new EditDouble(name, lookup(name, def)) {
+      @Override
+      public boolean setByText(final String txt) {
+        fields.put(name, txt);
+        return super.setByText(txt);
+      }
+    };
+  }
+
+  /**
+   * Get a bound integer
+   *
+   * @param name
+   *          the name of the integer
+   * @param def
+   *          the default value should it not exist
+   * @return a editable link to the integer
+   */
+  public EditInteger getInteger(final String name, final int def) {
+    return new EditInteger(name, lookup(name, def)) {
+      @Override
+      public boolean setByText(final String txt) {
+        fields.put(name, txt);
+        return super.setByText(txt);
+      }
+    };
+  }
+
+  /**
+   * Get a bound string
+   *
+   * @param name
+   *          the name of the string
+   * @param def
+   *          the default value should it not exist
+   * @return a editable link to the string
+   */
+  public EditString getString(final String name, final String def) {
+    return new EditString(name, lookup(name, def)) {
+      @Override
+      public boolean setByText(final String txt) {
+        fields.put(name, txt);
+        return super.setByText(txt);
+      }
+    };
+  }
+
+  /**
+   * @return a set of all keys defined in the map
+   */
+  public Set<String> keys() {
+    return fields.keySet();
+  }
+
+  private boolean lookup(final String name, final boolean def) {
+    final Object v = fields.get(name);
+
+    if (v == null) {
+      return def;
     }
-
-    /**
-     * Get a bound boolean
-     *
-     * @param name
-     *            the name of the boolean
-     * @param def
-     *            the default value should it not exist
-     * @return a editable link to the boolean
-     */
-    public EditBoolean getBoolean(final String name, final boolean def) {
-        return new EditBoolean(name, lookup(name, def)) {
-            @Override
-            public boolean setByText(final String txt) {
-                fields.put(name, txt);
-                return super.setByText(txt);
-            }
-        };
+    if (v instanceof Boolean) {
+      return (Boolean) v;
     }
-
-    /**
-     * Get a bound double
-     *
-     * @param name
-     *            the name of the double
-     * @param def
-     *            the default value should it not exist
-     * @return a editable link to the double
-     */
-    public EditDouble getDouble(final String name, final double def) {
-        return new EditDouble(name, lookup(name, def)) {
-            @Override
-            public boolean setByText(final String txt) {
-                fields.put(name, txt);
-                return super.setByText(txt);
-            }
-        };
+    if (v instanceof String) {
+      final String txt = ((String) v).trim().toLowerCase();
+      return txt.equals("true") || txt.equals("yes");
     }
+    return def;
+  }
 
-    /**
-     * Get a bound integer
-     *
-     * @param name
-     *            the name of the integer
-     * @param def
-     *            the default value should it not exist
-     * @return a editable link to the integer
-     */
-    public EditInteger getInteger(final String name, final int def) {
-        return new EditInteger(name, lookup(name, def)) {
-            @Override
-            public boolean setByText(final String txt) {
-                fields.put(name, txt);
-                return super.setByText(txt);
-            }
-        };
+  private double lookup(final String name, final double def) {
+    final Object v = fields.get(name);
+
+    if (v == null) {
+      return def;
     }
-
-    /**
-     * Get a bound string
-     *
-     * @param name
-     *            the name of the string
-     * @param def
-     *            the default value should it not exist
-     * @return a editable link to the string
-     */
-    public EditString getString(final String name, final String def) {
-        return new EditString(name, lookup(name, def)) {
-            @Override
-            public boolean setByText(final String txt) {
-                fields.put(name, txt);
-                return super.setByText(txt);
-            }
-        };
+    if (v instanceof Double) {
+      return (Double) v;
     }
-
-    /**
-     * @return a set of all keys defined in the map
-     */
-    public Set<String> keys() {
-        return fields.keySet();
+    if (v instanceof Integer) {
+      return (Integer) v;
     }
-
-    private boolean lookup(final String name, final boolean def) {
-        final Object v = fields.get(name);
-
-        if (v == null) {
-            return def;
-        }
-        if (v instanceof Boolean) {
-            return (Boolean) v;
-        }
-        if (v instanceof String) {
-            final String txt = ((String) v).trim().toLowerCase();
-            return txt.equals("true") || txt.equals("yes");
-        }
-        return def;
+    if (v instanceof String) {
+      return Double.parseDouble((String) v);
     }
+    return def;
+  }
 
-    private double lookup(final String name, final double def) {
-        final Object v = fields.get(name);
+  private int lookup(final String name, final int def) {
+    final Object v = fields.get(name);
 
-        if (v == null) {
-            return def;
-        }
-        if (v instanceof Double) {
-            return (Double) v;
-        }
-        if (v instanceof Integer) {
-            return (Integer) v;
-        }
-        if (v instanceof String) {
-            return Double.parseDouble((String) v);
-        }
-        return def;
+    if (v == null) {
+      return def;
     }
-
-    private int lookup(final String name, final int def) {
-        final Object v = fields.get(name);
-
-        if (v == null) {
-            return def;
-        }
-        if (v instanceof Integer) {
-            return (Integer) v;
-        }
-        if (v instanceof String) {
-            return Integer.parseInt((String) v);
-        }
-        return def;
+    if (v instanceof Integer) {
+      return (Integer) v;
     }
-
-    private String lookup(final String name, final String def) {
-        final Object v = fields.get(name);
-        if (v == null) {
-            return def;
-        }
-        if (v instanceof String) {
-            return (String) v;
-        }
-        return def;
+    if (v instanceof String) {
+      return Integer.parseInt((String) v);
     }
+    return def;
+  }
+
+  private String lookup(final String name, final String def) {
+    final Object v = fields.get(name);
+    if (v == null) {
+      return def;
+    }
+    if (v instanceof String) {
+      return (String) v;
+    }
+    return def;
+  }
 }

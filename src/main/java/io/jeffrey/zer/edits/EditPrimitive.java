@@ -7,40 +7,40 @@ package io.jeffrey.zer.edits;
  */
 public abstract class EditPrimitive<T> extends Edit {
 
-    private final String name;
-    private T            pValue;
+  private final String name;
+  private T            pValue;
 
-    /**
-     * @param name
-     *            the name of the value
-     * @param v
-     *            the initial value
-     */
-    public EditPrimitive(final String name, final T v) {
-        this.name = name;
-        pValue = v;
-    }
+  /**
+   * @param name
+   *          the name of the value
+   * @param v
+   *          the initial value
+   */
+  public EditPrimitive(final String name, final T v) {
+    this.name = name;
+    pValue = v;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String name() {
-        return name;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String name() {
+    return name;
+  }
 
-    /**
-     * @return the value
-     */
-    public T value() {
-        return pValue;
-    }
+  /**
+   * @return the value
+   */
+  public T value() {
+    return pValue;
+  }
 
-    /**
-     * @param v
-     *            the new value to set
-     */
-    public void value(final T v) {
-        this.pValue = v;
-    }
+  /**
+   * @param v
+   *          the new value to set
+   */
+  public void value(final T v) {
+    this.pValue = v;
+  }
 }

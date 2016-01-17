@@ -1,12 +1,9 @@
 package io.jeffrey.zer.meta;
 
-import io.jeffrey.zer.Syncable;
-import io.jeffrey.zer.edits.Edit;
-
 import java.util.Map;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import io.jeffrey.zer.Syncable;
+import io.jeffrey.zer.edits.Edit;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -26,267 +23,260 @@ import javafx.scene.text.Text;
  */
 public class SurfaceItemEditorBuilderImpl implements SurfaceItemEditorBuilder {
 
+  /**
+   * This defines a grid where rows can be added simply with four columns
+   *
+   * @author jeffrey
+   *
+   */
+  public class SurfaceFourColumnGridImpl implements SurfaceFourColumnGrid {
+    private final GridPane grid;
+    private int            row;
+
     /**
-     * This defines a grid where rows can be added simply with four columns
+     * the grid pane that was added to hold these elements
      *
-     * @author jeffrey
-     *
+     * @param grid
      */
-    public class SurfaceFourColumnGridImpl implements SurfaceFourColumnGrid {
-        private final GridPane grid;
-        private int            row;
+    private SurfaceFourColumnGridImpl(final GridPane grid) {
+      this.grid = grid;
+      row = 0;
+    }
 
-        /**
-         * the grid pane that was added to hold these elements
-         *
-         * @param grid
-         */
-        private SurfaceFourColumnGridImpl(final GridPane grid) {
-            this.grid = grid;
-            row = 0;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void add(final Edit value0, final Edit value1, final Edit value2, final Edit value3) {
+      final TextField edit0 = new TextField();
+      binding.bindTextField(edit0, value0);
+      final TextField edit1 = new TextField();
+      binding.bindTextField(edit1, value1);
+      final TextField edit2 = new TextField();
+      binding.bindTextField(edit2, value2);
+      final TextField edit3 = new TextField();
+      binding.bindTextField(edit3, value3);
+      grid.add(edit0, 0, row);
+      grid.add(edit1, 1, row);
+      grid.add(edit2, 2, row);
+      grid.add(edit3, 3, row);
+      row++;
+    }
+
+    /**
+     * add an element with a label and a value that spaces 3 columns {@inheritDoc}
+     */
+    @Override
+    public void add(final String label, final Edit value) {
+      final Text txt = new Text(label);
+      final TextField field = new TextField();
+      binding.bindTextField(field, value);
+      grid.add(txt, 0, row);
+      grid.add(field, 1, row, 3, 1);
+      row++;
+    }
+
+    /**
+     * add an element with label, value, label, value for things like x,y coordinates {@inheritDoc}
+     */
+    @Override
+    public void add(final String label0, final Edit value0, final String label1, final Edit value1) {
+
+      final Text txt0 = new Text(label0);
+      final TextField edit0 = new TextField();
+      binding.bindTextField(edit0, value0);
+
+      final Text txt1 = new Text(label1);
+      final TextField edit1 = new TextField();
+      binding.bindTextField(edit1, value1);
+
+      grid.add(txt0, 0, row);
+      grid.add(edit0, 1, row);
+      grid.add(txt1, 2, row);
+      grid.add(edit1, 3, row);
+      row++;
+    }
+
+    /**
+     * add an element with two labels {@inheritDoc}
+     */
+    @Override
+    public void add(final String label, final String value) {
+      final Text txt = new Text(label);
+      final TextField field = new TextField(value);
+      field.setEditable(false);
+      grid.add(txt, 0, row);
+      grid.add(field, 1, row, 3, 1);
+      row++;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void add(final String label0, final String label1, final String label2, final String label3) {
+      grid.add(new Text(label0), 0, row);
+      grid.add(new Text(label1), 1, row);
+      grid.add(new Text(label2), 2, row);
+      grid.add(new Text(label3), 3, row);
+      row++;
+    }
+
+  }
+
+  private static final int  PAD = 2;
+
+  private final EditBinding binding;
+  private VBox              currentBox;
+  private final VBox        rootBox;
+
+  /**
+   * @param rootBox
+   *          the root box that will be cleared and where elements will be added
+   * @param binding
+   *          how data gets bound
+   */
+  public SurfaceItemEditorBuilderImpl(final VBox rootBox, final EditBinding binding) {
+    this.rootBox = rootBox;
+    currentBox = rootBox;
+    this.binding = binding;
+    rootBox.getChildren().clear();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addAction(final String label, final Runnable runnable) {
+    final Button act = new Button(label);
+    act.setOnAction(arg0 -> {
+      runnable.run();
+      binding.forceSync();
+    });
+    currentBox.getChildren().add(act);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean addBoolean(final String label, final Edit link) {
+    final CheckBox box = new CheckBox(label);
+    binding.bindBoolean(box, link);
+    currentBox.getChildren().add(box);
+    return box.isSelected();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String addColor(final String label, final Edit link) {
+    final GridPane pane = new GridPane();
+
+    final Text labelX = new Text(label);
+    pane.add(labelX, 0, 0);
+
+    final ColorPicker colorPicker = new ColorPicker();
+    binding.bindColor(colorPicker, link);
+    pane.add(colorPicker, 1, 0);
+
+    currentBox.getChildren().add(pane);
+    return link.getAsText();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T extends AbstractMapEditorItemRequirements, E extends AbstractMapEditor<T>> T addCombo(final boolean canEdit, final String label, final Edit link, final Map<String, T> values, final Class<E> clazz, final Syncable parent) {
+    final HBox position = new HBox();
+    final ComboBox<T> dropdown = new ComboBox<>();
+    binding.bindComboBox(dropdown, link, values, parent);
+    final Text labelX = new Text(label);
+
+    if (canEdit) {
+      final Button buttonEditLayer = new Button("...");
+      buttonEditLayer.setOnAction(arg0 -> {
+        try {
+          clazz.getConstructors()[0].newInstance(values, link.getAsText(), parent, binding.notifications);
+        } catch (final Exception failure) {
+          binding.notifications.println(failure, "unable to create new instance of the editor");
         }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void add(final Edit value0, final Edit value1, final Edit value2, final Edit value3) {
-            final TextField edit0 = new TextField();
-            binding.bindTextField(edit0, value0);
-            final TextField edit1 = new TextField();
-            binding.bindTextField(edit1, value1);
-            final TextField edit2 = new TextField();
-            binding.bindTextField(edit2, value2);
-            final TextField edit3 = new TextField();
-            binding.bindTextField(edit3, value3);
-            grid.add(edit0, 0, row);
-            grid.add(edit1, 1, row);
-            grid.add(edit2, 2, row);
-            grid.add(edit3, 3, row);
-            row++;
-        }
-
-        /**
-         * add an element with a label and a value that spaces 3 columns {@inheritDoc}
-         */
-        @Override
-        public void add(final String label, final Edit value) {
-            final Text txt = new Text(label);
-            final TextField field = new TextField();
-            binding.bindTextField(field, value);
-            grid.add(txt, 0, row);
-            grid.add(field, 1, row, 3, 1);
-            row++;
-        }
-
-        /**
-         * add an element with label, value, label, value for things like x,y coordinates {@inheritDoc}
-         */
-        @Override
-        public void add(final String label0, final Edit value0, final String label1, final Edit value1) {
-
-            final Text txt0 = new Text(label0);
-            final TextField edit0 = new TextField();
-            binding.bindTextField(edit0, value0);
-
-            final Text txt1 = new Text(label1);
-            final TextField edit1 = new TextField();
-            binding.bindTextField(edit1, value1);
-
-            grid.add(txt0, 0, row);
-            grid.add(edit0, 1, row);
-            grid.add(txt1, 2, row);
-            grid.add(edit1, 3, row);
-            row++;
-        }
-
-        /**
-         * add an element with two labels {@inheritDoc}
-         */
-        @Override
-        public void add(final String label, final String value) {
-            final Text txt = new Text(label);
-            final TextField field = new TextField(value);
-            field.setEditable(false);
-            grid.add(txt, 0, row);
-            grid.add(field, 1, row, 3, 1);
-            row++;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void add(final String label0, final String label1, final String label2, final String label3) {
-            grid.add(new Text(label0), 0, row);
-            grid.add(new Text(label1), 1, row);
-            grid.add(new Text(label2), 2, row);
-            grid.add(new Text(label3), 3, row);
-            row++;
-        }
-
+      });
+      position.getChildren().addAll(labelX, dropdown, buttonEditLayer);
+    } else {
+      position.getChildren().addAll(labelX, dropdown);
     }
+    currentBox.getChildren().add(position);
+    return dropdown.getValue();
+  }
 
-    private static final int  PAD = 2;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String addFile(final String title, final String label, final Edit link, final DocumentFileSystem normalize) {
+    final GridPane pane = new GridPane();
 
-    private final EditBinding binding;
-    private VBox              currentBox;
-    private final VBox        rootBox;
+    final Text labelX = new Text(label);
+    pane.add(labelX, 0, 0);
 
-    /**
-     * @param rootBox
-     *            the root box that will be cleared and where elements will be added
-     * @param binding
-     *            how data gets bound
-     */
-    public SurfaceItemEditorBuilderImpl(final VBox rootBox, final EditBinding binding) {
-        this.rootBox = rootBox;
-        currentBox = rootBox;
-        this.binding = binding;
-        rootBox.getChildren().clear();
-    }
+    final TextField uri = new TextField();
+    binding.bindTextField(uri, link);
+    pane.add(uri, 1, 0);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addAction(final String label, final Runnable runnable) {
-        final Button act = new Button(label);
-        act.setOnAction(new EventHandler<ActionEvent>() {
+    final Button choose = new Button("...");
+    binding.bindFile(title, choose, uri, link, normalize);
+    pane.add(choose, 2, 0);
 
-            @Override
-            public void handle(final ActionEvent arg0) {
-                runnable.run();
-                binding.forceSync();
-            }
-        });
-        currentBox.getChildren().add(act);
-    }
+    currentBox.getChildren().add(pane);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean addBoolean(final String label, final Edit link) {
-        final CheckBox box = new CheckBox(label);
-        binding.bindBoolean(box, link);
-        currentBox.getChildren().add(box);
-        return box.isSelected();
-    }
+    return link.getAsText();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String addColor(final String label, final Edit link) {
-        final GridPane pane = new GridPane();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void endBorder() {
+    currentBox = rootBox;
+  }
 
-        final Text labelX = new Text(label);
-        pane.add(labelX, 0, 0);
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void startBorder(final String label) {
+    final VBox childBox = new VBox();
+    final Text labelTxt = new Text(label);
 
-        final ColorPicker colorPicker = new ColorPicker();
-        binding.bindColor(colorPicker, link);
-        pane.add(colorPicker, 1, 0);
+    final HBox labelbox = new HBox();
 
-        currentBox.getChildren().add(pane);
-        return link.getAsText();
-    }
+    labelbox.setStyle("-fx-background-color: #ccccff; -fx-font: 15px Tahoma; -fx-fill: white;");
+    labelbox.getChildren().add(labelTxt);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T extends AbstractMapEditorItemRequirements, E extends AbstractMapEditor<T>> T addCombo(final boolean canEdit, final String label, final Edit link, final Map<String, T> values, final Class<E> clazz, final Syncable parent) {
-        final HBox position = new HBox();
-        final ComboBox<T> dropdown = new ComboBox<>();
-        binding.bindComboBox(dropdown, link, values, parent);
-        final Text labelX = new Text(label);
+    childBox.setPadding(new Insets(PAD, PAD, PAD, PAD));
 
-        if (canEdit) {
-            final Button buttonEditLayer = new Button("...");
-            buttonEditLayer.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(final ActionEvent arg0) {
-                    try {
-                        clazz.getConstructors()[0].newInstance(values, link.getAsText(), parent, binding.notifications);
-                    } catch (final Exception failure) {
-                        binding.notifications.println(failure, "unable to create new instance of the editor");
-                    }
-                }
-            });
-            position.getChildren().addAll(labelX, dropdown, buttonEditLayer);
-        } else {
-            position.getChildren().addAll(labelX, dropdown);
-        }
-        currentBox.getChildren().add(position);
-        return dropdown.getValue();
-    }
+    currentBox.getChildren().add(labelbox);
+    childBox.setStyle("-fx-border-color: black; -fx-border: 5px; -fx-border-radius: 5.0;");
+    currentBox.getChildren().add(childBox);
+    VBox.setMargin(childBox, new Insets(PAD, PAD, PAD, PAD));
+    HBox.setMargin(labelbox, new Insets(PAD, PAD, PAD, PAD));
+    currentBox = childBox;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String addFile(final String title, final String label, final Edit link, final DocumentFileSystem normalize) {
-        final GridPane pane = new GridPane();
-
-        final Text labelX = new Text(label);
-        pane.add(labelX, 0, 0);
-
-        final TextField uri = new TextField();
-        binding.bindTextField(uri, link);
-        pane.add(uri, 1, 0);
-
-        final Button choose = new Button("...");
-        binding.bindFile(title, choose, uri, link, normalize);
-        pane.add(choose, 2, 0);
-
-        currentBox.getChildren().add(pane);
-
-        return link.getAsText();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void endBorder() {
-        currentBox = rootBox;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void startBorder(final String label) {
-        final VBox childBox = new VBox();
-        final Text labelTxt = new Text(label);
-
-        final HBox labelbox = new HBox();
-
-        labelbox.setStyle("-fx-background-color: #ccccff; -fx-font: 15px Tahoma; -fx-fill: white;");
-        labelbox.getChildren().add(labelTxt);
-
-        childBox.setPadding(new Insets(PAD, PAD, PAD, PAD));
-
-        currentBox.getChildren().add(labelbox);
-        childBox.setStyle("-fx-border-color: black; -fx-border: 5px; -fx-border-radius: 5.0;");
-        currentBox.getChildren().add(childBox);
-        VBox.setMargin(childBox, new Insets(PAD, PAD, PAD, PAD));
-        HBox.setMargin(labelbox, new Insets(PAD, PAD, PAD, PAD));
-        currentBox = childBox;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public SurfaceFourColumnGrid startFourColumnGrid() {
-        final GridPane grid = new GridPane();
-        grid.setHgap(PAD);
-        grid.setVgap(PAD);
-        currentBox.getChildren().add(grid);
-        VBox.setMargin(grid, new Insets(PAD, PAD, PAD, PAD));
-        return new SurfaceFourColumnGridImpl(grid);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public SurfaceFourColumnGrid startFourColumnGrid() {
+    final GridPane grid = new GridPane();
+    grid.setHgap(PAD);
+    grid.setVgap(PAD);
+    currentBox.getChildren().add(grid);
+    VBox.setMargin(grid, new Insets(PAD, PAD, PAD, PAD));
+    return new SurfaceFourColumnGridImpl(grid);
+  }
 
 }

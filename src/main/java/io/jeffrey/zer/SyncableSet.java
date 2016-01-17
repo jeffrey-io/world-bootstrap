@@ -9,32 +9,32 @@ import java.util.HashSet;
  */
 public class SyncableSet implements Syncable {
 
-    private final HashSet<Syncable> all;
+  private final HashSet<Syncable> all;
 
-    /**
-     * create an empty set
-     */
-    public SyncableSet() {
-        all = new HashSet<>();
-    }
+  /**
+   * create an empty set
+   */
+  public SyncableSet() {
+    all = new HashSet<>();
+  }
 
-    /**
-     * Link the current syncable to this
-     *
-     * @param s
-     *            the syncable to add
-     */
-    public void add(final Syncable s) {
-        all.add(s);
-    }
+  /**
+   * Link the current syncable to this
+   *
+   * @param s
+   *          the syncable to add
+   */
+  public void add(final Syncable s) {
+    all.add(s);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void sync() {
-        for (final Syncable s : all) {
-            s.sync();
-        }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void sync() {
+    for (final Syncable s : all) {
+      s.sync();
     }
+  }
 }

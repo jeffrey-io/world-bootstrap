@@ -9,11 +9,11 @@ import io.jeffrey.zer.meta.GuideLine;
  * @author jeffrey
  */
 public interface GuideLineEnforcer {
-    /**
-     * try to snap the thing to the guide line
-     *
-     * @param line
-     *            the line to snap to
-     */
-    public void attemptSnapTo(Camera camera, GuideLine line);
+  /**
+   * try to snap the thing to the guide line
+   *
+   * @param line
+   *          the line to snap to
+   */
+  public void attemptSnapTo(Camera camera, GuideLine line);
 }

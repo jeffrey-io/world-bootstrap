@@ -5,9 +5,9 @@ import io.jeffrey.world.document.ThingData;
 
 public abstract class EdgedThing extends Thing {
 
-    protected EdgedThing(final Document document, final ThingData node) {
-        super(document, node);
-    }
+  protected EdgedThing(final Document document, final ThingData node) {
+    super(document, node);
+  }
 
-    public abstract double[] edges();
+  public abstract double[] edges();
 }

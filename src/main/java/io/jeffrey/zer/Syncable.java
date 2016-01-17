@@ -7,8 +7,8 @@ package io.jeffrey.zer;
  */
 public interface Syncable {
 
-    /**
-     * Indicate that data has been manipulated
-     */
-    public void sync();
+  /**
+   * Indicate that data has been manipulated
+   */
+  public void sync();
 }

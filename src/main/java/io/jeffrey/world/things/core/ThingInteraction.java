@@ -9,16 +9,16 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  */
 public interface ThingInteraction {
 
-    /**
-     * abort the interaction
-     */
-    public void cancel();
+  /**
+   * abort the interaction
+   */
+  public void cancel();
 
-    /**
-     * the mouse has moved
-     *
-     * @param event
-     *            the event in the thing space
-     */
-    public void moved(AdjustedMouseEvent event);
+  /**
+   * the mouse has moved
+   *
+   * @param event
+   *          the event in the thing space
+   */
+  public void moved(AdjustedMouseEvent event);
 }

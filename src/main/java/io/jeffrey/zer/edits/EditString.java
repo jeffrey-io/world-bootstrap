@@ -7,30 +7,30 @@ package io.jeffrey.zer.edits;
  *
  */
 public class EditString extends EditPrimitive<String> {
-    /**
-     * @param name
-     *            the unique name of the field
-     * @param v
-     *            the value
-     */
-    public EditString(final String name, final String v) {
-        super(name, v);
-    }
+  /**
+   * @param name
+   *          the unique name of the field
+   * @param v
+   *          the value
+   */
+  public EditString(final String name, final String v) {
+    super(name, v);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getAsText() {
-        return value();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getAsText() {
+    return value();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean setByText(final String txt) {
-        value(txt);
-        return true;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean setByText(final String txt) {
+    value(txt);
+    return true;
+  }
 }

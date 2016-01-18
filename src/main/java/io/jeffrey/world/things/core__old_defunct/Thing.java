@@ -13,8 +13,9 @@ import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.base.ControlDoodad;
+import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
-import io.jeffrey.world.things.core__old_defunct.ControlDoodad.Type;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingRotater;
 import io.jeffrey.world.things.interactions.ThingScaler;
@@ -372,14 +373,13 @@ public abstract class Thing extends ThingCore {
     if (deleted.value()) {
       return;
     }
-    cacheAngle();
     if (!locked.value() && selected()) {
       for (final ControlDoodad doodad : getDoodadsInWorldSpace()) {
 
-        if (doodad.type == Type.Scale && slock.value()) {
+        if (doodad.type == Type.Scale && scale.lock.value()) {
           continue;
         }
-        if (doodad.type == Type.Rotate && alock.value()) {
+        if (doodad.type == Type.Rotate && rotation.lock.value()) {
           continue;
         }
 
@@ -398,9 +398,9 @@ public abstract class Thing extends ThingCore {
     gc.save();
     gc.translate(camera.tX, camera.tY);
     gc.scale(camera.scale, camera.scale);
-    gc.translate(x.value(), y.value());
-    gc.rotate(-angle.value());
-    gc.scale(sx.value(), sy.value());
+    gc.translate(position.x.value(), position.y.value());
+    gc.rotate(-rotation.angle.value());
+    gc.scale(scale.x.value(), scale.y.value());
     draw(gc);
     gc.restore();
   }
@@ -447,10 +447,10 @@ public abstract class Thing extends ThingCore {
       if (interaction != null) {
         break;
       }
-      if (doodad.type == Type.Scale && slock.value()) {
+      if (doodad.type == Type.Scale && scale.lock.value()) {
         break;
       }
-      if (doodad.type == Type.Rotate && alock.value()) {
+      if (doodad.type == Type.Rotate && rotation.lock.value()) {
         break;
       }
 
@@ -508,13 +508,13 @@ public abstract class Thing extends ThingCore {
    */
   public void writeToTarget(final VectorRegister3 reg) {
     reg.copy_from_0_to_1();
-    reg.set_2(x.value(), y.value());
+    reg.set_2(position.x.value(), position.y.value());
     reg.sub_2_from_1();
-    reg.set_2(cx, cy);
+    reg.set_2(rotation.cachedComplexX(), rotation.cachedComplexY());
     reg.complex_mult_2_1();
     // add sheer to vector register
-    reg.x_1 /= sx.value();
-    reg.y_1 /= sy.value();
+    reg.x_1 /= scale.x.value();
+    reg.y_1 /= scale.y.value();
   }
 
   /**
@@ -529,11 +529,11 @@ public abstract class Thing extends ThingCore {
   public void writeToWorld(final VectorRegister3 reg) {
     reg.copy_from_0_to_1();
     // add sheer
-    reg.x_1 *= sx.value();
-    reg.y_1 *= sy.value();
-    reg.set_2(cx, -cy);
+    reg.x_1 *= scale.x.value();
+    reg.y_1 *= scale.y.value();
+    reg.set_2(rotation.cachedComplexX(), -rotation.cachedComplexY());
     reg.complex_mult_2_1();
-    reg.set_2(x.value(), y.value());
+    reg.set_2(position.x.value(), position.y.value());
     reg.add_2_to_1();
   }
 }

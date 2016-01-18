@@ -1,5 +1,7 @@
 package io.jeffrey.zer.edits;
 
+import java.util.function.BiConsumer;
+
 /**
  * Defines how to edit a single value
  *
@@ -41,6 +43,16 @@ public abstract class EditPrimitive<T> extends Edit {
    *          the new value to set
    */
   public void value(final T v) {
-    this.pValue = v;
+    if (subscriptions != null) {
+      String before = this.getAsText();
+      this.pValue = v;
+      String after = this.getAsText();
+      for (BiConsumer<String, String> event : subscriptions) {
+        event.accept(before, after);
+      }
+    } else {
+      this.pValue = v;
+    }
+    
   }
 }

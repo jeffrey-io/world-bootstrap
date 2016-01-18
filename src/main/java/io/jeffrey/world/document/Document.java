@@ -16,7 +16,7 @@ import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.WorldData;
-import io.jeffrey.world.things.core__old_defunct.ControlDoodad;
+import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingCore;
 import io.jeffrey.zer.Camera;

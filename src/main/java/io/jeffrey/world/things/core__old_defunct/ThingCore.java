@@ -8,6 +8,10 @@ import java.util.UUID;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryEditTrap;
+import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.base.parts.PositionPart;
+import io.jeffrey.world.things.base.parts.RotationPart;
+import io.jeffrey.world.things.base.parts.ScalePart;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;
@@ -18,16 +22,9 @@ import io.jeffrey.zer.edits.EditString;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 
-public abstract class ThingCore implements Editable, Comparable<Thing> {
-  private static final double             DEGREES_TO_RADIANS = 0.0174532925;
-  protected final EditBoolean             alock;
-  protected final EditDouble              angle;
-  protected final EditBoolean             aspect;
+public abstract class ThingCore extends AbstractThing implements Editable, Comparable<Thing> {
   protected final EditString              color;
-  protected double                        cx                 = 1.0;
-  protected double                        cy                 = 0.0;
   protected final EditBoolean             deleted;
-  protected final Document                document;
   protected final EditString              id;
   protected final EditString              layer;
   protected final EditBoolean             layerlock;
@@ -41,13 +38,11 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
   protected final EditBoolean             nometa;
   protected final EditDouble              order;
   protected final EditBoolean             selected;
-  protected final EditBoolean             slock;
-
-  protected final EditDouble              sx;
-  protected final EditDouble              sy;
   protected final EditString              type;
-  protected final EditDouble              x;
-  protected final EditDouble              y;
+
+  protected final PositionPart position;
+  protected final ScalePart scale;
+  protected final RotationPart rotation;
 
   /**
    * @param document
@@ -56,16 +51,21 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    *          where the data for the node comes from
    */
   public ThingCore(final Document document, final ThingData node) {
-    this.document = document;
+    super(document, node);
 
     id = node.getString("id", UUID.randomUUID().toString());
     type = node.getString("_type", null);
 
-    x = node.getDouble("x", 0.0);
-    y = node.getDouble("y", 0.0);
-    sx = node.getDouble("sx", 1.0);
-    sy = node.getDouble("sy", 1.0);
-    angle = node.getDouble("angle", 0.0);
+    position = new PositionPart(data);
+    register("position", position);
+    
+    scale = new ScalePart(data);
+    register("scale", scale);
+    
+    rotation = new RotationPart(data);
+    register("rotation", rotation);
+
+    
     name = node.getString("name", "Unnamed");
 
     layer = node.getString("layer", "_");
@@ -78,10 +78,6 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
 
     metaclass = node.getString("metaclass", "_");
     metadata = new HashMap<String, EditString>();
-
-    slock = node.getBoolean("slock", false);
-    alock = node.getBoolean("alock", false);
-    aspect = node.getBoolean("aspect", true);
 
     locklock = node.getBoolean("locklock", false);
     lockmeta = node.getBoolean("lockmeta", false);
@@ -100,7 +96,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    * @return the current angle (in degrees)
    */
   public double angle() {
-    return angle.value();
+    return rotation.angle.value();
   }
 
   /**
@@ -108,24 +104,15 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    *          the new angle value (in degrees)
    */
   public void angle(final double angle) {
-    cx = Math.cos(DEGREES_TO_RADIANS * angle);
-    cy = Math.sin(DEGREES_TO_RADIANS * angle);
-    this.angle.value(angle);
+    
+    this.rotation.angle.value(angle);
   }
 
   /**
    * @return if the aspect is locked
    */
   public boolean aspectLocked() {
-    return aspect.value();
-  }
-
-  /**
-   * update the basis vectors given the current angle
-   */
-  protected void cacheAngle() {
-    cx = Math.cos(DEGREES_TO_RADIANS * angle.value());
-    cy = Math.sin(DEGREES_TO_RADIANS * angle.value());
+    return scale.aspect.value();
   }
 
   /**
@@ -168,13 +155,9 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
   @Override
   public Map<String, Edit> getLinks(final boolean withHistory) {
     final HashMap<String, Edit> links = new HashMap<>();
+    links.putAll(data.getLinks());
     links.put("id", id);
     links.put("_type", type);
-    links.put("x", x);
-    links.put("y", y);
-    links.put("sx", sx);
-    links.put("sy", sy);
-    links.put("angle", angle);
     links.put("name", name);
 
     links.put("layer", layer);
@@ -183,10 +166,6 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
     links.put("locked", locked);
     links.put("deleted", deleted);
     links.put("selected", selected);
-
-    links.put("slock", slock);
-    links.put("alock", alock);
-    links.put("aspect", aspect);
 
     links.put("locklock", locklock);
     links.put("lockmeta", lockmeta);
@@ -337,7 +316,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    * @return the current scaling of the x axis
    */
   public double sx() {
-    return sx.value();
+    return scale.x.value();
   }
 
   /**
@@ -345,14 +324,14 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    *          the new scale of the x axis
    */
   public void sx(final double sx) {
-    this.sx.value(Math.min(10000.0, Math.max(0.1, sx)));
+    this.scale.x.value(Math.min(10000.0, Math.max(0.1, sx)));
   }
 
   /**
    * @return the current scaling of the y axis
    */
   public double sy() {
-    return sy.value();
+    return scale.y.value();
   }
 
   /**
@@ -360,7 +339,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    *          the new scale of the y axis
    */
   public void sy(final double sy) {
-    this.sy.value(Math.min(10000.0, Math.max(0.1, sy)));
+    this.scale.y.value(Math.min(10000.0, Math.max(0.1, sy)));
   }
 
   /**
@@ -375,7 +354,7 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    * @return the current x coordinate value
    */
   public double x() {
-    return snapValue(x.value());
+    return snapValue(position.x.value());
   }
 
   /**
@@ -383,14 +362,14 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    *          the new x coordinate value
    */
   public void x(final double x) {
-    this.x.value(snapValue(x));
+    this.position.x.value(snapValue(x));
   }
 
   /**
    * @return the current y coordinate value
    */
   public double y() {
-    return snapValue(y.value());
+    return snapValue(position.y.value());
   }
 
   /**
@@ -398,6 +377,6 @@ public abstract class ThingCore implements Editable, Comparable<Thing> {
    *          the new y coordinate value
    */
   public void y(final double y) {
-    this.y.value(snapValue(y));
+    this.position.y.value(snapValue(y));
   }
 }

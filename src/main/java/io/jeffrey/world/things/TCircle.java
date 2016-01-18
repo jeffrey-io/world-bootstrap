@@ -7,11 +7,11 @@ import java.util.Set;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.base.ControlDoodad;
+import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
-import io.jeffrey.world.things.core__old_defunct.ControlDoodad;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
-import io.jeffrey.world.things.core__old_defunct.ControlDoodad.Type;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;

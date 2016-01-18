@@ -273,7 +273,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    * {@inheritDoc}
    */
   @Override
-  public double[] edges() {
+  public double[] worldSpaceEdges() {
     final VectorRegister5 W = new VectorRegister5();
     final double[] targetEdges = chain.edges(isPolygonLooped());
     for (int k = 0; k + 1 < targetEdges.length; k += 2) {
@@ -282,11 +282,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       W.extract_1(targetEdges, k);
     }
     return targetEdges;
-  }
-
-  @Override
-  public double[] worldSpaceEdges() {
-    return edges();
   }
 
   /**

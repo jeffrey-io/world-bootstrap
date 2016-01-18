@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.base.parts;
+package io.jeffrey.world.things.parts;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.world.things.base.ControlDoodad;

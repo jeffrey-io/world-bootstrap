@@ -99,7 +99,7 @@ public class TCircle extends Thing {
    */
   @Override
   public void draw(final GraphicsContext gc) {
-    gc.setFill(Color.valueOf(color.getAsText()));
+    gc.setFill(Color.valueOf(fill.color.getAsText()));
     gc.fillArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
     if (selected()) {
       gc.setStroke(Color.RED);
@@ -151,7 +151,7 @@ public class TCircle extends Thing {
   @Override
   public Color queryTargetColor(final double x, final double y) {
     if (doesContainTargetPoint(x, y)) {
-      return Color.valueOf(color.getAsText());
+      return Color.valueOf(fill.color.getAsText());
     }
     return null;
   }

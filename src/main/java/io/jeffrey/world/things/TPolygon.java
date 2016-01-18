@@ -119,7 +119,7 @@ public class TPolygon extends AbstractPointChain {
    */
   @Override
   protected void renderPolygon(final Document document, final GraphicsContext gc) {
-    gc.setFill(Color.valueOf(color.getAsText()));
+    gc.setFill(Color.valueOf(fill.color.getAsText()));
     gc.fillPolygon(cache.x, cache.y, cache.y.length);
     if (selected()) {
       gc.setStroke(Color.RED);

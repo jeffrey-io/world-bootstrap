@@ -71,9 +71,9 @@ public class ThingEditor {
       builder.endBorder();
     }
 
-    if (containAll(fields, "color") && isNotLocked(fields, "lockcolor")) {
+    if (containAll(fields, "fill_color") && isNotLocked(fields, "fill_lock")) {
       builder.startBorder("Color");
-      builder.addColor("Color", fields.get("color"));
+      builder.addColor("Color", fields.get("fill_color"));
       builder.endBorder();
     }
 

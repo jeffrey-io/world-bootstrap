@@ -9,6 +9,7 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.base.parts.ColorPart;
 import io.jeffrey.world.things.base.parts.EditingPart;
 import io.jeffrey.world.things.base.parts.IdentityPart;
 import io.jeffrey.world.things.base.parts.LayerPart;
@@ -30,12 +31,6 @@ import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 public abstract class ThingCore extends AbstractThing implements Editable, Comparable<Thing> {
   protected final IdentityPart identity;
   protected final LifetimePart lifetime;
-
-  
-  protected final EditString   color;
-  protected final EditBoolean  lockcolor;
-
-  
   protected final MetadataPart metadata;
   protected final PositionPart position;
   protected final RotationPart rotation;
@@ -43,6 +38,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   protected final Transform    transform;
   protected final EditingPart editing;
   protected final LayerPart layerP;
+  protected final ColorPart fill;
 
   /**
    * @param document
@@ -79,14 +75,8 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
     layerP = new LayerPart(document, data);
     register("layer", layerP);
 
-
-
-    color = node.getString("color", "blue");
-
-
-
-    lockcolor = node.getBoolean("lockcolor", false);
-
+    fill = new ColorPart("fill", data);
+    register("fill", fill);
   }
 
   /**
@@ -153,12 +143,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public Map<String, Edit> getLinks(final boolean withHistory) {
     final HashMap<String, Edit> links = new HashMap<>();
     links.putAll(data.getLinks());
-
-    if (supportsColor()) {
-      links.put("color", color);
-      links.put("lockcolor", lockcolor);
-    }
-
     populateLinks(links);
     if (withHistory) {
       final HashMap<String, Edit> actualLinks = new HashMap<>();

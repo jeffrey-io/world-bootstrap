@@ -117,7 +117,7 @@ public class TPath extends AbstractPointChain {
     if (cache.x.length == 0) {
       return;
     }
-    gc.setStroke(Color.valueOf(color.getAsText()));
+    gc.setStroke(Color.valueOf(fill.color.getAsText()));
     gc.beginPath();
     final double s = 2.0 / (sx() + sy());
     gc.setLineWidth(s);

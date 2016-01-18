@@ -369,7 +369,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   @Override
   public Color queryTargetColor(final double x, final double y) {
     if (doesContainTargetPoint(x, y)) {
-      return Color.valueOf(color.getAsText());
+      return Color.valueOf(fill.color.getAsText());
     }
     return null;
   }

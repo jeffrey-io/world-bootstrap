@@ -21,6 +21,7 @@ import io.jeffrey.world.things.interactions.ThingRotater;
 import io.jeffrey.world.things.interactions.ThingScaler;
 import io.jeffrey.world.things.interactions.ThingSnapper;
 import io.jeffrey.world.things.parts.ControlDoodadPart;
+import io.jeffrey.world.things.parts.HasControlDoodadsInThingSpace;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
@@ -32,8 +33,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public abstract class Thing extends ThingCore {
-  private boolean         alreadySelected                = false;
+public abstract class Thing extends ThingCore implements HasControlDoodadsInThingSpace {
+  private boolean          alreadySelected                = false;
+
+  public ControlDoodadPart doodadCache;
 
   /**
    * does the thing the given (x,y) point in world space
@@ -44,9 +47,7 @@ public abstract class Thing extends ThingCore {
    *          the y-coordinate
    * @return whether or not point is in the thing
    */
-  VectorRegister3         threadUnsafeContainmentScratch = new VectorRegister8();
-
-  public ControlDoodadPart doodadCache;
+  VectorRegister3          threadUnsafeContainmentScratch = new VectorRegister8();
 
   /**
    * @param document
@@ -56,19 +57,8 @@ public abstract class Thing extends ThingCore {
    */
   protected Thing(final Document document, final ThingData node) {
     super(document, node);
-    
-    this.doodadCache = new ControlDoodadPart(transform) {
-      
-      @Override
-      public void update() {
-        
-      }
-      
-      @Override
-      protected ControlDoodad[] getDoodadsInThingSpace() {
-        return Thing.this.getDoodadsInThingSpace();
-      }
-    };
+
+    doodadCache = new ControlDoodadPart(transform, this);
   }
 
   /**
@@ -229,11 +219,6 @@ public abstract class Thing extends ThingCore {
     describePossibleActions(actions);
     return actions;
   }
-
-  /**
-   * @return all the doodads in target space
-   */
-  protected abstract ControlDoodad[] getDoodadsInThingSpace();
 
   /**
    * @return a new link to align this in real time

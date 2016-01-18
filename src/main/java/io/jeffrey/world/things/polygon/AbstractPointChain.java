@@ -1,6 +1,5 @@
 package io.jeffrey.world.things.polygon;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -306,7 +305,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    * {@inheritDoc}
    */
   @Override
-  protected ControlDoodad[] getDoodadsInThingSpace() {
+  public ControlDoodad[] getDoodadsInThingSpace() {
     if (cache.needsUpdate()) {
       cache.update();
     }
@@ -351,20 +350,9 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   /**
    * {@inheritDoc}
    */
-  @Override
-  protected void populateLinks(final HashMap<String, Edit> links) {
-    pointsEditList.edits.clear();
-    cache.update();
-    int index = 0;
-    for (final SelectablePoint2 p : chain) {
-      pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true));
-      pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false));
-      index++;
-    }
-    links.put("points", pointsEditList);
-    links.put("vlock", vlock);
-    populatePolygonalEditLinks(links);
-  }
+  /*
+   * @Override protected void populateLinks(final HashMap<String, Edit> links) { pointsEditList.edits.clear(); cache.update(); int index = 0; for (final SelectablePoint2 p : chain) { pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true)); pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false)); index++; } links.put("points", pointsEditList); links.put("vlock", vlock); populatePolygonalEditLinks(links); }
+   */
 
   @Override
   public Color queryTargetColor(final double x, final double y) {

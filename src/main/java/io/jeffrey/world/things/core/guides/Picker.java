@@ -19,7 +19,6 @@ public class Picker {
     for (int k = 0; k < guideSelectBuffer.length; k++) {
       guideSelectBuffer[k] = new PickState();
     }
-
   }
 
   public MouseInteraction select(final GuideLine line, final Camera camera, final double x, final double y, final double radius) {

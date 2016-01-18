@@ -23,22 +23,20 @@ import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;
 import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.edits.EditBoolean;
-import io.jeffrey.zer.edits.EditString;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 
 public abstract class ThingCore extends AbstractThing implements Editable, Comparable<Thing> {
+  protected final EditingPart  editing;
+  protected final ColorPart    fill;
   protected final IdentityPart identity;
+  protected final LayerPart    layerP;
   protected final LifetimePart lifetime;
   protected final MetadataPart metadata;
   protected final PositionPart position;
   protected final RotationPart rotation;
   protected final ScalePart    scale;
   protected final Transform    transform;
-  protected final EditingPart editing;
-  protected final LayerPart layerP;
-  protected final ColorPart fill;
 
   /**
    * @param document
@@ -68,7 +66,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
 
     lifetime = new LifetimePart(data);
     register("lifetime", lifetime);
-    
+
     editing = new EditingPart(data);
     register("editing", editing);
 
@@ -143,7 +141,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public Map<String, Edit> getLinks(final boolean withHistory) {
     final HashMap<String, Edit> links = new HashMap<>();
     links.putAll(data.getLinks());
-    populateLinks(links);
     if (withHistory) {
       final HashMap<String, Edit> actualLinks = new HashMap<>();
       for (final Entry<String, Edit> link : links.entrySet()) {
@@ -211,14 +208,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public void order(final double value) {
     layerP.order.value(value);
   }
-
-  /**
-   * walk the subclassing links
-   *
-   * @param links
-   *          the links to all the fields
-   */
-  protected abstract void populateLinks(HashMap<String, Edit> links);
 
   /**
    * save the data from things thing to the given map

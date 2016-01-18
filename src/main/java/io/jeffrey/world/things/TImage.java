@@ -1,32 +1,26 @@
 package io.jeffrey.world.things;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import io.jeffrey.vector.VectorRegister3;
-import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
+import io.jeffrey.world.things.behaviors.Selectable.ContainmentCheck;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core__old_defunct.EdgedThing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
+import io.jeffrey.world.things.parts.RectanglePart;
+import io.jeffrey.world.things.parts.UriPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.SelectionWindow.Mode;
-import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.edits.EditBoolean;
-import io.jeffrey.zer.edits.EditString;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 /**
  * A thing that is an image
@@ -39,13 +33,11 @@ public class TImage extends EdgedThing {
     return Math.min(high, Math.max(low, value));
   }
 
-  private final ImageCache      cache;
-  private final ControlDoodad[] doodads;
-  private Image                 img  = null;
-  private Rectangle             rect = null;
-  private final EditString      uri;
+  private final ImageCache    cache;
 
-  private final EditBoolean     urilock;
+  private Image               img = null;
+  private final RectanglePart rectangle;
+  private final UriPart       uri;
 
   /**
    * @param document
@@ -56,11 +48,18 @@ public class TImage extends EdgedThing {
   public TImage(final Document document, final ThingData node) {
     super(document, node);
     cache = document.imageCache;
-    doodads = new ControlDoodad[8];
+
+    rectangle = new RectanglePart(transform);
     this.sx(node.getDouble("sx", 0.25).value());
     this.sy(node.getDouble("sy", 0.25).value());
-    uri = node.getString("uri", "");
-    urilock = node.getBoolean("urilock", false);
+
+    uri = new UriPart("", data) {
+
+      @Override
+      public void update() {
+        refresh();
+      }
+    };
     refresh();
   }
 
@@ -90,7 +89,7 @@ public class TImage extends EdgedThing {
    */
   @Override
   protected boolean doesContainTargetPoint(final double x, final double y) {
-    return rect.contains(x, y);
+    return rectangle.contains(x, y, ContainmentCheck.ExactlyInside);
   }
 
   /**
@@ -99,7 +98,7 @@ public class TImage extends EdgedThing {
   @Override
   protected boolean doesPointApplyToSelection(final AdjustedMouseEvent event) {
     refresh();
-    return rect.contains(event.position.x_1, event.position.y_1);
+    return rectangle.contains(event.position.x_1, event.position.y_1, ContainmentCheck.CloseEnoughToMaintainSelection);
   }
 
   /**
@@ -120,44 +119,7 @@ public class TImage extends EdgedThing {
 
   @Override
   public double[] edges() {
-    final double[] edges = new double[16];
-    final VectorRegister3 W = new VectorRegister8();
-
-    W.set_0(-rect.getWidth() / 2, -rect.getHeight() / 2);
-    writeToWorld(W);
-    W.extract_1(edges, 0);
-    W.set_0(rect.getWidth() / 2, -rect.getHeight() / 2);
-    writeToWorld(W);
-    W.extract_1(edges, 2);
-
-    /*
-     * W.set_0(rect.getWidth() / 2, -rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 4); W.set_0(rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 6);
-     *
-     * W.set_0(rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 8); W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 10);
-     *
-     * W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 12); W.set_0(-rect.getWidth() / 2, -rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 14);
-     */
-
-    edges[4] = edges[2];
-    edges[5] = edges[3];
-
-    W.set_0(rect.getWidth() / 2, rect.getHeight() / 2);
-    writeToWorld(W);
-    W.extract_1(edges, 6);
-
-    edges[8] = edges[6];
-    edges[9] = edges[7];
-
-    W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2);
-    writeToWorld(W);
-    W.extract_1(edges, 10);
-
-    edges[12] = edges[10];
-    edges[13] = edges[11];
-    edges[14] = edges[0];
-    edges[15] = edges[1];
-
-    return edges;
+    return rectangle.worldSpaceEdges();
   }
 
   /**
@@ -172,9 +134,9 @@ public class TImage extends EdgedThing {
    * {@inheritDoc}
    */
   @Override
-  protected ControlDoodad[] getDoodadsInThingSpace() {
+  public ControlDoodad[] getDoodadsInThingSpace() {
     refresh();
-    return doodads;
+    return rectangle.getDoodadsInThingSpace();
   }
 
   @Override
@@ -196,15 +158,6 @@ public class TImage extends EdgedThing {
     interactions.add(new ThingMover(event));
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void populateLinks(final HashMap<String, Edit> links) {
-    links.put("uri", uri);
-    links.put("urilock", urilock);
-  }
-
   @Override
   public Color queryTargetColor(final double x, final double y) {
     if (doesContainTargetPoint(x, y)) {
@@ -219,8 +172,10 @@ public class TImage extends EdgedThing {
    * helper: update the image based on the cache
    */
   private void refresh() {
-    img = cache.of(document.find(uri.value()));
-    update(img);
+    img = cache.of(document.find(uri.uri.value()));
+    if (img != null) {
+      rectangle.set(-img.getWidth() / 2, -img.getHeight() / 2, img.getWidth(), img.getHeight());
+    }
   }
 
   /**
@@ -229,7 +184,7 @@ public class TImage extends EdgedThing {
   @Override
   protected boolean selectionIntersect(final Polygon p, final Mode mode) {
     refresh();
-    return Shape.intersect(rect, p).getBoundsInLocal().getWidth() > 0;
+    return rectangle.selectionIntersect(p, mode);
   }
 
   /**
@@ -257,27 +212,6 @@ public class TImage extends EdgedThing {
    */
   @Override
   public void update() {
-  }
-
-  /**
-   * update the boundaries and the doodads
-   *
-   * @param img
-   *          the image
-   */
-  private void update(final Image img) {
-    if (img != null) {
-      rect = new Rectangle(-img.getWidth() / 2, -img.getHeight() / 2, img.getWidth(), img.getHeight());
-    } else {
-      rect = new Rectangle(-100, -100, 200, 200);
-    }
-    doodads[0] = new ControlDoodad(Type.Rotate, 0, rect.getHeight() / 2);
-    doodads[1] = new ControlDoodad(Type.Rotate, 0, -rect.getHeight() / 2);
-    doodads[2] = new ControlDoodad(Type.Rotate, -rect.getWidth() / 2, 0);
-    doodads[3] = new ControlDoodad(Type.Rotate, rect.getWidth() / 2, 0);
-    doodads[4] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, -rect.getHeight() / 2);
-    doodads[5] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, rect.getHeight() / 2);
-    doodads[6] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, -rect.getHeight() / 2);
-    doodads[7] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, rect.getHeight() / 2);
+    refresh();
   }
 }

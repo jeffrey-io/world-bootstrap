@@ -1,7 +1,6 @@
 package io.jeffrey.world.things;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +15,6 @@ import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
-import io.jeffrey.zer.edits.Edit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -120,7 +118,7 @@ public class TCircle extends Thing {
    * {@inheritDoc}
    */
   @Override
-  protected ControlDoodad[] getDoodadsInThingSpace() {
+  public ControlDoodad[] getDoodadsInThingSpace() {
     return doodads;
   }
 
@@ -139,13 +137,6 @@ public class TCircle extends Thing {
   @Override
   protected void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     interactions.add(new ThingMover(event));
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void populateLinks(final HashMap<String, Edit> links) {
   }
 
   @Override

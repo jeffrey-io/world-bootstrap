@@ -7,7 +7,7 @@ public interface Transform {
 
   /**
    * is the doodadType supported by this transformation
-   * 
+   *
    * @param doodadType
    *          the type of doodad
    * @return true if allowed, false otherwise

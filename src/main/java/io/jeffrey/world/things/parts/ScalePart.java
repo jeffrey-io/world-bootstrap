@@ -2,6 +2,7 @@ package io.jeffrey.world.things.parts;
 
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
+import io.jeffrey.world.things.base.Snap;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 
@@ -17,6 +18,14 @@ public class ScalePart implements Part {
     lock = data.getBoolean("slock", false);
     aspect = data.getBoolean("aspect", true);
   }
+  
+  public void act(String action) {
+    if ("normalize.scale".equals(action)) {
+      final double s = (sx() + sy()) / 2.0;
+      sx(s);
+      sy(s);
+    }
+  }
 
   @Override
   public boolean unique() {
@@ -25,5 +34,35 @@ public class ScalePart implements Part {
 
   @Override
   public void update() {
+  }
+  
+  /**
+   * @return the current scaling of the x axis
+   */
+  public double sx() {
+    return x.value();
+  }
+
+  /**
+   * @param sx
+   *          the new scale of the x axis
+   */
+  public void sx(final double sx) {
+    x.value(Math.min(10000.0, Math.max(0.1, sx)));
+  }
+
+  /**
+   * @return the current scaling of the y axis
+   */
+  public double sy() {
+    return y.value();
+  }
+
+  /**
+   * @param sy
+   *          the new scale of the y axis
+   */
+  public void sy(final double sy) {
+    y.value(Math.min(10000.0, Math.max(0.1, sy)));
   }
 }

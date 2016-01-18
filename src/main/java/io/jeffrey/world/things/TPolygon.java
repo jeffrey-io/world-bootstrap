@@ -33,8 +33,6 @@ public class TPolygon extends AbstractPointChain {
    */
   public TPolygon(final Document document, final ThingData node) {
     super(document, node);
-    this.sx(node.getDouble("sx", 64).value());
-    this.sy(node.getDouble("sy", 64).value());
     cache.update();
   }
 
@@ -80,7 +78,7 @@ public class TPolygon extends AbstractPointChain {
 
   @Override
   protected GuideLineEnforcer getGuideLineEnforcer() {
-    return new EdgeEnforcer(this);
+    return new EdgeEnforcer(this, position, rotation);
   }
 
   /**
@@ -123,7 +121,7 @@ public class TPolygon extends AbstractPointChain {
     gc.fillPolygon(cache.x, cache.y, cache.y.length);
     if (selected()) {
       gc.setStroke(Color.RED);
-      gc.setLineWidth(2.0 / (sx() + sy()));
+      gc.setLineWidth(2.0 / (scale.sx() + scale.sy()));
       gc.moveTo(-cache.boundingRadiusForControls, 0);
       gc.strokeArc(-cache.boundingRadiusForControls, -cache.boundingRadiusForControls, 2 * cache.boundingRadiusForControls, 2 * cache.boundingRadiusForControls, 0, 3601, ArcType.ROUND);
       gc.strokePolygon(cache.x, cache.y, cache.y.length);

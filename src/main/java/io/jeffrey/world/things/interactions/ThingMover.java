@@ -2,6 +2,8 @@ package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
+import io.jeffrey.world.things.parts.PositionPart;
+import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
 /**
@@ -18,18 +20,22 @@ public class ThingMover implements ThingInteraction {
   private final Thing  target;
   private final double x;
   private final double y;
+  private final PositionPart position;
+  private final RotationPart rotation;
 
   /**
    * @param initial
    *          the initial event in the thing space
    */
-  public ThingMover(final AdjustedMouseEvent initial) {
+  public ThingMover(final AdjustedMouseEvent initial, PositionPart position, RotationPart rotation) {
     target = (Thing) initial.userdata;
-    x = target.x();
-    y = target.y();
+    x = position.x();
+    y = position.y();
     ix = initial.position.x_0;
     iy = initial.position.y_0;
-    angle = target.angle();
+    angle = rotation.angle(); 
+    this.position = position;
+    this.rotation = rotation;
   }
 
   /**
@@ -37,8 +43,9 @@ public class ThingMover implements ThingInteraction {
    */
   @Override
   public void cancel() {
-    target.x(x);
-    target.y(y);
+    position.x(x);
+    position.y(y);
+    rotation.angle(angle);
   }
 
   /**
@@ -46,9 +53,9 @@ public class ThingMover implements ThingInteraction {
    */
   @Override
   public void moved(final AdjustedMouseEvent event) {
-    target.x(x + event.position.x_0 - ix);
-    target.y(y + event.position.y_0 - iy);
-    target.angle(angle);
+    position.x(x + event.position.x_0 - ix);
+    position.y(y + event.position.y_0 - iy);
+    rotation.angle(angle);
   }
 
 }

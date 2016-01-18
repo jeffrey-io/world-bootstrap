@@ -8,9 +8,9 @@ import io.jeffrey.zer.edits.EditString;
 
 public class IdentityPart implements Part {
   private final EditString id;
+  public final EditString  metaclass;
   public final EditString  name;
   private final EditString type;
-  public final EditString   metaclass;
 
   public IdentityPart(final LinkedDataMap data) {
     id = data.getString("id", UUID.randomUUID().toString());
@@ -18,13 +18,13 @@ public class IdentityPart implements Part {
     name = data.getString("name", "Unnamed");
     metaclass = data.getString("metaclass", "_");
   }
-  
-  public String getType() {
-    return type.getAsText();
-  }
 
   public String getID() {
     return id.getAsText();
+  }
+
+  public String getType() {
+    return type.getAsText();
   }
 
   @Override

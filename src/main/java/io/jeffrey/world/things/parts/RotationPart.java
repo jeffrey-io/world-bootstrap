@@ -19,6 +19,12 @@ public class RotationPart implements Part {
     lock = data.getBoolean("alock", false);
     update();
   }
+  
+  public void act(String action) {
+    if ("reset.angle".equals(action)) {
+      angle(0);
+    }
+  }
 
   public double cachedComplexX() {
     return cx;
@@ -37,5 +43,20 @@ public class RotationPart implements Part {
   public void update() {
     cx = Math.cos(DEGREES_TO_RADIANS * angle.value());
     cy = Math.sin(DEGREES_TO_RADIANS * angle.value());
+  }
+  
+  /**
+   * @return the current angle (in degrees)
+   */
+  public double angle() {
+    return angle.value();
+  }
+
+  /**
+   * @param angle
+   *          the new angle value (in degrees)
+   */
+  public void angle(final double angle) {
+    this.angle.value(angle);
   }
 }

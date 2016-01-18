@@ -231,17 +231,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     if ("?".equals(action)) {
       return getActions();
     }
-
-    if ("reset.angle".equals(action)) {
-      angle(0);
-      return true;
-    }
-    if ("normalize.scale".equals(action)) {
-      final double s = (sx() + sy()) / 2.0;
-      sx(s);
-      sy(s);
-      return true;
-    }
     if ("push.down".equals(action)) {
       layerP.order.value(layerP.order.value() - 1.5);
       return true;
@@ -421,10 +410,10 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
           break;
         }
         if (doodad.type == Type.Scale) {
-          interaction = new ThingScaler(event);
+          interaction = new ThingScaler(event, scale);
         }
         if (doodad.type == Type.Rotate) {
-          interaction = new ThingRotater(event);
+          interaction = new ThingRotater(event, rotation);
         }
       }
     }
@@ -481,5 +470,13 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    */
   public void writeToWorld(final VectorRegister3 reg) {
     transform.writeToWorld(reg);
+  }
+  
+  public double x() {
+    return position.x();
+  }
+  
+  public double y() {
+    return position.y();
   }
 }

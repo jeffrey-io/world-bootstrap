@@ -8,6 +8,7 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.base.Snap;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.parts.ColorPart;
 import io.jeffrey.world.things.parts.EditingPart;
@@ -46,8 +47,21 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    */
   public ThingCore(final Document document, final ThingData node) {
     super(document, node);
+    
+    Snap snap = new Snap() {
+      
+      @Override
+      public double y(double y) {
+        return snapValue(y);
+      }
+      
+      @Override
+      public double x(double x) {
+        return snapValue(x);
+      }
+    };
 
-    position = new PositionPart(data);
+    position = new PositionPart(data, snap);
     register("position", position);
 
     scale = new ScalePart(data);
@@ -75,22 +89,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
 
     fill = new ColorPart("fill", data);
     register("fill", fill);
-  }
-
-  /**
-   * @return the current angle (in degrees)
-   */
-  public double angle() {
-    return rotation.angle.value();
-  }
-
-  /**
-   * @param angle
-   *          the new angle value (in degrees)
-   */
-  public void angle(final double angle) {
-
-    rotation.angle.value(angle);
   }
 
   /**
@@ -250,35 +248,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    */
   protected abstract boolean supportsColor();
 
-  /**
-   * @return the current scaling of the x axis
-   */
-  public double sx() {
-    return scale.x.value();
-  }
 
-  /**
-   * @param sx
-   *          the new scale of the x axis
-   */
-  public void sx(final double sx) {
-    scale.x.value(Math.min(10000.0, Math.max(0.1, sx)));
-  }
-
-  /**
-   * @return the current scaling of the y axis
-   */
-  public double sy() {
-    return scale.y.value();
-  }
-
-  /**
-   * @param sy
-   *          the new scale of the y axis
-   */
-  public void sy(final double sy) {
-    scale.y.value(Math.min(10000.0, Math.max(0.1, sy)));
-  }
 
   /**
    * helper to unselect the thing
@@ -288,33 +258,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
     clearSelection();
   }
 
-  /**
-   * @return the current x coordinate value
-   */
-  public double x() {
-    return snapValue(position.x.value());
-  }
-
-  /**
-   * @param x
-   *          the new x coordinate value
-   */
-  public void x(final double x) {
-    position.x.value(snapValue(x));
-  }
-
-  /**
-   * @return the current y coordinate value
-   */
-  public double y() {
-    return snapValue(position.y.value());
-  }
-
-  /**
-   * @param y
-   *          the new y coordinate value
-   */
-  public void y(final double y) {
-    position.y.value(snapValue(y));
-  }
+  
+  
 }

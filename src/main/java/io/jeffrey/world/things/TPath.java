@@ -29,8 +29,6 @@ public class TPath extends AbstractPointChain {
    */
   public TPath(final Document document, final ThingData node) {
     super(document, node);
-    this.sx(node.getDouble("sx", 64).value());
-    this.sy(node.getDouble("sy", 64).value());
     cache.update();
   }
 
@@ -119,7 +117,7 @@ public class TPath extends AbstractPointChain {
     }
     gc.setStroke(Color.valueOf(fill.color.getAsText()));
     gc.beginPath();
-    final double s = 2.0 / (sx() + sy());
+    final double s = 2.0 / (scale.sx() + scale.sy());
     gc.setLineWidth(s);
     gc.moveTo(cache.x[0], cache.y[0]);
     for (int k = 1; k < cache.y.length; k++) {

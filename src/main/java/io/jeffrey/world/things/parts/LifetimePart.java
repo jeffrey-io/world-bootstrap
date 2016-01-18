@@ -6,8 +6,8 @@ import io.jeffrey.zer.edits.EditBoolean;
 
 public class LifetimePart implements Part {
   protected final EditBoolean deleted;
-  public final EditBoolean locklock;
-  
+  public final EditBoolean    locklock;
+
   public LifetimePart(final LinkedDataMap data) {
     deleted = data.getBoolean("deleted", false);
     locklock = data.getBoolean("locklock", false);

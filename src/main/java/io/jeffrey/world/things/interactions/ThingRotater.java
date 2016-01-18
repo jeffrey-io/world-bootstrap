@@ -4,6 +4,7 @@ import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
+import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
 /**
@@ -17,18 +18,20 @@ public class ThingRotater implements ThingInteraction {
   private final VectorRegister3 origin;
   private final double          startingAngle;
   private final Thing           thing;
+  private final RotationPart rotation;
 
   /**
    * @param initial
    *          the initial event in the thing space
    */
-  public ThingRotater(final AdjustedMouseEvent initial) {
+  public ThingRotater(final AdjustedMouseEvent initial, RotationPart rotation) {
     thing = (Thing) initial.userdata;
     origin = new VectorRegister8();
     origin.zero_out_0();
     thing.writeToWorld(origin);
-    angle = thing.angle();
-    startingAngle = thing.angle() + RADIANS_TO_DEGREES * Math.atan2(initial.position.y_0 - origin.y_1, initial.position.x_0 - origin.x_1);
+    angle = rotation.angle();
+    startingAngle = rotation.angle() + RADIANS_TO_DEGREES * Math.atan2(initial.position.y_0 - origin.y_1, initial.position.x_0 - origin.x_1);
+    this.rotation = rotation;
   }
 
   /**
@@ -36,7 +39,7 @@ public class ThingRotater implements ThingInteraction {
    */
   @Override
   public void cancel() {
-    thing.angle(angle);
+    rotation.angle(angle);
   }
 
   /**
@@ -50,7 +53,7 @@ public class ThingRotater implements ThingInteraction {
     if (event.altdown) {
       nangle = Math.floor(nangle / 7.5) * 7.5;
     }
-    thing.angle(nangle);
+    rotation.angle(nangle);
   }
 
 }

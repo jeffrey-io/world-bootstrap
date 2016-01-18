@@ -90,8 +90,6 @@ public class TConnector extends AbstractPointChain {
    */
   public TConnector(final Document document, final ThingData node) {
     super(document, node);
-    this.sx(node.getDouble("sx", 64).value());
-    this.sy(node.getDouble("sy", 64).value());
     from = new LockedVertex(chain.at(0), node, "from");
     to = new LockedVertex(chain.at(1), node, "to");
     cache.update();
@@ -186,7 +184,7 @@ public class TConnector extends AbstractPointChain {
     }
     gc.setStroke(Color.valueOf(fill.color.getAsText()));
     gc.beginPath();
-    final double s = 2.0 / (sx() + sy());
+    final double s = 2.0 / (scale.sx() + scale.sy());
     gc.setLineWidth(s);
     gc.moveTo(cache.x[0], cache.y[0]);
     for (int k = 1; k < cache.y.length; k++) {

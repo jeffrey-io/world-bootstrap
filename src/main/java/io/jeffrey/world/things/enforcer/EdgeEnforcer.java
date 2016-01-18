@@ -4,16 +4,26 @@ import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core__old_defunct.EdgedThing;
+import io.jeffrey.world.things.parts.HasEdgesInWorldSpace;
+import io.jeffrey.world.things.parts.PositionPart;
+import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.meta.GuideLine;
 
 public class EdgeEnforcer implements GuideLineEnforcer {
   private static final double RADIANS_TO_DEGREES = 57.295779578552298943021782279762;
 
-  private final EdgedThing    target;
+  private final HasEdgesInWorldSpace thingWithEdges;
+  private final PositionPart position;
+  private final RotationPart rotation;
 
-  public EdgeEnforcer(final EdgedThing target) {
-    this.target = target;
+  public EdgeEnforcer(
+      final HasEdgesInWorldSpace thingWithEdges,
+      final PositionPart position,
+      final RotationPart rotation) {
+    this.thingWithEdges = thingWithEdges;
+    this.position = position;
+    this.rotation = rotation;
   }
 
   @Override
@@ -24,12 +34,10 @@ public class EdgeEnforcer implements GuideLineEnforcer {
     A /= AB;
     B /= AB;
     double angleToApply = 360;
-    double[] edges = target.edges();
+    double[] edges = thingWithEdges.worldSpaceEdges();
     int at = -1;
     final VectorRegister5 temp = new VectorRegister5();
     for (int k = 0; k + 3 < edges.length; k += 4) {
-      // TODO: define the minimal distance between two line segments; for now, simply
-      // average the distance between the endpoints of the edge
       line.writeSegment(camera, temp);
       temp.set_2(edges[k], edges[k + 1]);
       double d = Lines.minimalDistanceV2toLineContainingV0V1_Destructive(temp);
@@ -56,16 +64,16 @@ public class EdgeEnforcer implements GuideLineEnforcer {
         }
       }
     }
-    if (Math.abs(angleToApply) < 30 && at >= 0) { // TODO: bring out the snap-iness
-      double nextAngle = target.angle() + angleToApply;
+    if (Math.abs(angleToApply) < 30 && at >= 0) {
+      double nextAngle = rotation.angle() + angleToApply;
       nextAngle = Math.round(nextAngle * 100) / 100.0;
-      target.angle(nextAngle);
-      edges = target.edges();
+      rotation.angle(nextAngle);
+      edges = thingWithEdges.worldSpaceEdges();
       line.writeSegment(camera, temp);
       temp.set_2(edges[at], edges[at + 1]);
       Lines.minimalDistanceV2toLineContainingV0V1_Destructive(temp);
-      target.x(target.x() - (edges[at] - temp.x_0));
-      target.y(target.y() - (edges[at + 1] - temp.y_0));
+      position.x(position.x() - (edges[at] - temp.x_0));
+      position.y(position.y() - (edges[at + 1] - temp.y_0));
     }
   }
 }

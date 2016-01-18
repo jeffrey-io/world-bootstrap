@@ -5,9 +5,9 @@ import io.jeffrey.world.things.base.Part;
 import io.jeffrey.zer.edits.EditBoolean;
 
 public class EditingPart implements Part {
-  public final EditBoolean  locked;
-  public final EditBoolean  selected;
-  
+  public final EditBoolean locked;
+  public final EditBoolean selected;
+
   public EditingPart(final LinkedDataMap data) {
     locked = data.getBoolean("locked", false);
     selected = data.getBoolean("selected", false);

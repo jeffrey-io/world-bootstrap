@@ -48,10 +48,7 @@ public class TImage extends EdgedThing {
   public TImage(final Document document, final ThingData node) {
     super(document, node);
     cache = document.imageCache;
-
     rectangle = new RectanglePart(transform);
-    this.sx(node.getDouble("sx", 0.25).value());
-    this.sy(node.getDouble("sy", 0.25).value());
 
     uri = new UriPart("", data) {
 
@@ -141,7 +138,7 @@ public class TImage extends EdgedThing {
 
   @Override
   protected GuideLineEnforcer getGuideLineEnforcer() {
-    return new EdgeEnforcer(this);
+    return new EdgeEnforcer(rectangle, position, rotation);
   }
 
   @Override
@@ -155,7 +152,7 @@ public class TImage extends EdgedThing {
   @Override
   protected void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     refresh();
-    interactions.add(new ThingMover(event));
+    interactions.add(new ThingMover(event, position, rotation));
   }
 
   @Override
@@ -194,7 +191,7 @@ public class TImage extends EdgedThing {
   protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
     refresh();
     if (doesPointApplyToSelection(event)) {
-      return new ThingMover(event);
+      return new ThingMover(event, position, rotation);
     }
     return null;
   }

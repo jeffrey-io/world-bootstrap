@@ -39,8 +39,6 @@ public class TCircle extends Thing {
    */
   public TCircle(final Document document, final ThingData node) {
     super(document, node);
-    this.sx(node.getDouble("sx", 64).value());
-    this.sy(node.getDouble("sy", 64).value());
 
     final ArrayList<ControlDoodad> doodads = new ArrayList<>();
     doodads.add(new ControlDoodad(Type.Rotate, -1, 0));
@@ -101,7 +99,7 @@ public class TCircle extends Thing {
     gc.fillArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
     if (selected()) {
       gc.setStroke(Color.RED);
-      gc.setLineWidth(4 / (sx() + sy()));
+      gc.setLineWidth(4 / (scale.sx() + scale.sy()));
       gc.strokeArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
     }
   }
@@ -124,7 +122,7 @@ public class TCircle extends Thing {
 
   @Override
   protected GuideLineEnforcer getGuideLineEnforcer() {
-    return new OriginEnforcer(this);
+    return new OriginEnforcer(position);
   }
 
   @Override
@@ -136,7 +134,7 @@ public class TCircle extends Thing {
    */
   @Override
   protected void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
-    interactions.add(new ThingMover(event));
+    interactions.add(new ThingMover(event, position, rotation));
   }
 
   @Override
@@ -161,7 +159,7 @@ public class TCircle extends Thing {
   @Override
   protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
     if (doesPointApplyToSelection(event)) {
-      return new ThingMover(event);
+      return new ThingMover(event, position, rotation);
     }
     return null;
   }

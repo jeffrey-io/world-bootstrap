@@ -54,10 +54,10 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
      * normalize the scale
      */
     private void apply_scale() {
-      final double mx = sx();
-      final double my = sy();
-      sx(1.0);
-      sy(1.0);
+      final double mx = scale.sx();
+      final double my = scale.sy();
+      scale.sx(1.0);
+      scale.sy(1.0);
       if (inlineXYPairs.length == 0) {
         return;
       }
@@ -140,7 +140,10 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         }
       }
       if (hasStandardControls()) {
-        final double aug = 32 / (sx() + sy());
+        
+        double scale_norm = scale.sx() + scale.sy();
+        
+        final double aug = 32 / scale_norm;
 
         boundingRadiusForControls = Math.sqrt(boundingRadiusForControls) + aug;
 
@@ -280,6 +283,11 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     }
     return targetEdges;
   }
+  
+  @Override
+  public double[] worldSpaceEdges() {
+    return edges();
+  }
 
   /**
    * {@inheritDoc}
@@ -337,7 +345,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     }
     if (all || !any) {
       // this will be faster
-      interactions.add(new ThingMover(event));
+      interactions.add(new ThingMover(event, position, rotation));
       return;
     }
     for (final SelectablePoint2 point : chain) {
@@ -440,7 +448,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       }
     }
     if (doesPointApplyToSelection(event)) {
-      return new ThingMover(event);
+      return new ThingMover(event, position, rotation);
     }
     return null;
   }

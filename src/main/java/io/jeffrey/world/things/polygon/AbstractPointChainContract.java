@@ -6,6 +6,7 @@ import java.util.Map;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core__old_defunct.EdgedThing;
+import io.jeffrey.world.things.parts.HasEdgesInWorldSpace;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.Edit;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,7 +18,7 @@ import javafx.scene.shape.Polygon;
  * @author jeffrey
  *
  */
-public abstract class AbstractPointChainContract extends EdgedThing {
+public abstract class AbstractPointChainContract extends EdgedThing implements HasEdgesInWorldSpace {
 
   protected AbstractPointChainContract(final Document document, final ThingData node) {
     super(document, node);

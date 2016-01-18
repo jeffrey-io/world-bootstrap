@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.parts;
+package io.jeffrey.world.things.behaviors;
 
 public interface HasEdgesInWorldSpace {
 

@@ -1,7 +1,10 @@
 package io.jeffrey.world.things.parts;
 
+import java.util.Set;
+
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
+import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 
@@ -19,8 +22,9 @@ public class RotationPart implements Part {
     lock = data.getBoolean("alock", false);
     update();
   }
-  
-  public void act(String action) {
+
+  @Override
+  public void act(String action, SharedActionSpace space) {
     if ("reset.angle".equals(action)) {
       angle(0);
     }
@@ -44,7 +48,7 @@ public class RotationPart implements Part {
     cx = Math.cos(DEGREES_TO_RADIANS * angle.value());
     cy = Math.sin(DEGREES_TO_RADIANS * angle.value());
   }
-  
+
   /**
    * @return the current angle (in degrees)
    */
@@ -59,4 +63,10 @@ public class RotationPart implements Part {
   public void angle(final double angle) {
     this.angle.value(angle);
   }
+
+  @Override
+  public void list(Set<String> actionsAvailable) {
+    actionsAvailable.add("reset.angle");
+  }
+
 }

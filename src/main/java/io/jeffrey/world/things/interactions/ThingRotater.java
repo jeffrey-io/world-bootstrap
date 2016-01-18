@@ -18,7 +18,7 @@ public class ThingRotater implements ThingInteraction {
   private final VectorRegister3 origin;
   private final double          startingAngle;
   private final Thing           thing;
-  private final RotationPart rotation;
+  private final RotationPart    rotation;
 
   /**
    * @param initial

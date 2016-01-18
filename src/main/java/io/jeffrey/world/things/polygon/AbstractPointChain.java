@@ -140,9 +140,9 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         }
       }
       if (hasStandardControls()) {
-        
+
         double scale_norm = scale.sx() + scale.sy();
-        
+
         final double aug = 32 / scale_norm;
 
         boundingRadiusForControls = Math.sqrt(boundingRadiusForControls) + aug;
@@ -283,7 +283,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     }
     return targetEdges;
   }
-  
+
   @Override
   public double[] worldSpaceEdges() {
     return edges();

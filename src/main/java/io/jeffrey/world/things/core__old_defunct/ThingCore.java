@@ -9,6 +9,7 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.Snap;
+import io.jeffrey.world.things.base.StandardTransform;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.parts.ColorPart;
 import io.jeffrey.world.things.parts.EditingPart;
@@ -19,7 +20,6 @@ import io.jeffrey.world.things.parts.MetadataPart;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
-import io.jeffrey.world.things.parts.StandardTransform;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;
@@ -47,14 +47,14 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    */
   public ThingCore(final Document document, final ThingData node) {
     super(document, node);
-    
+
     Snap snap = new Snap() {
-      
+
       @Override
       public double y(double y) {
         return snapValue(y);
       }
-      
+
       @Override
       public double x(double x) {
         return snapValue(x);
@@ -248,8 +248,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    */
   protected abstract boolean supportsColor();
 
-
-
   /**
    * helper to unselect the thing
    */
@@ -258,6 +256,4 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
     clearSelection();
   }
 
-  
-  
 }

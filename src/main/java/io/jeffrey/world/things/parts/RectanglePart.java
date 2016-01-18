@@ -1,11 +1,16 @@
 package io.jeffrey.world.things.parts;
 
+import java.util.Set;
+
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.base.Part;
+import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
+import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.behaviors.Selectable;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;
@@ -101,6 +106,15 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
     edges[15] = edges[1];
 
     return edges;
+  }
+
+  @Override
+  public void act(String action, SharedActionSpace space) {
+  }
+
+  @Override
+  public void list(Set<String> actionsAvailable) {
+
   }
 
 }

@@ -13,15 +13,15 @@ import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
+import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingRotater;
 import io.jeffrey.world.things.interactions.ThingScaler;
 import io.jeffrey.world.things.interactions.ThingSnapper;
-import io.jeffrey.world.things.parts.ControlDoodadPart;
-import io.jeffrey.world.things.parts.HasControlDoodadsInThingSpace;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
@@ -34,9 +34,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public abstract class Thing extends ThingCore implements HasControlDoodadsInThingSpace {
-  private boolean          alreadySelected                = false;
+  private boolean                             alreadySelected                = false;
 
-  public ControlDoodadPart doodadCache;
+  public AdaptThingSpaceDoodadsIntoWorldSpace doodadCache;
 
   /**
    * does the thing the given (x,y) point in world space
@@ -47,7 +47,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    *          the y-coordinate
    * @return whether or not point is in the thing
    */
-  VectorRegister3          threadUnsafeContainmentScratch = new VectorRegister8();
+  VectorRegister3                             threadUnsafeContainmentScratch = new VectorRegister8();
 
   /**
    * @param document
@@ -58,7 +58,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   protected Thing(final Document document, final ThingData node) {
     super(document, node);
 
-    doodadCache = new ControlDoodadPart(transform, this);
+    doodadCache = new AdaptThingSpaceDoodadsIntoWorldSpace(transform, this);
   }
 
   /**
@@ -471,11 +471,11 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   public void writeToWorld(final VectorRegister3 reg) {
     transform.writeToWorld(reg);
   }
-  
+
   public double x() {
     return position.x();
   }
-  
+
   public double y() {
     return position.y();
   }

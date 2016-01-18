@@ -1,13 +1,13 @@
-package io.jeffrey.world.things.parts;
+package io.jeffrey.world.things.base;
 
 import io.jeffrey.vector.VectorRegister3;
-import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.parts.PositionPart;
+import io.jeffrey.world.things.parts.RotationPart;
+import io.jeffrey.world.things.parts.ScalePart;
 import javafx.scene.canvas.GraphicsContext;
 
-public class StandardTransform implements Part, Transform {
+public class StandardTransform implements Transform {
   private final PositionPart position;
   private final RotationPart rotation;
   private final ScalePart    scale;
@@ -37,15 +37,6 @@ public class StandardTransform implements Part, Transform {
     gc.translate(position.x.value(), position.y.value());
     gc.rotate(-rotation.angle.value());
     gc.scale(scale.x.value(), scale.y.value());
-  }
-
-  @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
-  public void update() {
   }
 
   /**

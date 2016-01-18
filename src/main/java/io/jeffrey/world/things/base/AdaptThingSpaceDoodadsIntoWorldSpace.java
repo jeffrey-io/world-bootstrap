@@ -1,12 +1,11 @@
-package io.jeffrey.world.things.parts;
+package io.jeffrey.world.things.base;
 
 import io.jeffrey.vector.VectorRegister3;
-import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
+import io.jeffrey.world.things.behaviors.HasControlDoodadsInWorldSpace;
 
-public class ControlDoodadPart implements Part, HasControlDoodadsInWorldSpace {
+public class AdaptThingSpaceDoodadsIntoWorldSpace implements HasControlDoodadsInWorldSpace {
   private final HasControlDoodadsInThingSpace doodads;
   private final Transform                     transform;
 
@@ -15,7 +14,7 @@ public class ControlDoodadPart implements Part, HasControlDoodadsInWorldSpace {
    */
   private ControlDoodad[]                     worldDoodadCache;
 
-  public ControlDoodadPart(final Transform transform, final HasControlDoodadsInThingSpace doodads) {
+  public AdaptThingSpaceDoodadsIntoWorldSpace(final Transform transform, final HasControlDoodadsInThingSpace doodads) {
     this.transform = transform;
     this.doodads = doodads;
     worldDoodadCache = new ControlDoodad[0];
@@ -44,14 +43,5 @@ public class ControlDoodadPart implements Part, HasControlDoodadsInWorldSpace {
       world.v = W.y_1;
     }
     return worldDoodadCache;
-  }
-
-  @Override
-  public boolean unique() {
-    return false;
-  }
-
-  @Override
-  public void update() {
   }
 }

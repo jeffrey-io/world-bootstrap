@@ -11,11 +11,11 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  * @author jeffrey
  */
 public class ThingScaler implements ThingInteraction {
-  private final double ix;
-  private final double iy;
-  private final double sx;
-  private final double sy;
-  private Thing thing;
+  private final double    ix;
+  private final double    iy;
+  private final double    sx;
+  private final double    sy;
+  private Thing           thing;
   private final ScalePart scale;
 
   /**

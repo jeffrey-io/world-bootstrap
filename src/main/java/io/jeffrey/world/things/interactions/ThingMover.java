@@ -13,13 +13,13 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  */
 public class ThingMover implements ThingInteraction {
 
-  private final double angle;
+  private final double       angle;
 
-  private final double ix;
-  private final double iy;
-  private final Thing  target;
-  private final double x;
-  private final double y;
+  private final double       ix;
+  private final double       iy;
+  private final Thing        target;
+  private final double       x;
+  private final double       y;
   private final PositionPart position;
   private final RotationPart rotation;
 
@@ -33,7 +33,7 @@ public class ThingMover implements ThingInteraction {
     y = position.y();
     ix = initial.position.x_0;
     iy = initial.position.y_0;
-    angle = rotation.angle(); 
+    angle = rotation.angle();
     this.position = position;
     this.rotation = rotation;
   }

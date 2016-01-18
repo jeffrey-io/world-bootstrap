@@ -1,8 +1,11 @@
 package io.jeffrey.world.things.parts;
 
+import java.util.Set;
+
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
+import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 import io.jeffrey.zer.edits.EditString;
@@ -45,4 +48,14 @@ public class LayerPart implements Part {
     }
     return 0;
   }
+
+  @Override
+  public void act(String action, SharedActionSpace space) {
+  }
+
+  @Override
+  public void list(Set<String> actionsAvailable) {
+
+  }
+
 }

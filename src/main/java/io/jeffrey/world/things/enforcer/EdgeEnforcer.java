@@ -2,25 +2,22 @@ package io.jeffrey.world.things.enforcer;
 
 import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
+import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core__old_defunct.EdgedThing;
-import io.jeffrey.world.things.parts.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.meta.GuideLine;
 
 public class EdgeEnforcer implements GuideLineEnforcer {
-  private static final double RADIANS_TO_DEGREES = 57.295779578552298943021782279762;
+  private static final double        RADIANS_TO_DEGREES = 57.295779578552298943021782279762;
 
   private final HasEdgesInWorldSpace thingWithEdges;
-  private final PositionPart position;
-  private final RotationPart rotation;
+  private final PositionPart         position;
+  private final RotationPart         rotation;
 
-  public EdgeEnforcer(
-      final HasEdgesInWorldSpace thingWithEdges,
-      final PositionPart position,
-      final RotationPart rotation) {
+  public EdgeEnforcer(final HasEdgesInWorldSpace thingWithEdges, final PositionPart position, final RotationPart rotation) {
     this.thingWithEdges = thingWithEdges;
     this.position = position;
     this.rotation = rotation;

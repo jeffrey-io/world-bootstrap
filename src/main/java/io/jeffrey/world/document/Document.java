@@ -65,13 +65,13 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     history.capture();
   }
 
-  private HashMap<String, Object> convert2(final JsonNode node) {
-    final HashMap<String, Object> value = new HashMap<String, Object>();
+  private HashMap<String, String> convert2(final JsonNode node) {
+    final HashMap<String, String> value = new HashMap<String, String>();
     final Iterator<Entry<String, JsonNode>> fields = node.getFields();
     while (fields.hasNext()) {
       final Entry<String, JsonNode> field = fields.next();
       if (field.getValue().isDouble()) {
-        value.put(field.getKey(), field.getValue().getDoubleValue());
+        value.put(field.getKey(), Double.toString(field.getValue().getDoubleValue()));
       } else {
         value.put(field.getKey(), field.getValue().getTextValue());
       }
@@ -166,18 +166,18 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     final JsonNode thingsToLoad = tree.get("things");
     final HashMap<String, ThingCore> lookup = new HashMap<String, ThingCore>();
     for (int k = 0; k < thingsToLoad.size(); k++) {
-      final HashMap<String, Object> tdata = new HashMap<String, Object>();
+      final HashMap<String, String> tdata = new HashMap<String, String>();
       final JsonNode thing = thingsToLoad.get(k);
       final Iterator<String> fields = thing.getFieldNames();
       while (fields.hasNext()) {
         final String key = fields.next();
         final JsonNode value = thing.get(key);
         if (value.isBoolean()) {
-          tdata.put(key, value.asBoolean());
+          tdata.put(key, Boolean.toString(value.asBoolean()));
         } else if (value.isDouble()) {
-          tdata.put(key, value.asDouble());
+          tdata.put(key, Double.toString(value.asDouble()));
         } else if (value.isInt()) {
-          tdata.put(key, value.asInt());
+          tdata.put(key, Integer.toString(value.asInt()));
         } else if (value.isTextual()) {
           tdata.put(key, value.asText());
         }

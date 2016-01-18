@@ -2,6 +2,8 @@ package io.jeffrey.world.things.base;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 import io.jeffrey.world.document.Document;
@@ -36,6 +38,27 @@ public class AbstractThing {
         part.update();
       }
     }
+  }
+  
+  public Set<String> getActionsAvailable() {
+    final TreeSet<String> actions = new TreeSet<>();
+    for (final ArrayList<Part> list : parts.values()) {
+      for (final Part part : list) {
+        part.list(actions);
+      }
+    }
+    return actions;
+  }
+  
+  public Set<String> invokeAction(String action) {
+    SharedActionSpace sharedActionSpace = new SharedActionSpace();
+    final TreeSet<String> actions = new TreeSet<>();
+    for (final ArrayList<Part> list : parts.values()) {
+      for (final Part part : list) {
+        part.act(action,  sharedActionSpace);
+      }
+    }
+    return actions;
   }
 
   @SuppressWarnings("unchecked")

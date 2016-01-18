@@ -26,11 +26,6 @@ public class AdjustedMouseEvent {
   public final VectorRegister8 position;
 
   /**
-   * public user data that can be attached to the object
-   */
-  public Object                userdata;
-
-  /**
    * @param camera
    *          the document that holds the view transformation
    * @param event

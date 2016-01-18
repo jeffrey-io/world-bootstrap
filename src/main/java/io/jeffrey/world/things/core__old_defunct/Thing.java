@@ -103,7 +103,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    */
   public void adjustAndBindEvent(final AdjustedMouseEvent event) {
     writeToTarget(event.position);
-    event.userdata = this;
   }
 
   /**
@@ -196,26 +195,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   @Override
   public List<String> getActions() {
     final ArrayList<String> actions = new ArrayList<>();
-    actions.add("reset.angle");
-    actions.add("normalize.scale");
-    actions.add("bring.up");
-    actions.add("push.down");
-    if (lifetime.isDeleted()) {
-      actions.add("undelete");
-    } else {
-      actions.add("delete");
-    }
-    if (editing.locked.value()) {
-      actions.add("unlock");
-    } else {
-      actions.add("lock");
-    }
-    if (selected()) {
-      actions.add("unselect");
-    }
-    if (!lifetime.locklock.value()) {
-      actions.add("templatize");
-    }
+    actions.addAll(getActionsAvailable());
     describePossibleActions(actions);
     return actions;
   }
@@ -231,30 +211,10 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     if ("?".equals(action)) {
       return getActions();
     }
-    if ("push.down".equals(action)) {
-      layerP.order.value(layerP.order.value() - 1.5);
-      return true;
-    }
-    if ("bring.up".equals(action)) {
-      layerP.order.value(layerP.order.value() + 1.5);
-      return true;
-    }
-    if ("delete".equals(action)) {
-      delete();
-      return true;
-    }
-    if ("undelete".equals(action)) {
-      lifetime.undelete();
-      return true;
-    }
-    if ("lock".equals(action)) {
-      editing.locked.value(true);
-      return true;
-    }
-    if ("unlock".equals(action)) {
-      editing.locked.value(false);
-      return true;
-    }
+    
+    invokeAction(action);
+
+
     if ("unselect".equals(action)) {
       unselect();
       return true;
@@ -413,7 +373,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
           interaction = new ThingScaler(event, scale);
         }
         if (doodad.type == Type.Rotate) {
-          interaction = new ThingRotater(event, rotation);
+          interaction = new ThingRotater(event, transform, rotation);
         }
       }
     }

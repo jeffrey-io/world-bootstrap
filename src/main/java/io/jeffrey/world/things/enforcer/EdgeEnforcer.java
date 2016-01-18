@@ -4,7 +4,6 @@ import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
-import io.jeffrey.world.things.core__old_defunct.EdgedThing;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.zer.Camera;

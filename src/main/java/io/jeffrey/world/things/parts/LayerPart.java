@@ -51,11 +51,20 @@ public class LayerPart implements Part {
 
   @Override
   public void act(String action, SharedActionSpace space) {
+    if ("push.down".equals(action)) {
+      order.value(order.value() - 1.5);
+      return;
+    }
+    if ("bring.up".equals(action)) {
+      order.value(order.value() + 1.5);
+      return;
+    }    
   }
 
   @Override
   public void list(Set<String> actionsAvailable) {
-
+    actionsAvailable.add("bring.up");
+    actionsAvailable.add("push.down");
   }
 
 }

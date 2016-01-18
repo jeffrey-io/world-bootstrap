@@ -39,11 +39,24 @@ public class LifetimePart implements Part {
 
   @Override
   public void act(String action, SharedActionSpace space) {
+    if ("undelete".equals(action)) {
+      deleted.value(false);
+    }    
+    if ("deleted".equals(action)) {
+      deleted.value(true);
+    }    
   }
 
   @Override
   public void list(Set<String> actionsAvailable) {
-
+    if (!locklock.value()) {
+      actionsAvailable.add("templatize");
+    }
+    if (deleted.value()) {
+      actionsAvailable.add("undelete");
+    } else {
+      actionsAvailable.add("delete");
+    }    
   }
 
 }

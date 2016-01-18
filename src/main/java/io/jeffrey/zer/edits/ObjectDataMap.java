@@ -12,9 +12,9 @@ import java.util.Set;
  */
 public class ObjectDataMap {
 
-  public final Map<String, Object> fields;
+  public final Map<String, String> fields;
 
-  public ObjectDataMap(final Map<String, Object> fields) {
+  public ObjectDataMap(final Map<String, String> fields) {
     this.fields = fields;
   }
 

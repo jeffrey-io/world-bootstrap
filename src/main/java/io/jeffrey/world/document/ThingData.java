@@ -14,7 +14,7 @@ import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class ThingData extends ObjectDataMap {
 
-  public ThingData(final HashMap<String, Object> data) {
+  public ThingData(final HashMap<String, String> data) {
     super(data);
   }
 

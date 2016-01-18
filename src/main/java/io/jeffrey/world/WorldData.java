@@ -88,49 +88,38 @@ public class WorldData extends SurfaceData {
     final double at_y = context.cursor_y;
     if ("Circle".equals(type)) {
       data = document.newData("circle");
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
+      data.fields.put("sx", "50");
+      data.fields.put("sy", "50");
     }
     if ("Triangle".equals(type)) {
       data = document.newData("polygon");
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
       data.fields.put("points", polyCircle(0, 2 * Math.PI / 3, 3));
     }
     if ("Turtle".equals(type)) {
       data = document.newData("turtle");
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
       data.fields.put("points", polyCircle(0, 2 * Math.PI / 3, 3));
     }
     if ("Box".equals(type)) {
       data = document.newData("polygon");
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
       data.fields.put("points", polyCircle(Math.PI / 4, Math.PI / 2, 4));
     }
     if ("Hexagon".equals(type)) {
       data = document.newData("polygon");
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
       data.fields.put("points", polyCircle(Math.PI / 6, Math.PI / 3, 6));
     }
     if ("Path".equals(type)) {
       data = document.newData("path");
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
-      data.fields.put("points", "0,0,1,0");
+      data.fields.put("points", "0,0,25,0");
     }
     if ("Connector".equals(type)) {
       data = document.newData("connector");
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
-      data.fields.put("points", "0,0,1,0");
+      data.fields.put("points", "0,0,25,0");
     }
     if ("Image".equalsIgnoreCase(type)) {
       data = document.newData("image");
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
+      data.fields.put("sx", "0.50");
+      data.fields.put("sy", "0.50");
+      
       final FileChooser chooser = new FileChooser();
       chooser.setTitle("Pick image");
       final File file = chooser.showOpenDialog(null);
@@ -162,12 +151,11 @@ public class WorldData extends SurfaceData {
       for (final Entry<String, String> en : temp.entrySet()) {
         data.fields.put(en.getKey(), en.getValue());
       }
-      data.fields.put("x", at_x);
-      data.fields.put("y", at_y);
       data.fields.put("locklock", "true");
     }
-
     if (data != null) {
+      data.fields.put("x", Double.toString(at_x));
+      data.fields.put("y", Double.toString(at_y));
       document.addThing(data.make(document));
     }
   }
@@ -428,8 +416,8 @@ public class WorldData extends SurfaceData {
     final ArrayList<Double> values = new ArrayList<Double>();
     double theta = start;
     for (int k = 0; k < count; k++) {
-      values.add(Math.cos(theta));
-      values.add(Math.sin(theta));
+      values.add(50 * Math.cos(theta));
+      values.add(50 * Math.sin(theta));
       theta += dangle;
     }
     return PointChain.pack(values);

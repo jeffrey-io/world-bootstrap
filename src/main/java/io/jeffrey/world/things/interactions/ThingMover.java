@@ -1,6 +1,5 @@
 package io.jeffrey.world.things.interactions;
 
-import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
@@ -17,7 +16,6 @@ public class ThingMover implements ThingInteraction {
 
   private final double       ix;
   private final double       iy;
-  private final Thing        target;
   private final double       x;
   private final double       y;
   private final PositionPart position;
@@ -28,7 +26,6 @@ public class ThingMover implements ThingInteraction {
    *          the initial event in the thing space
    */
   public ThingMover(final AdjustedMouseEvent initial, PositionPart position, RotationPart rotation) {
-    target = (Thing) initial.userdata;
     x = position.x();
     y = position.y();
     ix = initial.position.x_0;

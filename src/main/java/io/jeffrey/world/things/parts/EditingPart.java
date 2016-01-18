@@ -27,10 +27,23 @@ public class EditingPart implements Part {
 
   @Override
   public void act(String action, SharedActionSpace space) {
+    if ("lock".equals(action)) {
+      locked.value(true);
+    }
+    if ("unlock".equals(action)) {
+      locked.value(false);
+    }    
   }
 
   @Override
   public void list(Set<String> actionsAvailable) {
-
+    if (locked.value()) {
+      actionsAvailable.add("unlock");
+    } else {
+      actionsAvailable.add("lock");
+    }
+    if (selected.value()) {
+      actionsAvailable.add("unselect");
+    }    
   }
 }

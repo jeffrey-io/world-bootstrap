@@ -119,7 +119,7 @@ public class WorldData extends SurfaceData {
       data = document.newData("image");
       data.fields.put("sx", "0.50");
       data.fields.put("sy", "0.50");
-      
+
       final FileChooser chooser = new FileChooser();
       chooser.setTitle("Pick image");
       final File file = chooser.showOpenDialog(null);

@@ -16,12 +16,34 @@ public class LifetimePart implements Part {
     locklock = data.getBoolean("locklock", false);
   }
 
+  @Override
+  public void act(final String action, final SharedActionSpace space) {
+    if ("undelete".equals(action)) {
+      deleted.value(false);
+    }
+    if ("deleted".equals(action)) {
+      deleted.value(true);
+    }
+  }
+
   public void delete() {
     deleted.value(true);
   }
 
   public boolean isDeleted() {
     return deleted.value();
+  }
+
+  @Override
+  public void list(final Set<String> actionsAvailable) {
+    if (!locklock.value()) {
+      actionsAvailable.add("templatize");
+    }
+    if (deleted.value()) {
+      actionsAvailable.add("undelete");
+    } else {
+      actionsAvailable.add("delete");
+    }
   }
 
   public void undelete() {
@@ -35,28 +57,6 @@ public class LifetimePart implements Part {
 
   @Override
   public void update() {
-  }
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
-    if ("undelete".equals(action)) {
-      deleted.value(false);
-    }    
-    if ("deleted".equals(action)) {
-      deleted.value(true);
-    }    
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-    if (!locklock.value()) {
-      actionsAvailable.add("templatize");
-    }
-    if (deleted.value()) {
-      actionsAvailable.add("undelete");
-    } else {
-      actionsAvailable.add("delete");
-    }    
   }
 
 }

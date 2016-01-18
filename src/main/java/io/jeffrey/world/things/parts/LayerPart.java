@@ -28,8 +28,26 @@ public class LayerPart implements Part {
     update();
   }
 
+  @Override
+  public void act(final String action, final SharedActionSpace space) {
+    if ("push.down".equals(action)) {
+      order.value(order.value() - 1.5);
+      return;
+    }
+    if ("bring.up".equals(action)) {
+      order.value(order.value() + 1.5);
+      return;
+    }
+  }
+
   public LayerProperties getLayerProperties() {
     return cachedLayerProperties;
+  }
+
+  @Override
+  public void list(final Set<String> actionsAvailable) {
+    actionsAvailable.add("bring.up");
+    actionsAvailable.add("push.down");
   }
 
   @Override
@@ -47,24 +65,6 @@ public class LayerPart implements Part {
       return cachedLayerProperties.zorder.value();
     }
     return 0;
-  }
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
-    if ("push.down".equals(action)) {
-      order.value(order.value() - 1.5);
-      return;
-    }
-    if ("bring.up".equals(action)) {
-      order.value(order.value() + 1.5);
-      return;
-    }    
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-    actionsAvailable.add("bring.up");
-    actionsAvailable.add("push.down");
   }
 
 }

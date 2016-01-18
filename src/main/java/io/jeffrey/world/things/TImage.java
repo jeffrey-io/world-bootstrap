@@ -6,7 +6,7 @@ import java.util.Set;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.behaviors.Selectable.ContainmentCheck;
+import io.jeffrey.world.things.behaviors.IsSelectable.ContainmentCheck;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;

@@ -141,7 +141,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       }
       if (hasStandardControls()) {
 
-        double scale_norm = scale.sx() + scale.sy();
+        final double scale_norm = scale.sx() + scale.sy();
 
         final double aug = 32 / scale_norm;
 
@@ -267,21 +267,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       cache.update();
     }
     renderPolygon(document, gc);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public double[] worldSpaceEdges() {
-    final VectorRegister5 W = new VectorRegister5();
-    final double[] targetEdges = chain.edges(isPolygonLooped());
-    for (int k = 0; k + 1 < targetEdges.length; k += 2) {
-      W.inject_0(targetEdges, k);
-      writeToWorld(W);
-      W.extract_1(targetEdges, k);
-    }
-    return targetEdges;
   }
 
   /**
@@ -462,6 +447,21 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   @Override
   public void sync() {
     cache.update();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public double[] worldSpaceEdges() {
+    final VectorRegister5 W = new VectorRegister5();
+    final double[] targetEdges = chain.edges(isPolygonLooped());
+    for (int k = 0; k + 1 < targetEdges.length; k += 2) {
+      W.inject_0(targetEdges, k);
+      writeToWorld(W);
+      W.extract_1(targetEdges, k);
+    }
+    return targetEdges;
   }
 
 }

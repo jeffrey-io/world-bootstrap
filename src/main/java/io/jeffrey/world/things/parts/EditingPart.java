@@ -17,26 +17,17 @@ public class EditingPart implements Part {
   }
 
   @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
-  public void update() {
-  }
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
+  public void act(final String action, final SharedActionSpace space) {
     if ("lock".equals(action)) {
       locked.value(true);
     }
     if ("unlock".equals(action)) {
       locked.value(false);
-    }    
+    }
   }
 
   @Override
-  public void list(Set<String> actionsAvailable) {
+  public void list(final Set<String> actionsAvailable) {
     if (locked.value()) {
       actionsAvailable.add("unlock");
     } else {
@@ -44,6 +35,15 @@ public class EditingPart implements Part {
     }
     if (selected.value()) {
       actionsAvailable.add("unselect");
-    }    
+    }
+  }
+
+  @Override
+  public boolean unique() {
+    return true;
+  }
+
+  @Override
+  public void update() {
   }
 }

@@ -16,14 +16,14 @@ public class ThingRotater implements ThingInteraction {
   private static final double   RADIANS_TO_DEGREES = 57.2957795;
   private final double          angle;
   private final VectorRegister3 origin;
-  private final double          startingAngle;
   private final RotationPart    rotation;
+  private final double          startingAngle;
 
   /**
    * @param initial
    *          the initial event in the thing space
    */
-  public ThingRotater(final AdjustedMouseEvent initial, Transform transform, RotationPart rotation) {
+  public ThingRotater(final AdjustedMouseEvent initial, final Transform transform, final RotationPart rotation) {
     origin = new VectorRegister8();
     origin.zero_out_0();
     transform.writeToWorld(origin);

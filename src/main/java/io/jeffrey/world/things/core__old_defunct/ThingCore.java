@@ -48,16 +48,16 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public ThingCore(final Document document, final ThingData node) {
     super(document, node);
 
-    Snap snap = new Snap() {
+    final Snap snap = new Snap() {
 
       @Override
-      public double y(double y) {
-        return snapValue(y);
+      public double x(final double x) {
+        return snapValue(x);
       }
 
       @Override
-      public double x(double x) {
-        return snapValue(x);
+      public double y(final double y) {
+        return snapValue(y);
       }
     };
 

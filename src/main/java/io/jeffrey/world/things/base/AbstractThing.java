@@ -1,10 +1,13 @@
 package io.jeffrey.world.things.base;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
@@ -18,6 +21,32 @@ public class AbstractThing {
     this.document = document;
     data = new LinkedDataMap(node);
     parts = new HashMap<>();
+  }
+
+  public <T, O> Set<O> collect(final Class<T> clazz, final Function<T, Collection<O>> collector) {
+    final HashSet<O> result = new HashSet<>();
+    walk(part -> {
+      if (part.getClass().isInstance(clazz)) {
+        result.addAll(collector.apply((T) part));
+      }
+    });
+    return result;
+  }
+
+  public Set<String> getActionsAvailable() {
+    final TreeSet<String> actions = new TreeSet<>();
+    for (final ArrayList<Part> list : parts.values()) {
+      for (final Part part : list) {
+        part.list(actions);
+      }
+    }
+    return actions;
+  }
+
+  public SharedActionSpace invokeAction(final String action) {
+    final SharedActionSpace sharedActionSpace = new SharedActionSpace();
+    walk(part -> part.act(action, sharedActionSpace));
+    return sharedActionSpace;
   }
 
   protected synchronized <T extends Part> void register(final String key, final T part) {
@@ -39,26 +68,13 @@ public class AbstractThing {
       }
     }
   }
-  
-  public Set<String> getActionsAvailable() {
-    final TreeSet<String> actions = new TreeSet<>();
+
+  public void walk(final Consumer<Part> consumer) {
     for (final ArrayList<Part> list : parts.values()) {
       for (final Part part : list) {
-        part.list(actions);
+        consumer.accept(part);
       }
     }
-    return actions;
-  }
-  
-  public Set<String> invokeAction(String action) {
-    SharedActionSpace sharedActionSpace = new SharedActionSpace();
-    final TreeSet<String> actions = new TreeSet<>();
-    for (final ArrayList<Part> list : parts.values()) {
-      for (final Part part : list) {
-        part.act(action,  sharedActionSpace);
-      }
-    }
-    return actions;
   }
 
   @SuppressWarnings("unchecked")

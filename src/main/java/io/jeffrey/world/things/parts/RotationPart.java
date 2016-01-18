@@ -24,29 +24,10 @@ public class RotationPart implements Part {
   }
 
   @Override
-  public void act(String action, SharedActionSpace space) {
+  public void act(final String action, final SharedActionSpace space) {
     if ("reset.angle".equals(action)) {
       angle(0);
     }
-  }
-
-  public double cachedComplexX() {
-    return cx;
-  }
-
-  public double cachedComplexY() {
-    return cy;
-  }
-
-  @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
-  public void update() {
-    cx = Math.cos(DEGREES_TO_RADIANS * angle.value());
-    cy = Math.sin(DEGREES_TO_RADIANS * angle.value());
   }
 
   /**
@@ -64,9 +45,28 @@ public class RotationPart implements Part {
     this.angle.value(angle);
   }
 
+  public double cachedComplexX() {
+    return cx;
+  }
+
+  public double cachedComplexY() {
+    return cy;
+  }
+
   @Override
-  public void list(Set<String> actionsAvailable) {
+  public void list(final Set<String> actionsAvailable) {
     actionsAvailable.add("reset.angle");
+  }
+
+  @Override
+  public boolean unique() {
+    return true;
+  }
+
+  @Override
+  public void update() {
+    cx = Math.cos(DEGREES_TO_RADIANS * angle.value());
+    cy = Math.sin(DEGREES_TO_RADIANS * angle.value());
   }
 
 }

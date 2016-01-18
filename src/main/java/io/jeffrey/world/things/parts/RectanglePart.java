@@ -11,13 +11,13 @@ import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
-import io.jeffrey.world.things.behaviors.Selectable;
+import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDoodadsInThingSpace, Selectable {
+public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDoodadsInThingSpace, IsSelectable {
 
   private final ControlDoodad[] doodads;
   private Rectangle             rect;
@@ -31,6 +31,10 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   }
 
   @Override
+  public void act(final String action, final SharedActionSpace space) {
+  }
+
+  @Override
   public boolean contains(final double x, final double y, final ContainmentCheck check) {
     return rect.contains(x, y);
   }
@@ -38,6 +42,11 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   @Override
   public ControlDoodad[] getDoodadsInThingSpace() {
     return doodads;
+  }
+
+  @Override
+  public void list(final Set<String> actionsAvailable) {
+
   }
 
   @Override
@@ -106,15 +115,6 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
     edges[15] = edges[1];
 
     return edges;
-  }
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-
   }
 
 }

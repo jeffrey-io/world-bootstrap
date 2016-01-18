@@ -12,9 +12,9 @@ import io.jeffrey.zer.meta.GuideLine;
 public class EdgeEnforcer implements GuideLineEnforcer {
   private static final double        RADIANS_TO_DEGREES = 57.295779578552298943021782279762;
 
-  private final HasEdgesInWorldSpace thingWithEdges;
   private final PositionPart         position;
   private final RotationPart         rotation;
+  private final HasEdgesInWorldSpace thingWithEdges;
 
   public EdgeEnforcer(final HasEdgesInWorldSpace thingWithEdges, final PositionPart position, final RotationPart rotation) {
     this.thingWithEdges = thingWithEdges;

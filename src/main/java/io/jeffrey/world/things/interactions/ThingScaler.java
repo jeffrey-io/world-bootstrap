@@ -12,15 +12,15 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 public class ThingScaler implements ThingInteraction {
   private final double    ix;
   private final double    iy;
+  private final ScalePart scale;
   private final double    sx;
   private final double    sy;
-  private final ScalePart scale;
 
   /**
    * @param initial
    *          the initial event in the thing space
    */
-  public ThingScaler(final AdjustedMouseEvent initial, ScalePart scale) {
+  public ThingScaler(final AdjustedMouseEvent initial, final ScalePart scale) {
     this.scale = scale;
     sx = scale.sx();
     sy = scale.sy();

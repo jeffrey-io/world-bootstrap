@@ -211,9 +211,8 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     if ("?".equals(action)) {
       return getActions();
     }
-    
-    invokeAction(action);
 
+    invokeAction(action);
 
     if ("unselect".equals(action)) {
       unselect();

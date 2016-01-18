@@ -16,16 +16,16 @@ public class ThingMover implements ThingInteraction {
 
   private final double       ix;
   private final double       iy;
-  private final double       x;
-  private final double       y;
   private final PositionPart position;
   private final RotationPart rotation;
+  private final double       x;
+  private final double       y;
 
   /**
    * @param initial
    *          the initial event in the thing space
    */
-  public ThingMover(final AdjustedMouseEvent initial, PositionPart position, RotationPart rotation) {
+  public ThingMover(final AdjustedMouseEvent initial, final PositionPart position, final RotationPart rotation) {
     x = position.x();
     y = position.y();
     ix = initial.position.x_0;

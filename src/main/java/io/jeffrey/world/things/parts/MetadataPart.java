@@ -25,6 +25,15 @@ public class MetadataPart implements Part {
     }
   }
 
+  @Override
+  public void act(final String action, final SharedActionSpace space) {
+  }
+
+  @Override
+  public void list(final Set<String> actionsAvailable) {
+
+  }
+
   public Edit metadataOf(final String key, final String defaultValue) {
     final EditString ed = metadata.get(key);
     if (ed == null) {
@@ -46,15 +55,6 @@ public class MetadataPart implements Part {
 
   @Override
   public void update() {
-  }
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-
   }
 
 }

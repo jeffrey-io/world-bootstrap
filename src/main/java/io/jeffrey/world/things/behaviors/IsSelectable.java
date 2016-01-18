@@ -3,7 +3,7 @@ package io.jeffrey.world.things.behaviors;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;
 
-public interface Selectable {
+public interface IsSelectable {
 
   public static enum ContainmentCheck {
     CloseEnoughToMaintainSelection, ExactlyInside

@@ -21,6 +21,10 @@ public class IdentityPart implements Part {
     metaclass = data.getString("metaclass", "_");
   }
 
+  @Override
+  public void act(final String action, final SharedActionSpace space) {
+  }
+
   public String getID() {
     return id.getAsText();
   }
@@ -30,20 +34,16 @@ public class IdentityPart implements Part {
   }
 
   @Override
+  public void list(final Set<String> actionsAvailable) {
+
+  }
+
+  @Override
   public boolean unique() {
     return true;
   }
 
   @Override
   public void update() {
-  }
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-
   }
 }

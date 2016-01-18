@@ -18,20 +18,20 @@ public class ColorPart implements Part {
   }
 
   @Override
+  public void act(final String action, final SharedActionSpace space) {
+  }
+
+  @Override
+  public void list(final Set<String> actionsAvailable) {
+
+  }
+
+  @Override
   public boolean unique() {
     return false;
   }
 
   @Override
   public void update() {
-  }
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-
   }
 }

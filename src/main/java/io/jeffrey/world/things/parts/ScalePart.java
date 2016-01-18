@@ -22,7 +22,7 @@ public class ScalePart implements Part {
   }
 
   @Override
-  public void act(String action, SharedActionSpace space) {
+  public void act(final String action, final SharedActionSpace space) {
     if ("normalize.scale".equals(action)) {
       final double s = (sx() + sy()) / 2.0;
       sx(s);
@@ -31,12 +31,8 @@ public class ScalePart implements Part {
   }
 
   @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
-  public void update() {
+  public void list(final Set<String> actionsAvailable) {
+    actionsAvailable.add("normalize.scale");
   }
 
   /**
@@ -70,8 +66,12 @@ public class ScalePart implements Part {
   }
 
   @Override
-  public void list(Set<String> actionsAvailable) {
-    actionsAvailable.add("normalize.scale");
+  public boolean unique() {
+    return true;
+  }
+
+  @Override
+  public void update() {
   }
 
 }

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TurtleCompiler {
-  
+
   public static String compile(final String script) {
-    Turtle turtle = new Turtle();
+    final Turtle turtle = new Turtle();
     for (final String[] statement : tokenizeLines(script)) {
       final String command = statement[0];
       if (statement.length != 2) {
@@ -17,7 +17,7 @@ public class TurtleCompiler {
           turtle.forward(Double.parseDouble(statement[1]));
           break;
         case "back":
-          turtle.forward(- Double.parseDouble(statement[1]));
+          turtle.forward(-Double.parseDouble(statement[1]));
           break;
         case "left":
           turtle.turn(-Double.parseDouble(statement[1]));
@@ -43,7 +43,7 @@ public class TurtleCompiler {
 
   private static List<String[]> tokenizeLines(final String script) {
     final ArrayList<String[]> commands = new ArrayList<>();
-    final String[] lines = script.replaceAll(";","\n").split("\n");
+    final String[] lines = script.replaceAll(";", "\n").split("\n");
     for (String line : lines) {
       line = line.trim().toLowerCase();
       if (line.length() == 0) {

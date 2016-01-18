@@ -70,7 +70,7 @@ public abstract class Thing extends ThingCore {
    *          the event in world space
    */
   public void addSelectionMovers(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
-    if (locked.value() || deleted.value()) {
+    if (editing.locked.value() || lifetime.isDeleted()) {
       return;
     }
     if (!selected()) {
@@ -113,7 +113,7 @@ public abstract class Thing extends ThingCore {
    *          the selection window
    */
   public void applySelection(final SelectionWindow window) {
-    if (deleted.value()) {
+    if (lifetime.isDeleted()) {
       return;
     }
     final double[] adjusted = window.rect();
@@ -128,7 +128,7 @@ public abstract class Thing extends ThingCore {
     final boolean touches = selectionIntersect(polygon, window.mode);
     final boolean shouldSelect = window.mode.selected(alreadySelected, touches);
     if (shouldSelect) {
-      selected.value(true);
+      editing.selected.value(true);
     } else {
       unselect();
     }
@@ -143,7 +143,7 @@ public abstract class Thing extends ThingCore {
   }
 
   public boolean deleted() {
-    return deleted.value();
+    return lifetime.isDeleted();
   }
 
   /**
@@ -200,12 +200,12 @@ public abstract class Thing extends ThingCore {
     actions.add("normalize.scale");
     actions.add("bring.up");
     actions.add("push.down");
-    if (deleted.value()) {
+    if (lifetime.isDeleted()) {
       actions.add("undelete");
     } else {
       actions.add("delete");
     }
-    if (locked.value()) {
+    if (editing.locked.value()) {
       actions.add("unlock");
     } else {
       actions.add("lock");
@@ -280,19 +280,19 @@ public abstract class Thing extends ThingCore {
       return true;
     }
     if ("delete".equals(action)) {
-      deleted.value(true);
+      delete();
       return true;
     }
     if ("undelete".equals(action)) {
-      deleted.value(false);
+      lifetime.undelete();
       return true;
     }
     if ("lock".equals(action)) {
-      locked.value(true);
+      editing.locked.value(true);
       return true;
     }
     if ("unlock".equals(action)) {
-      locked.value(false);
+      editing.locked.value(false);
       return true;
     }
     if ("unselect".equals(action)) {
@@ -304,7 +304,7 @@ public abstract class Thing extends ThingCore {
       for (final Entry<String, Edit> link : getLinks(false).entrySet()) {
         template.put(link.getKey(), link.getValue().getAsText());
       }
-      document.templates.put(name.getAsText(), template);
+      document.templates.put(identity.name.getAsText(), template);
       return true;
     }
     return executeAction(action);
@@ -348,7 +348,7 @@ public abstract class Thing extends ThingCore {
   }
 
   public void preSelectionWindow() {
-    alreadySelected = selected.value();
+    alreadySelected = editing.selected.value();
     cacheSelection();
   }
 
@@ -370,18 +370,11 @@ public abstract class Thing extends ThingCore {
    *          where the user is at
    */
   public void render(final GraphicsContext gc, final Camera camera) {
-    if (deleted.value()) {
+    if (lifetime.isDeleted()) {
       return;
     }
-    if (!locked.value() && selected()) {
+    if (!editing.locked.value() && selected()) {
       for (final ControlDoodad doodad : getDoodadsInWorldSpace()) {
-
-        if (doodad.type == Type.Scale && scale.lock.value()) {
-          continue;
-        }
-        if (doodad.type == Type.Rotate && rotation.lock.value()) {
-          continue;
-        }
 
         if (doodad.type == Type.Scale) {
           gc.drawImage(document.SCALE_ICON, -document.controlPointSize + camera.x(doodad.u), -document.controlPointSize + camera.y(doodad.v), 2 * document.controlPointSize, 2 * document.controlPointSize);
@@ -398,9 +391,7 @@ public abstract class Thing extends ThingCore {
     gc.save();
     gc.translate(camera.tX, camera.tY);
     gc.scale(camera.scale, camera.scale);
-    gc.translate(position.x.value(), position.y.value());
-    gc.rotate(-rotation.angle.value());
-    gc.scale(scale.x.value(), scale.y.value());
+    transform.readyGraphicsContext(gc);
     draw(gc);
     gc.restore();
   }
@@ -409,7 +400,7 @@ public abstract class Thing extends ThingCore {
    * @return is the thing selected?
    */
   public boolean selected() {
-    return selected.value();
+    return editing.selected.value();
   }
 
   /**
@@ -426,11 +417,11 @@ public abstract class Thing extends ThingCore {
    * @return a mouse interaction to manipulate things (or null if nothing to do)
    */
   public MouseInteraction startInteraction(final AdjustedMouseEvent event) {
-    if (deleted.value()) {
+    if (lifetime.isDeleted()) {
       return null;
     }
     final MouseInteraction mi = startInteractionReal(event);
-    if (locked.value()) {
+    if (editing.locked.value()) {
       return null;
     }
     return mi;
@@ -441,17 +432,14 @@ public abstract class Thing extends ThingCore {
     ThingInteraction interaction = null;
     final VectorRegister3 W = new VectorRegister3();
     for (final ControlDoodad doodad : getDoodadsInThingSpace()) {
-      if (locked.value()) {
+      if (editing.locked.value()) {
         break;
       }
       if (interaction != null) {
         break;
       }
-      if (doodad.type == Type.Scale && scale.lock.value()) {
-        break;
-      }
-      if (doodad.type == Type.Rotate && rotation.lock.value()) {
-        break;
+      if (!transform.allowed(doodad.type)) {
+        continue;
       }
 
       W.set_0(doodad.u, doodad.v);
@@ -485,7 +473,7 @@ public abstract class Thing extends ThingCore {
       }
     }
 
-    selected.value(true);
+    editing.selected.value(true);
     // check document to see if the alignment
     return new ThingInteractionToMouseIteractionAdapter(document.history, interaction, this);
   }
@@ -495,6 +483,7 @@ public abstract class Thing extends ThingCore {
   /**
    * update any state before we render
    */
+  @Override
   public abstract void update();
 
   /**
@@ -507,14 +496,7 @@ public abstract class Thing extends ThingCore {
    * @return a vector representing the point in world space
    */
   public void writeToTarget(final VectorRegister3 reg) {
-    reg.copy_from_0_to_1();
-    reg.set_2(position.x.value(), position.y.value());
-    reg.sub_2_from_1();
-    reg.set_2(rotation.cachedComplexX(), rotation.cachedComplexY());
-    reg.complex_mult_2_1();
-    // add sheer to vector register
-    reg.x_1 /= scale.x.value();
-    reg.y_1 /= scale.y.value();
+    transform.writeToTarget(reg);
   }
 
   /**
@@ -527,13 +509,6 @@ public abstract class Thing extends ThingCore {
    * @return a vector representing the point in world space
    */
   public void writeToWorld(final VectorRegister3 reg) {
-    reg.copy_from_0_to_1();
-    // add sheer
-    reg.x_1 *= scale.x.value();
-    reg.y_1 *= scale.y.value();
-    reg.set_2(rotation.cachedComplexX(), -rotation.cachedComplexY());
-    reg.complex_mult_2_1();
-    reg.set_2(position.x.value(), position.y.value());
-    reg.add_2_to_1();
+    transform.writeToWorld(reg);
   }
 }

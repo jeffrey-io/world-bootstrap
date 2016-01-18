@@ -6,5 +6,5 @@ public abstract class ControlDoodadPart implements Part {
   @Override
   public boolean unique() {
     return false;
-  }  
+  }
 }

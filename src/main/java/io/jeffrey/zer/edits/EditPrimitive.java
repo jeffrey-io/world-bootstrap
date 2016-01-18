@@ -44,15 +44,15 @@ public abstract class EditPrimitive<T> extends Edit {
    */
   public void value(final T v) {
     if (subscriptions != null) {
-      String before = this.getAsText();
+      final String before = getAsText();
       this.pValue = v;
-      String after = this.getAsText();
-      for (BiConsumer<String, String> event : subscriptions) {
+      final String after = getAsText();
+      for (final BiConsumer<String, String> event : subscriptions) {
         event.accept(before, after);
       }
     } else {
       this.pValue = v;
     }
-    
+
   }
 }

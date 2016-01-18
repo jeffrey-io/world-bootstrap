@@ -11,7 +11,7 @@ import javafx.scene.image.Image;
 public interface IconResolver {
   /**
    * the type of an icon
-   * 
+   *
    * @author jeffrey
    *
    */
@@ -21,7 +21,7 @@ public interface IconResolver {
 
   /**
    * lookup an image
-   * 
+   *
    * @param type
    *          the type of the image
    * @param name

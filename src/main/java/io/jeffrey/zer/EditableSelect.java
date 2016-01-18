@@ -89,7 +89,7 @@ public class EditableSelect {
 
   /**
    * helper: select the item based on the id
-   * 
+   *
    * @param newId
    *          the new editable id to select
    */

@@ -117,7 +117,7 @@ public class ActionBar implements Syncable {
 
   /**
    * sync the common operations
-   * 
+   *
    * @param edits
    *          the selected editables
    */
@@ -197,7 +197,7 @@ public class ActionBar implements Syncable {
 
   /**
    * sync a single editable thing
-   * 
+   *
    * @param editable
    *          the editable thing that has actions available
    */

@@ -96,7 +96,7 @@ public class Camera {
 
   /**
    * set the camera such that the scane and translation fit the given bounds
-   * 
+   *
    * @param bounds
    *          the bounds (minimum point in the 0 vector and maximum point in the 1 vector)
    * @param context

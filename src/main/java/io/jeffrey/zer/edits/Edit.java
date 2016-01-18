@@ -9,11 +9,11 @@ import java.util.function.BiConsumer;
  * @author jeffrey
  */
 public abstract class Edit {
-  
+
   protected ArrayList<BiConsumer<String, String>> subscriptions;
-  
+
   public Edit() {
-    this.subscriptions = null;
+    subscriptions = null;
   }
 
   /**
@@ -35,9 +35,9 @@ public abstract class Edit {
    */
   public boolean set(final String txt) {
     if (subscriptions != null) {
-      String before = getAsText();
+      final String before = getAsText();
       if (setByText(txt)) {
-        for (BiConsumer<String, String> event : subscriptions) {
+        for (final BiConsumer<String, String> event : subscriptions) {
           event.accept(before, txt);
         }
         return true;
@@ -48,13 +48,6 @@ public abstract class Edit {
       return setByText(txt);
     }
   }
-  
-  public void subscribe(BiConsumer<String, String> change) {
-    if (subscriptions == null) {
-      subscriptions = new ArrayList<>();
-    }
-    subscriptions.add(change);
-  }
 
   /**
    * set the value with the given text by parsing it
@@ -64,4 +57,11 @@ public abstract class Edit {
    * @return true if the value was accepted
    */
   protected abstract boolean setByText(String txt);
+
+  public void subscribe(final BiConsumer<String, String> change) {
+    if (subscriptions == null) {
+      subscriptions = new ArrayList<>();
+    }
+    subscriptions.add(change);
+  }
 }

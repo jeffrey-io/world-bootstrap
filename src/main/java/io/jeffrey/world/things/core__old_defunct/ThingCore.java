@@ -3,15 +3,19 @@ package io.jeffrey.world.things.core__old_defunct;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.base.parts.IdentityPart;
+import io.jeffrey.world.things.base.parts.LifetimePart;
+import io.jeffrey.world.things.base.parts.MetadataPart;
 import io.jeffrey.world.things.base.parts.PositionPart;
 import io.jeffrey.world.things.base.parts.RotationPart;
 import io.jeffrey.world.things.base.parts.ScalePart;
+import io.jeffrey.world.things.base.parts.StandardTransform;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;
@@ -23,26 +27,24 @@ import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 
 public abstract class ThingCore extends AbstractThing implements Editable, Comparable<Thing> {
-  protected final EditString              color;
-  protected final EditBoolean             deleted;
-  protected final EditString              id;
-  protected final EditString              layer;
-  protected final EditBoolean             layerlock;
-  protected final EditBoolean             lockcolor;
-  protected final EditBoolean             locked;
-  protected final EditBoolean             locklock;
-  protected final EditBoolean             lockmeta;
-  protected final EditString              metaclass;
-  protected final Map<String, EditString> metadata;
-  protected final EditString              name;
-  protected final EditBoolean             nometa;
-  protected final EditDouble              order;
-  protected final EditBoolean             selected;
-  protected final EditString              type;
+  protected final IdentityPart identity;
+  protected final LifetimePart lifetime;
 
+  
+  protected final EditString   color;
+  protected final EditString   layer;
+  protected final EditBoolean  layerlock;
+  protected final EditBoolean  lockcolor;
+  protected final EditBoolean  locklock;
+
+  
+  protected final EditDouble   order;
+  protected final MetadataPart metadata;
   protected final PositionPart position;
-  protected final ScalePart scale;
   protected final RotationPart rotation;
+  protected final ScalePart    scale;
+  protected final Transform    transform;
+  protected final EditingPart editing;
 
   /**
    * @param document
@@ -53,43 +55,41 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public ThingCore(final Document document, final ThingData node) {
     super(document, node);
 
-    id = node.getString("id", UUID.randomUUID().toString());
-    type = node.getString("_type", null);
-
     position = new PositionPart(data);
     register("position", position);
-    
+
     scale = new ScalePart(data);
     register("scale", scale);
-    
+
     rotation = new RotationPart(data);
     register("rotation", rotation);
 
+    identity = new IdentityPart(data);
+    register("identity", identity);
+
+    transform = new StandardTransform(position, scale, rotation);
+
+    metadata = new MetadataPart("metadata_", data);
+    register("metadata", metadata);
+
+    lifetime = new LifetimePart(data);
+    register("lifetime", lifetime);
     
-    name = node.getString("name", "Unnamed");
+    editing = new EditingPart(data);
+    register("editing", editing);
 
     layer = node.getString("layer", "_");
     order = node.getDouble("order", Double.MAX_VALUE);
 
-    locked = node.getBoolean("locked", false);
-    deleted = node.getBoolean("deleted", false);
-    selected = node.getBoolean("selected", false);
+
     color = node.getString("color", "blue");
 
-    metaclass = node.getString("metaclass", "_");
-    metadata = new HashMap<String, EditString>();
 
     locklock = node.getBoolean("locklock", false);
-    lockmeta = node.getBoolean("lockmeta", false);
-    nometa = node.getBoolean("nometa", false);
+
     lockcolor = node.getBoolean("lockcolor", false);
     layerlock = node.getBoolean("layerlock", false);
 
-    for (final String key : node.fields.keySet()) {
-      if (key.startsWith("metadata_")) {
-        metadata.put(key.substring(9), node.getString(key, null));
-      }
-    }
   }
 
   /**
@@ -104,8 +104,8 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    *          the new angle value (in degrees)
    */
   public void angle(final double angle) {
-    
-    this.rotation.angle.value(angle);
+
+    rotation.angle.value(angle);
   }
 
   /**
@@ -146,7 +146,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   protected void delete() {
     document.history.register(this);
     unselect();
-    deleted.value(true);
+    lifetime.delete();
   }
 
   /**
@@ -156,30 +156,17 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public Map<String, Edit> getLinks(final boolean withHistory) {
     final HashMap<String, Edit> links = new HashMap<>();
     links.putAll(data.getLinks());
-    links.put("id", id);
-    links.put("_type", type);
-    links.put("name", name);
-
     links.put("layer", layer);
     links.put("order", order);
-
-    links.put("locked", locked);
-    links.put("deleted", deleted);
-    links.put("selected", selected);
+    links.put("layerlock", layerlock);
 
     links.put("locklock", locklock);
-    links.put("lockmeta", lockmeta);
-    links.put("nometa", nometa);
 
     if (supportsColor()) {
       links.put("color", color);
       links.put("lockcolor", lockcolor);
     }
-    links.put("layerlock", layerlock);
-    links.put("metaclass", metaclass);
-    for (final Entry<String, EditString> e : metadata.entrySet()) {
-      links.put("metadata_" + e.getKey(), e.getValue());
-    }
+
     populateLinks(links);
     if (withHistory) {
       final HashMap<String, Edit> actualLinks = new HashMap<>();
@@ -196,7 +183,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * @return the meta class of the thing
    */
   public String getMetaclass() {
-    return metaclass.value();
+    return identity.metaclass.value();
   }
 
   /**
@@ -204,7 +191,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    */
   @Override
   public String id() {
-    return id.value();
+    return identity.getID();
   }
 
   /**
@@ -235,17 +222,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    */
   @Override
   public Edit metadataOf(final String key, final String defaultValue) {
-    EditString ed = metadata.get(key);
-    if (ed == null) {
-      ed = new EditString("metadata_" + key, defaultValue) {
-        @Override
-        public boolean setByText(final String txt) {
-          metadata.put(key, this);
-          return super.setByText(txt);
-        };
-      };
-    }
-    return ed;
+    return metadata.metadataOf(key, defaultValue);
   }
 
   /**
@@ -289,7 +266,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    */
   public void select() {
     unselect();
-    selected.value(true);
+    editing.selected.value(true);
   }
 
   /**
@@ -324,7 +301,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    *          the new scale of the x axis
    */
   public void sx(final double sx) {
-    this.scale.x.value(Math.min(10000.0, Math.max(0.1, sx)));
+    scale.x.value(Math.min(10000.0, Math.max(0.1, sx)));
   }
 
   /**
@@ -339,14 +316,14 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    *          the new scale of the y axis
    */
   public void sy(final double sy) {
-    this.scale.y.value(Math.min(10000.0, Math.max(0.1, sy)));
+    scale.y.value(Math.min(10000.0, Math.max(0.1, sy)));
   }
 
   /**
    * helper to unselect the thing
    */
   public void unselect() {
-    selected.value(false);
+    editing.selected.value(false);
     clearSelection();
   }
 
@@ -362,7 +339,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    *          the new x coordinate value
    */
   public void x(final double x) {
-    this.position.x.value(snapValue(x));
+    position.x.value(snapValue(x));
   }
 
   /**
@@ -377,6 +354,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    *          the new y coordinate value
    */
   public void y(final double y) {
-    this.position.y.value(snapValue(y));
+    position.y.value(snapValue(y));
   }
 }

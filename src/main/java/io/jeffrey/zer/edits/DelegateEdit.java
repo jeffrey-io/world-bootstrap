@@ -1,12 +1,14 @@
 package io.jeffrey.zer.edits;
 
 public abstract class DelegateEdit extends Edit {
-  
+
   private final Edit delegate;
-  
-  public DelegateEdit(Edit delegate) {
+
+  public DelegateEdit(final Edit delegate) {
     this.delegate = delegate;
   }
+
+  public abstract boolean acceptSetByText(String value);
 
   @Override
   public String getAsText() {
@@ -19,12 +21,10 @@ public abstract class DelegateEdit extends Edit {
   }
 
   @Override
-  protected boolean setByText(String txt) {
+  protected boolean setByText(final String txt) {
     if (acceptSetByText(txt)) {
       return delegate.setByText(txt);
     }
     return false;
   }
-
-  public abstract boolean acceptSetByText(String value);
 }

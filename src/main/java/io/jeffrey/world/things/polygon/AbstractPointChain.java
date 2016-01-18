@@ -201,11 +201,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     chain = new PointChain(node.getString("points", "0,-1,1,1,-1,1").value());
     cache.update();
   }
-  
-  public Edit getPointsLinks() {
-    return pointsEditList;
-  }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -315,6 +311,10 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       cache.update();
     }
     return cache.doodads;
+  }
+
+  public Edit getPointsLinks() {
+    return pointsEditList;
   }
 
   @Override

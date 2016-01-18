@@ -102,7 +102,7 @@ public class WorldData extends SurfaceData {
       data.fields.put("x", at_x);
       data.fields.put("y", at_y);
       data.fields.put("points", polyCircle(0, 2 * Math.PI / 3, 3));
-    }    
+    }
     if ("Box".equals(type)) {
       data = document.newData("polygon");
       data.fields.put("x", at_x);

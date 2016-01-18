@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 public class SelectionWindow {
   /**
    * an algebraic mode for how selection should work
-   * 
+   *
    * @author jeffrey
    */
 

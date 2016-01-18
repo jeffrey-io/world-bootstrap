@@ -17,7 +17,7 @@ public class SurfaceContext {
 
   /**
    * the camera
-   * 
+   *
    * @param camera
    */
   public SurfaceContext(final Camera camera) {

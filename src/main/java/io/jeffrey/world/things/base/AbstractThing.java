@@ -8,18 +8,17 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 
 public class AbstractThing {
-  protected final Document document;
-  protected final LinkedDataMap data;
+  protected final LinkedDataMap                  data;
+  protected final Document                       document;
   private final HashMap<String, ArrayList<Part>> parts;
-  
 
-  public AbstractThing(Document document, final ThingData node) {
+  public AbstractThing(final Document document, final ThingData node) {
     this.document = document;
-    this.data = new LinkedDataMap(node);
-    this.parts = new HashMap<>();
+    data = new LinkedDataMap(node);
+    parts = new HashMap<>();
   }
-  
-  protected synchronized <T extends Part> void register(String key, T part) {
+
+  protected synchronized <T extends Part> void register(final String key, final T part) {
     ArrayList<Part> subkey = parts.get(key);
     if (subkey == null) {
       subkey = new ArrayList<>();
@@ -31,13 +30,21 @@ public class AbstractThing {
     subkey.add(part);
   }
 
+  public void update() {
+    for (final ArrayList<Part> list : parts.values()) {
+      for (final Part part : list) {
+        part.update();
+      }
+    }
+  }
+
   @SuppressWarnings("unchecked")
-  public <T extends Part> void walk(String key, Consumer<T> consumer) {
-    ArrayList<Part> subkey = parts.get(key);
+  public <T extends Part> void walk(final String key, final Consumer<T> consumer) {
+    final ArrayList<Part> subkey = parts.get(key);
     if (subkey == null) {
       return; // we are done, nothing to do
     }
-    for (Part p : subkey) {
+    for (final Part p : subkey) {
       consumer.accept((T) p);
     }
   }

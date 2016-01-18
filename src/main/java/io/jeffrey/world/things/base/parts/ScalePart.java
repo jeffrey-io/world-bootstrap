@@ -6,10 +6,10 @@ import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 
 public class ScalePart implements Part {
-  public final EditBoolean             lock;
-  public final EditDouble              x;
-  public final EditDouble              y;
-  public final EditBoolean             aspect;
+  public final EditBoolean aspect;
+  public final EditBoolean lock;
+  public final EditDouble  x;
+  public final EditDouble  y;
 
   public ScalePart(final LinkedDataMap data) {
     x = data.getDouble("sx", 1.0);

@@ -8,7 +8,7 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.behaviors.Selectable.ContainmentCheck;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
-import io.jeffrey.world.things.core__old_defunct.EdgedThing;
+import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
@@ -28,7 +28,7 @@ import javafx.scene.shape.Polygon;
  * @author jeffrey
  *
  */
-public class TImage extends EdgedThing {
+public class TImage extends Thing {
   private static int clamp(final int value, final int low, final int high) {
     return Math.min(high, Math.max(low, value));
   }
@@ -112,11 +112,6 @@ public class TImage extends EdgedThing {
       gc.strokeRect(-img.getWidth() / 2.0, -img.getHeight() / 2.0, img.getWidth(), img.getHeight());
       gc.restore();
     }
-  }
-
-  @Override
-  public double[] edges() {
-    return rectangle.worldSpaceEdges();
   }
 
   /**

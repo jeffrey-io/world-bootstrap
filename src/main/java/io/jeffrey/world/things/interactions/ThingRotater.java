@@ -2,8 +2,8 @@ package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
-import io.jeffrey.world.things.core.Thing;
-import io.jeffrey.world.things.core.ThingInteraction;
+import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
 /**

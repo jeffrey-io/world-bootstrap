@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.core;
+package io.jeffrey.world.things.core__old_defunct;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,8 +13,8 @@ import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
+import io.jeffrey.world.things.core__old_defunct.ControlDoodad.Type;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingRotater;
 import io.jeffrey.world.things.interactions.ThingScaler;

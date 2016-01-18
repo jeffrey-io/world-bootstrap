@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.core;
+package io.jeffrey.world.things.core__old_defunct;
 
 /**
  * A doodad is a mechanism for things to emit points of interest to control the thin in question

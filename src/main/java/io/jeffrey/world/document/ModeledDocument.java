@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import io.jeffrey.world.document.history.History;
-import io.jeffrey.world.things.core.Thing;
+import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.LayerProperties;

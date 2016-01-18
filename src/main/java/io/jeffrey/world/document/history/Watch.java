@@ -2,7 +2,7 @@ package io.jeffrey.world.document.history;
 
 import java.util.HashMap;
 
-import io.jeffrey.world.things.core.ThingCore;
+import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
  * Watch a thing by copying and it then build the transition

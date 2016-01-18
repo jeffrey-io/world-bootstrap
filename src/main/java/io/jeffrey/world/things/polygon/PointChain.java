@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.core.Thing;
+import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.polygon.actions.CleanEdges;
 import io.jeffrey.world.things.polygon.actions.ColinearReduction;
 import io.jeffrey.world.things.polygon.actions.DeleteVertices;

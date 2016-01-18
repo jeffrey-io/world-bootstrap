@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.core;
+package io.jeffrey.world.things.core__old_defunct;
 
 import java.util.ArrayList;
 import java.util.Map;

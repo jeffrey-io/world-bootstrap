@@ -2,8 +2,8 @@ package io.jeffrey.world.things.interactions;
 
 import java.util.Collection;
 
-import io.jeffrey.world.things.core.ThingInteraction;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
+import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.meta.GuideLine;

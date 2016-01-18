@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
-import io.jeffrey.world.things.core.ThingCore;
+import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
  * Very simple history of changes

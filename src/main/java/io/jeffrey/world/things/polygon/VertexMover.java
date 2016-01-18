@@ -1,6 +1,6 @@
 package io.jeffrey.world.things.polygon;
 
-import io.jeffrey.world.things.core.ThingInteraction;
+import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
 /**

@@ -7,6 +7,8 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
+import io.jeffrey.world.things.enforcer.OriginEnforcer;
+import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.Edit;
@@ -34,6 +36,11 @@ public class TPolygon extends AbstractPointChain {
   public TPolygon(final Document document, final ThingData node) {
     super(document, node);
     cache.update();
+    
+    EnforcersPart enforcers = new EnforcersPart(
+        new OriginEnforcer(position),
+        new EdgeEnforcer(this, position, rotation));
+    register("enforcers", enforcers);
   }
 
   /**
@@ -74,11 +81,6 @@ public class TPolygon extends AbstractPointChain {
   @Override
   protected boolean doesPolygonIntersect(final Polygon p) {
     return Shape.intersect(p, polygon).getBoundsInLocal().getWidth() > 0;
-  }
-
-  @Override
-  protected GuideLineEnforcer getGuideLineEnforcer() {
-    return new EdgeEnforcer(this, position, rotation);
   }
 
   /**

@@ -136,11 +136,6 @@ public class TConnector extends AbstractPointChain {
     return false;
   }
 
-  @Override
-  protected GuideLineEnforcer getGuideLineEnforcer() {
-    return null;
-  }
-
   /**
    * {@inheritDoc}
    */

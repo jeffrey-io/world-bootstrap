@@ -31,7 +31,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   protected final EditingPart  editing;
   protected final ColorPart    fill;
   protected final IdentityPart identity;
-  protected final LayerPart    layerP;
+  protected final LayerPart    layer;
   protected final LifetimePart lifetime;
   protected final MetadataPart metadata;
   protected final PositionPart position;
@@ -84,18 +84,11 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
     editing = new EditingPart(data);
     register("editing", editing);
 
-    layerP = new LayerPart(document, data);
-    register("layer", layerP);
+    layer = new LayerPart(document, data);
+    register("layer", layer);
 
     fill = new ColorPart("fill", data);
     register("fill", fill);
-  }
-
-  /**
-   * @return if the aspect is locked
-   */
-  public boolean aspectLocked() {
-    return scale.aspect.value();
   }
 
   /**
@@ -110,7 +103,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public int compareTo(final Thing o) {
     final int dlayer = -Integer.compare(o.layerZ(), layerZ());
     if (dlayer == 0) {
-      return -Double.compare(o.layerP.order.value(), layerP.order.value());
+      return -Double.compare(o.layer.order.value(), layer.order.value());
     }
     return dlayer;
   }
@@ -174,14 +167,14 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * @return the thing's layer
    */
   public LayerProperties layer() {
-    return layerP.getLayerProperties();
+    return layer.getLayerProperties();
   }
 
   /**
    * @return the layer's order
    */
   public int layerZ() {
-    return layerP.z();
+    return layer.z();
   }
 
   /**
@@ -196,7 +189,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * @return the order
    */
   public double order() {
-    return layerP.order.value();
+    return layer.order.value();
   }
 
   /**
@@ -204,7 +197,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    *          the new order
    */
   public void order(final double value) {
-    layerP.order.value(value);
+    layer.order.value(value);
   }
 
   /**
@@ -236,7 +229,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * @return the resulting snap'd value
    */
   private double snapValue(final double v) {
-    final LayerProperties p = layerP.getLayerProperties();
+    final LayerProperties p = layer.getLayerProperties();
     if (p != null) {
       return p.snap(v);
     }

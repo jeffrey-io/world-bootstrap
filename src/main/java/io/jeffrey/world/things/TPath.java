@@ -72,11 +72,6 @@ public class TPath extends AbstractPointChain {
     return false;
   }
 
-  @Override
-  protected GuideLineEnforcer getGuideLineEnforcer() {
-    return null;
-  }
-
   /**
    * {@inheritDoc}
    */

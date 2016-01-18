@@ -26,7 +26,7 @@ public class AbstractThing {
   public <T, O> Set<O> collect(final Class<T> clazz, final Function<T, Collection<O>> collector) {
     final HashSet<O> result = new HashSet<>();
     walk(part -> {
-      if (part.getClass().isInstance(clazz)) {
+      if (clazz.isAssignableFrom(part.getClass())) {
         result.addAll(collector.apply((T) part));
       }
     });

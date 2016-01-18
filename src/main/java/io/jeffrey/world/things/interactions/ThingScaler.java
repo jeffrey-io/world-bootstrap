@@ -1,5 +1,6 @@
 package io.jeffrey.world.things.interactions;
 
+import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.world.things.parts.ScalePart;
 import io.jeffrey.zer.AdjustedMouseEvent;
@@ -10,9 +11,10 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  * @author jeffrey
  */
 public class ThingScaler implements ThingInteraction {
+  private final Transform transform;
+  private final ScalePart scale;
   private final double    ix;
   private final double    iy;
-  private final ScalePart scale;
   private final double    sx;
   private final double    sy;
 
@@ -20,7 +22,8 @@ public class ThingScaler implements ThingInteraction {
    * @param initial
    *          the initial event in the thing space
    */
-  public ThingScaler(final AdjustedMouseEvent initial, final ScalePart scale) {
+  public ThingScaler(final AdjustedMouseEvent initial, final Transform transform, final ScalePart scale) {
+    this.transform = transform;
     this.scale = scale;
     sx = scale.sx();
     sy = scale.sy();
@@ -44,6 +47,7 @@ public class ThingScaler implements ThingInteraction {
   public void moved(final AdjustedMouseEvent event) {
     scale.sx(sx);
     scale.sy(sy);
+    transform.writeToTarget(event.position);
     final double mx = event.position.x_1 / ix;
     final double my = event.position.y_1 / iy;
     double nsx = sx * mx;

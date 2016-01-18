@@ -18,9 +18,7 @@ import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
-import io.jeffrey.world.things.interactions.ThingMover;
-import io.jeffrey.world.things.interactions.ThingRotater;
-import io.jeffrey.world.things.interactions.ThingScaler;
+import io.jeffrey.world.things.interactions.DefaultMouseInteraction;
 import io.jeffrey.world.things.interactions.ThingSnapper;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
@@ -79,11 +77,11 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     adjustAndBindEvent(event);
     final HashSet<ThingInteraction> local = new HashSet<>();
     iterateMovers(local, event);
-    final Collection<GuideLine> lines = document.getGuideLines(layerP.layer.getAsText());
+    final Collection<GuideLine> lines = document.getGuideLines(layer.layer.getAsText());
 
     GuideLineEnforcer enforcer = null;
     if (lines.size() > 0) {
-      enforcer = getGuideLineEnforcer();
+      // enforcer = getGuideLineEnforcerX();
     }
     for (final ThingInteraction itRaw : local) {
       final ThingInteraction it;
@@ -200,10 +198,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     return actions;
   }
 
-  /**
-   * @return a new link to align this in real time
-   */
-  protected abstract GuideLineEnforcer getGuideLineEnforcer();
 
   @Override
   public Object invoke(final String action) {
@@ -348,52 +342,28 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
 
   private MouseInteraction startInteractionReal(final AdjustedMouseEvent event) {
     adjustAndBindEvent(event);
-    ThingInteraction interaction = null;
-    final VectorRegister3 W = new VectorRegister3();
-    for (final ControlDoodad doodad : getDoodadsInThingSpace()) {
-      if (editing.locked.value()) {
-        break;
+    
+    DefaultMouseInteraction defaultMouseInteraction = new DefaultMouseInteraction(
+        this,
+        this,
+        document,
+        transform,
+        editing,
+        position,
+        scale,
+        rotation,
+        layer) {
+      @Override
+      protected ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event) {
+        return Thing.this.startTargetAdjustedInteraction(event);
       }
-      if (interaction != null) {
-        break;
-      }
-      if (!transform.allowed(doodad.type)) {
-        continue;
-      }
-
-      W.set_0(doodad.u, doodad.v);
-      writeToWorld(W);
-      final double d = event.doodadDistance(W.x_1, W.y_1);
-      if (d <= document.controlPointSize) {
-        if (doodad.type == Type.PointSelected || doodad.type == Type.PointSelected) {
-          break;
-        }
-        if (doodad.type == Type.Scale) {
-          interaction = new ThingScaler(event, scale);
-        }
-        if (doodad.type == Type.Rotate) {
-          interaction = new ThingRotater(event, transform, rotation);
-        }
-      }
-    }
-    if (interaction == null) {
-      interaction = startTargetAdjustedInteraction(event);
-    }
+    };
+    
+    ThingInteraction interaction = defaultMouseInteraction.start(event);
     if (interaction == null) {
       return null;
     }
-    if (interaction instanceof ThingMover) {
-      final Collection<GuideLine> lines = document.getGuideLines(layerP.layer.getAsText());
-      if (lines.size() > 0) {
-        final GuideLineEnforcer enforcer = getGuideLineEnforcer();
-        if (enforcer != null) {
-          interaction = new ThingSnapper(document.camera, lines, enforcer, interaction);
-        }
-      }
-    }
-
-    editing.selected.value(true);
-    // check document to see if the alignment
+    
     return new ThingInteractionToMouseIteractionAdapter(document.history, interaction, this);
   }
 

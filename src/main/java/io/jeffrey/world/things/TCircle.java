@@ -13,6 +13,7 @@ import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
+import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.canvas.GraphicsContext;
@@ -50,6 +51,9 @@ public class TCircle extends Thing {
     doodads.add(new ControlDoodad(Type.Scale, -0.7, 0.7));
     doodads.add(new ControlDoodad(Type.Scale, -0.7, -0.7));
     this.doodads = doodads.toArray(new ControlDoodad[doodads.size()]);
+    
+    EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
+    register("enforcers", enforcers);
   }
 
   /**
@@ -118,11 +122,6 @@ public class TCircle extends Thing {
   @Override
   public ControlDoodad[] getDoodadsInThingSpace() {
     return doodads;
-  }
-
-  @Override
-  protected GuideLineEnforcer getGuideLineEnforcer() {
-    return new OriginEnforcer(position);
   }
 
   @Override

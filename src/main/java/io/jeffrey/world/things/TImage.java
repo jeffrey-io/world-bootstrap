@@ -11,7 +11,9 @@ import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
+import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
+import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.RectanglePart;
 import io.jeffrey.world.things.parts.UriPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
@@ -58,6 +60,13 @@ public class TImage extends Thing {
       }
     };
     refresh();
+    
+    EnforcersPart enforcers = new EnforcersPart(
+        new OriginEnforcer(position),
+        new EdgeEnforcer(rectangle, position, rotation));
+    register("enforcers", enforcers);
+
+    
   }
 
   /**
@@ -129,11 +138,6 @@ public class TImage extends Thing {
   public ControlDoodad[] getDoodadsInThingSpace() {
     refresh();
     return rectangle.getDoodadsInThingSpace();
-  }
-
-  @Override
-  protected GuideLineEnforcer getGuideLineEnforcer() {
-    return new EdgeEnforcer(rectangle, position, rotation);
   }
 
   @Override

@@ -231,7 +231,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
       if (!thing.selected() && onlySelected) {
         continue;
       }
-      for (final ControlDoodad doodad : thing.getDoodadsInWorldSpace()) {
+      for (final ControlDoodad doodad : thing.doodadCache.getDoodadsInWorldSpace()) {
         if (n == 0) {
           reg.set_0(doodad.u, doodad.v);
           reg.set_1(doodad.u, doodad.v);

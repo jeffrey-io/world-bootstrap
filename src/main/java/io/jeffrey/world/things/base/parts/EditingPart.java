@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.core__old_defunct;
+package io.jeffrey.world.things.base.parts;
 
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;

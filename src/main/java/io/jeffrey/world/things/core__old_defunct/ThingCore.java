@@ -9,7 +9,9 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.base.parts.EditingPart;
 import io.jeffrey.world.things.base.parts.IdentityPart;
+import io.jeffrey.world.things.base.parts.LayerPart;
 import io.jeffrey.world.things.base.parts.LifetimePart;
 import io.jeffrey.world.things.base.parts.MetadataPart;
 import io.jeffrey.world.things.base.parts.PositionPart;
@@ -21,7 +23,6 @@ import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditBoolean;
-import io.jeffrey.zer.edits.EditDouble;
 import io.jeffrey.zer.edits.EditString;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
@@ -32,19 +33,16 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
 
   
   protected final EditString   color;
-  protected final EditString   layer;
-  protected final EditBoolean  layerlock;
   protected final EditBoolean  lockcolor;
-  protected final EditBoolean  locklock;
 
   
-  protected final EditDouble   order;
   protected final MetadataPart metadata;
   protected final PositionPart position;
   protected final RotationPart rotation;
   protected final ScalePart    scale;
   protected final Transform    transform;
   protected final EditingPart editing;
+  protected final LayerPart layerP;
 
   /**
    * @param document
@@ -78,17 +76,16 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
     editing = new EditingPart(data);
     register("editing", editing);
 
-    layer = node.getString("layer", "_");
-    order = node.getDouble("order", Double.MAX_VALUE);
+    layerP = new LayerPart(document, data);
+    register("layer", layerP);
+
 
 
     color = node.getString("color", "blue");
 
 
-    locklock = node.getBoolean("locklock", false);
 
     lockcolor = node.getBoolean("lockcolor", false);
-    layerlock = node.getBoolean("layerlock", false);
 
   }
 
@@ -127,7 +124,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public int compareTo(final Thing o) {
     final int dlayer = -Integer.compare(o.layerZ(), layerZ());
     if (dlayer == 0) {
-      return -Double.compare(o.order.value(), order.value());
+      return -Double.compare(o.layerP.order.value(), layerP.order.value());
     }
     return dlayer;
   }
@@ -156,11 +153,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   public Map<String, Edit> getLinks(final boolean withHistory) {
     final HashMap<String, Edit> links = new HashMap<>();
     links.putAll(data.getLinks());
-    links.put("layer", layer);
-    links.put("order", order);
-    links.put("layerlock", layerlock);
-
-    links.put("locklock", locklock);
 
     if (supportsColor()) {
       links.put("color", color);
@@ -203,18 +195,14 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * @return the thing's layer
    */
   public LayerProperties layer() {
-    return document.layers.get(layer.getAsText());
+    return layerP.getLayerProperties();
   }
 
   /**
    * @return the layer's order
    */
   public int layerZ() {
-    final LayerProperties p = document.layers.get(layer.getAsText());
-    if (p != null) {
-      return p.zorder.value();
-    }
-    return 0;
+    return layerP.z();
   }
 
   /**
@@ -229,7 +217,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * @return the order
    */
   public double order() {
-    return order.value();
+    return layerP.order.value();
   }
 
   /**
@@ -237,7 +225,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    *          the new order
    */
   public void order(final double value) {
-    order.value(value);
+    layerP.order.value(value);
   }
 
   /**
@@ -277,7 +265,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * @return the resulting snap'd value
    */
   private double snapValue(final double v) {
-    final LayerProperties p = document.layers.get(layer.getAsText());
+    final LayerProperties p = layerP.getLayerProperties();
     if (p != null) {
       return p.snap(v);
     }

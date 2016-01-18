@@ -15,6 +15,7 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
+import io.jeffrey.world.things.base.parts.ControlDoodadPart;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingRotater;
@@ -45,10 +46,7 @@ public abstract class Thing extends ThingCore {
    */
   VectorRegister3         threadUnsafeContainmentScratch = new VectorRegister8();
 
-  /**
-   * cached allocation of the doodads
-   */
-  private ControlDoodad[] worldDoodads;
+  public ControlDoodadPart doodadCache;
 
   /**
    * @param document
@@ -58,7 +56,19 @@ public abstract class Thing extends ThingCore {
    */
   protected Thing(final Document document, final ThingData node) {
     super(document, node);
-    worldDoodads = new ControlDoodad[0];
+    
+    this.doodadCache = new ControlDoodadPart(transform) {
+      
+      @Override
+      public void update() {
+        
+      }
+      
+      @Override
+      protected ControlDoodad[] getDoodadsInThingSpace() {
+        return Thing.this.getDoodadsInThingSpace();
+      }
+    };
   }
 
   /**
@@ -79,7 +89,7 @@ public abstract class Thing extends ThingCore {
     adjustAndBindEvent(event);
     final HashSet<ThingInteraction> local = new HashSet<>();
     iterateMovers(local, event);
-    final Collection<GuideLine> lines = document.getGuideLines(layer.getAsText());
+    final Collection<GuideLine> lines = document.getGuideLines(layerP.layer.getAsText());
 
     GuideLineEnforcer enforcer = null;
     if (lines.size() > 0) {
@@ -213,7 +223,7 @@ public abstract class Thing extends ThingCore {
     if (selected()) {
       actions.add("unselect");
     }
-    if (!locklock.value()) {
+    if (!lifetime.locklock.value()) {
       actions.add("templatize");
     }
     describePossibleActions(actions);
@@ -224,30 +234,6 @@ public abstract class Thing extends ThingCore {
    * @return all the doodads in target space
    */
   protected abstract ControlDoodad[] getDoodadsInThingSpace();
-
-  /**
-   * @return all the control doodads in the world space for rendering
-   */
-  public ControlDoodad[] getDoodadsInWorldSpace() {
-    final ControlDoodad[] original = getDoodadsInThingSpace();
-    if (worldDoodads.length != original.length) {
-      worldDoodads = new ControlDoodad[original.length];
-      for (int k = 0; k < original.length; k++) {
-        worldDoodads[k] = new ControlDoodad(Type.PointUnselected, 0.0, 0.0);
-      }
-    }
-    final VectorRegister3 W = new VectorRegister3();
-    for (int k = 0; k < original.length; k++) {
-      final ControlDoodad doodad = original[k];
-      W.set_0(doodad.u, doodad.v);
-      writeToWorld(W);
-      final ControlDoodad world = worldDoodads[k];
-      world.type = doodad.type;
-      world.u = W.x_1;
-      world.v = W.y_1;
-    }
-    return worldDoodads;
-  }
 
   /**
    * @return a new link to align this in real time
@@ -272,11 +258,11 @@ public abstract class Thing extends ThingCore {
       return true;
     }
     if ("push.down".equals(action)) {
-      order.value(order.value() - 1.5);
+      layerP.order.value(layerP.order.value() - 1.5);
       return true;
     }
     if ("bring.up".equals(action)) {
-      order.value(order.value() + 1.5);
+      layerP.order.value(layerP.order.value() + 1.5);
       return true;
     }
     if ("delete".equals(action)) {
@@ -374,7 +360,7 @@ public abstract class Thing extends ThingCore {
       return;
     }
     if (!editing.locked.value() && selected()) {
-      for (final ControlDoodad doodad : getDoodadsInWorldSpace()) {
+      for (final ControlDoodad doodad : doodadCache.getDoodadsInWorldSpace()) {
 
         if (doodad.type == Type.Scale) {
           gc.drawImage(document.SCALE_ICON, -document.controlPointSize + camera.x(doodad.u), -document.controlPointSize + camera.y(doodad.v), 2 * document.controlPointSize, 2 * document.controlPointSize);
@@ -464,7 +450,7 @@ public abstract class Thing extends ThingCore {
       return null;
     }
     if (interaction instanceof ThingMover) {
-      final Collection<GuideLine> lines = document.getGuideLines(layer.getAsText());
+      final Collection<GuideLine> lines = document.getGuideLines(layerP.layer.getAsText());
       if (lines.size() > 0) {
         final GuideLineEnforcer enforcer = getGuideLineEnforcer();
         if (enforcer != null) {

@@ -71,13 +71,6 @@ public class TImage extends Thing {
    * {@inheritDoc}
    */
   @Override
-  protected void cacheSelection() {
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   protected void describePossibleActions(final List<String> actions) {
   }
 

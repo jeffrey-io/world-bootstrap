@@ -8,6 +8,7 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
+import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.Edit;
@@ -26,6 +27,7 @@ public class TPolygon extends AbstractPointChain {
 
   private Polygon polygon;
 
+
   /**
    * @param document
    *          the owner of the thing
@@ -34,10 +36,13 @@ public class TPolygon extends AbstractPointChain {
    */
   public TPolygon(final Document document, final ThingData node) {
     super(document, node);
-    cache.update();
-
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(this, position, rotation));
     register("enforcers", enforcers);
+    
+    points.subscribe(c -> {
+      TPolygon.this.polygon =  new Polygon(c.inlineXYPairs);
+      TPolygon.this.cache = c;
+    });
   }
 
   /**
@@ -101,7 +106,6 @@ public class TPolygon extends AbstractPointChain {
    */
   @Override
   protected void onCacheUpdated() {
-    polygon = new Polygon(cache.inlineXYPairs);
   }
 
   /**
@@ -116,6 +120,9 @@ public class TPolygon extends AbstractPointChain {
    */
   @Override
   protected void renderPolygon(final Document document, final GraphicsContext gc) {
+    if (cache == null) {
+      return;
+    }
     gc.setFill(Color.valueOf(fill.color.getAsText()));
     gc.fillPolygon(cache.x, cache.y, cache.y.length);
     if (selected()) {

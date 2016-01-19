@@ -11,6 +11,7 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
+import io.jeffrey.world.things.behaviors.CanCacheSelection;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.interactions.DefaultMouseInteraction;
 import io.jeffrey.world.things.interactions.ThingInteraction;
@@ -84,8 +85,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   public void applySelection(final SelectionWindow window) {
     defaultMouseInteraction.updateSelectionBasedOnWindow(window);
   }
-
-  protected abstract void cacheSelection();
 
   public boolean contains(final double x, final double y) {
     threadUnsafeContainmentScratch.set_0(x, y);
@@ -172,7 +171,10 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
 
   public void preSelectionWindow() {
     defaultMouseInteraction.aboutToBeginSelectionBasedOnWindow();
-    cacheSelection();
+    collect(CanCacheSelection.class, t -> {
+      t.cache();
+      return null;
+    });
   }
 
   public Color query(final double x, final double y) {

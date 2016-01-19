@@ -28,7 +28,6 @@ public class TPath extends AbstractPointChain {
    */
   public TPath(final Document document, final ThingData node) {
     super(document, node);
-    cache.update();
   }
 
   /**

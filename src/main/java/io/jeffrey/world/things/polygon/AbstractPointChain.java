@@ -9,10 +9,13 @@ import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.TPolygon;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
+import io.jeffrey.world.things.parts.PointSetPart;
+import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.Syncable;
@@ -36,24 +39,20 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    *
    * @author jeffrey
    */
+  /*
   public class VertexCache {
-    public double          boundingRadiusForControls;
-    public ControlDoodad[] doodads;
-    public double[]        inlineXYPairs;
-    private boolean        myvlock = false;
-    public double[]        x;
-    public double[]        y;
+    public double[] inlineXYPairs;
+    private boolean myvlock = false;
+    public double[] x;
+    public double[] y;
 
     public VertexCache() {
       inlineXYPairs = new double[0];
       x = new double[0];
       y = new double[0];
-      doodads = new ControlDoodad[0];
+
     }
 
-    /**
-     * normalize the scale
-     */
     private void apply_scale() {
       final double mx = scale.sx();
       final double my = scale.sy();
@@ -69,9 +68,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       update();
     }
 
-    /**
-     * center all the points around the senter
-     */
     private void center() {
       if (inlineXYPairs.length == 0) {
         return;
@@ -95,82 +91,16 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       update();
     }
 
-    /**
-     * @return if the cache needs to be manually updated
-     */
-    private boolean needsUpdate() {
-      return myvlock != vlock.value();
-    }
-
-    /**
-     * update the cache by pulling data from the chain
-     */
     public void update() {
-      final int n = chain.size();
-      final int doff = vlock.value() ? 0 : n;
-      final int nOps = hasStandardControls() ? 8 : 0;
-      final int ds = doff + nOps;
-      myvlock = vlock.value();
-      int k;
-      if (x.length != n) {
-        inlineXYPairs = new double[n * 2];
-        x = new double[n];
-        y = new double[n];
-      }
-      if (doodads.length != ds) {
-        doodads = new ControlDoodad[ds];
-        for (k = 0; k < doodads.length; k++) {
-          doodads[k] = new ControlDoodad(Type.PointUnselected, 0, 0);
-        }
-      }
-      if (n == 0) {
-        return;
-      }
-      boundingRadiusForControls = 0;
-      for (k = 0; k < n; k++) {
-        final SelectablePoint2 p = chain.at(k);
-        inlineXYPairs[2 * k] = p.x;
-        inlineXYPairs[2 * k + 1] = p.y;
-        x[k] = p.x;
-        y[k] = p.y;
-        boundingRadiusForControls = Math.max(boundingRadiusForControls, p.x * p.x + p.y * p.y);
-        if (!myvlock) {
-          doodads[k].u = p.x;
-          doodads[k].v = p.y;
-          doodads[k].type = p.selected ? Type.PointSelected : Type.PointUnselected;
-        }
-      }
-      if (hasStandardControls()) {
-
-        final double scale_norm = scale.sx() + scale.sy();
-
-        final double aug = 32 / scale_norm;
-
-        boundingRadiusForControls = Math.sqrt(boundingRadiusForControls) + aug;
-
-        for (k = 0; k < 4; k++) {
-          doodads[doff + k].type = Type.Scale;
-        }
-        for (k = 4; k < 8; k++) {
-          doodads[doff + k].type = Type.Rotate;
-        }
-
-        final double PI = 3.1415926535897932384626433832795;
-        final double[] ANGLES = new double[] { PI / 4, 3 * PI / 4, -PI / 4, -3 * PI / 4, 0, PI / 2, PI, -PI / 2 };
-        for (k = 0; k < 8; k++) {
-          doodads[doff + k].u = Math.cos(ANGLES[k]) * boundingRadiusForControls;
-          doodads[doff + k].v = Math.sin(ANGLES[k]) * boundingRadiusForControls;
-        }
-      }
       onCacheUpdated();
     }
   }
+  */
 
-  protected final VertexCache    cache;
   protected final PointChain     chain;
-  private final AbstractEditList pointsEditList;
-  private final EditBoolean      vlock;
-
+  protected final PointSetPart   points;
+  protected SharedMutableCache cache;
+  
   /**
    * @param document
    *          the document
@@ -179,33 +109,27 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    */
   protected AbstractPointChain(final Document document, final ThingData node) {
     super(document, node);
-    pointsEditList = new AbstractEditList("points") {
-
-      @Override
-      public String getAsText() {
-        return chain.toString();
-      }
-
-      @Override
-      protected boolean setByText(final String txt) {
-        try {
-          chain.set(txt);
-          cache.update();
-          return true;
-        } catch (final Exception failure) {
-          document.notifications.println(failure, "unable to set the points list");
-          return false;
-        }
-      }
-
-    };
-    cache = new VertexCache();
-    vlock = node.getBoolean("vlock", false);
     chain = new PointChain(node.getString("points", "0,-1,1,1,-1,1").value());
-    cache.update();
     
-    editing.selected.subscribe(new BiConsumer<String, String>() {
+    this.points = new PointSetPart(data, scale, rotation) {
+      @Override
+      public SelectablePoint2 at(int k) {
+        return chain.at(k);
+      }
       
+      @Override
+      public int getNumberOfPoints() {
+        return chain.size();
+      }
+    };
+    points.subscribe(c -> {
+      AbstractPointChain.this.cache = c;
+    });    
+    
+    register("data", points);
+
+    editing.selected.subscribe(new BiConsumer<String, String>() {
+
       @Override
       public void accept(String t, String u) {
         if (u.equals("false")) {
@@ -215,21 +139,11 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     });
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void cacheSelection() {
-    for (final SelectablePoint2 point : chain) {
-      point.alreadySelected = point.selected;
-    }
-  }
-
   protected void clearSelectionOnPoints() {
     for (final SelectablePoint2 point : chain) {
       point.selected = false;
     }
-    cache.update();
+    points.update();
   }
 
   /**
@@ -270,43 +184,21 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    */
   @Override
   protected void draw(final GraphicsContext gc) {
-    if (cache.needsUpdate()) {
-      cache.update();
-    }
+    points.update();
     renderPolygon(document, gc);
   }
 
   /*
-  protected Object executeAction(final String action) {
-    if ("self.center".equals(action)) {
-      cache.center();
-      return true;
-    }
-    if ("apply.scale".equals(action)) {
-      cache.apply_scale();
-      return true;
-    }
-    if (chain.act(action, isPolygonLooped(), document, this)) {
-      cache.update();
-      return true;
-    }
-    return false;
-  }
-  */
+   * protected Object executeAction(final String action) { if ("self.center".equals(action)) { cache.center(); return true; } if ("apply.scale".equals(action)) { cache.apply_scale(); return true; } if (chain.act(action, isPolygonLooped(), document, this)) { cache.update(); return true; } return false; }
+   */
 
   /**
    * {@inheritDoc}
    */
   @Override
   public ControlDoodad[] getDoodadsInThingSpace() {
-    if (cache.needsUpdate()) {
-      cache.update();
-    }
-    return cache.doodads;
-  }
-
-  public Edit getPointsLinks() {
-    return pointsEditList;
+    points.update();
+    return points.getDoodadsInThingSpace();
   }
 
   /**
@@ -335,12 +227,20 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   /*
-   * @Override protected void populateLinks(final HashMap<String, Edit> links) { pointsEditList.edits.clear(); cache.update(); int index = 0; for (final SelectablePoint2 p : chain) { pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true)); pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false)); index++; } links.put("points", pointsEditList); links.put("vlock", vlock); populatePolygonalEditLinks(links); }
-   */
+  protected void populateLinks(final HashMap<String, Edit> links) {
+    pointsEditList.edits.clear();
+    cache.update();
+    int index = 0;
+    for (final SelectablePoint2 p : chain) {
+      pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true));
+      pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false));
+      index++;
+    }
+    links.put("points", pointsEditList);
+    populatePolygonalEditLinks(links);
+  }
+  */
 
   @Override
   public Color queryTargetColor(final double x, final double y) {
@@ -375,7 +275,8 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       }
     }
     if (doUpdate) {
-      cache.update();
+      points.dirty();
+      points.update();
     }
     if (mode == Mode.Subtract && anySelected) {
       return false;
@@ -398,7 +299,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         return new VertexMover(new Vertex(point, this), event);
       }
     }
-    if (allowEdgeSelect() && !vlock.value()) {
+    if (allowEdgeSelect() && !points.lock.value()) {
       final VectorRegister3 reg = new VectorRegister3();
       for (final SelectablePoint2[] line : chain.lines(isPolygonLooped())) {
 
@@ -438,7 +339,8 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    */
   @Override
   public void sync() {
-    cache.update();
+    points.dirty();
+    points.update();
   }
 
   /**

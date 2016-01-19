@@ -21,7 +21,7 @@ public class TTurtle extends TPolygon {
       @Override
       public boolean acceptSetByText(final String value) {
         try {
-          getPointsLinks().set(TurtleCompiler.compile(value));
+          points.vertices.set(TurtleCompiler.compile(value));
           return true;
         } catch (final IllegalStateException ise) {
           return false;

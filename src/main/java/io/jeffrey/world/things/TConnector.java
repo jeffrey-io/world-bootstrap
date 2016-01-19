@@ -70,7 +70,7 @@ public class TConnector extends AbstractPointChain {
 
         pnt.x = to.x_1;
         pnt.y = to.y_1;
-        cache.update();
+        points.invalidateNow();
         dirty = false;
         link.value(currentThing.getID());
       }
@@ -91,7 +91,7 @@ public class TConnector extends AbstractPointChain {
     super(document, node);
     from = new LockedVertex(chain.at(0), node, "from");
     to = new LockedVertex(chain.at(1), node, "to");
-    cache.update();
+    points.invalidateNow();
     dirty = true;
   }
 

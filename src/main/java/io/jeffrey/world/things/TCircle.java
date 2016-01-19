@@ -1,23 +1,21 @@
 package io.jeffrey.world.things;
 
 import java.util.List;
-import java.util.Set;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.behaviors.IsSelectable.ContainmentCheck;
+import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.parts.CirclePart;
+import io.jeffrey.world.things.parts.CircleRenderPart;
 import io.jeffrey.world.things.parts.EnforcersPart;
+import io.jeffrey.world.things.parts.GenericMoverPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Polygon;
 
 /**
@@ -39,9 +37,12 @@ public class TCircle extends Thing {
 
     circle = new CirclePart();
     register("shapes", circle);
+    
+    register("render", new CircleRenderPart(transform, document, fill, fill, scale, editing));
 
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
     register("enforcers", enforcers);
+    register("control", new GenericMoverPart(position, rotation));
   }
 
   /**
@@ -51,35 +52,6 @@ public class TCircle extends Thing {
   protected void describePossibleActions(final List<String> actions) {
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesContainTargetPoint(final double x, final double y) {
-    return circle.contains(x, y, ContainmentCheck.ExactlyInside);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesPointApplyToSelection(final AdjustedMouseEvent event) {
-    return doesContainTargetPoint(event.position.x_1, event.position.y_1);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void draw(final GraphicsContext gc) {
-    gc.setFill(Color.valueOf(fill.color.getAsText()));
-    gc.fillArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
-    if (selected()) {
-      gc.setStroke(Color.RED);
-      gc.setLineWidth(4 / (scale.sx() + scale.sy()));
-      gc.strokeArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
-    }
-  }
 
   /**
    * {@inheritDoc}
@@ -89,22 +61,7 @@ public class TCircle extends Thing {
     return circle.getDoodadsInThingSpace();
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
-    interactions.add(new ThingMover(event, position, rotation));
-  }
-
-  @Override
-  public Color queryTargetColor(final double x, final double y) {
-    if (doesContainTargetPoint(x, y)) {
-      return Color.valueOf(fill.color.getAsText());
-    }
-    return null;
-  }
-
+  
   /**
    * {@inheritDoc}
    */
@@ -118,8 +75,10 @@ public class TCircle extends Thing {
    */
   @Override
   protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
-    if (doesPointApplyToSelection(event)) {
-      return new ThingMover(event, position, rotation);
+    for (IsSelectable isSelectable : collect(IsSelectable.class)) {
+      if (isSelectable.doesMouseEventPreserveExistingSelection(event)) {
+        return new ThingMover(event, position, rotation);
+      }
     }
     return null;
   }

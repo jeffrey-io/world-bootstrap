@@ -3,22 +3,32 @@ package io.jeffrey.world.things.parts;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import io.jeffrey.vector.VectorRegister3;
+import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Subscribers;
+import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.CanCacheSelection;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
+import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.interactions.ThingInteraction;
+import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.polygon.SelectablePoint2;
+import io.jeffrey.world.things.polygon.Vertex;
+import io.jeffrey.world.things.polygon.VertexMover;
+import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
+import io.jeffrey.zer.Syncable;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
-public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, CanCacheSelection, IsSelectable {
+public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, CanCacheSelection, IsSelectable, HasMover {
 
   public class SharedMutableCache {
     public double       boundingRadiusForControls;
@@ -35,6 +45,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     }
   }
 
+  private final Document document;
   private final SharedMutableCache              cache;
 
   private ControlDoodad[]                       doodads   = new ControlDoodad[0];
@@ -43,21 +54,25 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   private final Subscribers<SharedMutableCache> notification;
   public boolean                                outOfDate = false;
 
+  private final Transform transform;
   private final RotationPart                    rotation;
-
+  private final PositionPart                    position;
   private final ScalePart                       scale;
 
   public final EditString                       vertices;
 
-  public PointSetPart(final LinkedDataMap data, final ScalePart scale, final RotationPart rotation) {
+  public PointSetPart(final LinkedDataMap data, final Document document, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation) {
     lock = data.getBoolean("vlock", false);
+    this.document = document;
     this.scale = scale;
     this.rotation = rotation;
+    this.transform = transform;
     cache = new SharedMutableCache();
 
     lock.subscribe((t, u) -> PointSetPart.this.dirty());
     outOfDate = true;
     notification = new Subscribers<>();
+    this.position = position;
 
     vertices = data.getString("points", "0,-1,1,1,-1,1");
     update();
@@ -78,7 +93,26 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   @Override
-  public boolean contains(final double x, final double y, final ContainmentCheck check) {
+  public boolean contains(final double x, final double y) {
+    return false;
+  }
+  
+  @Override
+  public boolean doesMouseEventPreserveExistingSelection(AdjustedMouseEvent event) {
+    final VectorRegister3 W = new VectorRegister3();
+    if (document != null) {
+      int n = getNumberOfPoints();
+      for (int k = 0; k < n; k++) {
+        final SelectablePoint2 point = at(k);
+        if (point.selected) {
+          W.set_0(point.x, point.y);
+          transform.writeToWorldSpace(W);
+          if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
+            return true;
+          }
+        }
+      }
+    }
     return false;
   }
 
@@ -217,5 +251,39 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
     cache.owner = this;
     notification.publish(cache);
+  }
+
+  @Override
+  public void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event) {
+    boolean all = true;
+    boolean any = false;
+    int n = getNumberOfPoints();
+    for (int k = 0; k < n; k++) {
+      final SelectablePoint2 point = at(k);
+      if (!point.selected) {
+        all = false;
+      } else {
+        any = true;
+      }
+    }
+    if (all || !any) {
+      // this will be faster
+      interactions.add(new ThingMover(event, position, rotation));
+      return;
+    }
+
+    Syncable sync = new Syncable() {
+      @Override
+      public void sync() {
+        dirty();
+      }
+    };
+
+    for (int k = 0; k < n; k++) {
+      final SelectablePoint2 point = at(k);
+      if (point.selected) {
+        interactions.add(new VertexMover(new Vertex(point, sync), event));
+      }
+    }
   }
 }

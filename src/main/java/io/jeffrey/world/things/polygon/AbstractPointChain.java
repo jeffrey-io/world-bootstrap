@@ -9,6 +9,7 @@ import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
+import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.parts.PointSetPart;
@@ -61,7 +62,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     super(document, node);
     chain = new PointChain(node.getString("points", "0,-1,1,1,-1,1").value());
 
-    points = new PointSetPart(data, scale, rotation) {
+    points = new PointSetPart(data, document, transform, position, scale, rotation) {
       @Override
       public SelectablePoint2 at(final int k) {
         return chain.at(k);
@@ -105,30 +106,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     chain.describePossibleActionsBasedOnSelectedVertices(actions, isPolygonLooped());
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesPointApplyToSelection(final AdjustedMouseEvent event) {
-    final VectorRegister3 W = new VectorRegister3();
-    if (document != null) {
-      for (final SelectablePoint2 point : chain) {
-        if (point.selected) {
-          W.set_0(point.x, point.y);
-          writeToWorld(W);
-          if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
-            return true;
-          }
-        }
-      }
-    }
-    return doesPointApplyMaintainSelection(document, event);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   protected void draw(final GraphicsContext gc) {
     points.update();
     renderPolygon(document, gc);
@@ -147,43 +124,10 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     return points.getDoodadsInThingSpace();
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
-    boolean all = true;
-    boolean any = false;
-    for (final SelectablePoint2 point : chain) {
-      if (!point.selected) {
-        all = false;
-      } else {
-        any = true;
-      }
-    }
-    if (all || !any) {
-      // this will be faster
-      interactions.add(new ThingMover(event, position, rotation));
-      return;
-    }
-    for (final SelectablePoint2 point : chain) {
-      if (point.selected) {
-        interactions.add(new VertexMover(new Vertex(point, this), event));
-      }
-    }
-  }
-
   /*
    * protected void populateLinks(final HashMap<String, Edit> links) { pointsEditList.edits.clear(); cache.update(); int index = 0; for (final SelectablePoint2 p : chain) { pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true)); pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false)); index++; } links.put("points", pointsEditList); populatePolygonalEditLinks(links); }
    */
 
-  @Override
-  public Color queryTargetColor(final double x, final double y) {
-    if (doesContainTargetPoint(x, y)) {
-      return Color.valueOf(fill.color.getAsText());
-    }
-    return null;
-  }
 
   /**
    * {@inheritDoc}
@@ -263,8 +207,10 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         }
       }
     }
-    if (doesPointApplyToSelection(event)) {
-      return new ThingMover(event, position, rotation);
+    for (IsSelectable isSelectable : collect(IsSelectable.class)) {
+      if (isSelectable.doesMouseEventPreserveExistingSelection(event)) {
+        return new ThingMover(event, position, rotation);
+      }
     }
     return null;
   }

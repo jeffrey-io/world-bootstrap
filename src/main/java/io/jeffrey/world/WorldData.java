@@ -24,8 +24,11 @@ import io.jeffrey.world.document.EditableThing;
 import io.jeffrey.world.document.Iconify;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryMouseInteractionTrapper;
+import io.jeffrey.world.things.behaviors.CanBeSelectedByWindow;
+import io.jeffrey.world.things.behaviors.CanCacheSelection;
 import io.jeffrey.world.things.core.guides.Picker;
 import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.interactions.MousePart;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.polygon.PointChain;
 import io.jeffrey.zer.AdjustedMouseEvent;
@@ -341,7 +344,10 @@ public class WorldData extends SurfaceData {
     document.history.capture();
     final HashSet<MouseInteraction> set = new HashSet<MouseInteraction>();
     for (final Thing thing : document.getThings()) {
-      thing.addSelectionMovers(set, event);
+      MousePart mouse = thing.first("mouse", MousePart.class);
+      if (mouse != null) {
+        mouse.beginMoving(set, event);
+      }
     }
     if (set.size() == 0) {
       return null;
@@ -362,7 +368,16 @@ public class WorldData extends SurfaceData {
   @Override
   public void initiateSelectionWindow() {
     for (final Thing thing : document.getThings()) {
-      thing.preSelectionWindow();
+      
+      thing.collect(CanBeSelectedByWindow.class, t -> {
+        t.beginSelectionWindow();
+        return null;
+      });
+      
+      thing.collect(CanCacheSelection.class, t -> {
+        t.cache();
+        return null;
+      });      
     }
   }
 

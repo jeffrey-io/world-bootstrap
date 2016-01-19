@@ -25,6 +25,7 @@ public class AbstractThing {
   protected final EditingPart                    editing;
   protected final IdentityPart                   identity;
   private final HashMap<String, ArrayList<Part>> parts;
+  private long sequencer;
 
   /**
    * @param document
@@ -40,8 +41,31 @@ public class AbstractThing {
     register("identity", identity);
     editing = new EditingPart(data);
     register("editing", editing);
+    sequencer = 0;
   }
 
+  @SuppressWarnings("unchecked")
+  public <T> Set<T> collect(final Class<T> clazz) {
+    final HashSet<T> result = new HashSet<>();
+    walk(part -> {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        result.add((T) part);
+      }
+    });
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> Set<T> collect(final String key, final Class<T> clazz) {
+    final HashSet<T> result = new HashSet<>();
+    walk(key, part -> {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        result.add((T) part);
+      }
+    });
+    return result;
+  }
+  
   @SuppressWarnings("unchecked")
   public <T, O> Set<O> collect(final Class<T> clazz, final Function<T, O> collector) {
     final HashSet<O> result = new HashSet<>();
@@ -219,6 +243,7 @@ public class AbstractThing {
    *          the part
    */
   protected synchronized <T extends Part> void register(final String key, final T part) {
+    sequencer++;
     ArrayList<Part> subkey = parts.get(key);
     if (subkey == null) {
       subkey = new ArrayList<>();
@@ -226,7 +251,7 @@ public class AbstractThing {
     }
     subkey.add(part);
   }
-
+  
   /**
    * save the data from things thing to the given map
    *
@@ -288,5 +313,12 @@ public class AbstractThing {
     for (final Part p : subkey) {
       consumer.accept(p);
     }
+  }
+  
+  /**
+   * @return a sequencer to be able to know if there are new things in the image
+   */
+  public long getSequencer() {
+    return sequencer;
   }
 }

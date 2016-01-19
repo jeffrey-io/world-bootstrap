@@ -6,6 +6,7 @@ import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.StandardTransform;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.parts.ColorPart;
+import io.jeffrey.world.things.parts.DoodadRenderPart;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.LifetimePart;
 import io.jeffrey.world.things.parts.MetadataPart;
@@ -54,6 +55,8 @@ public abstract class ThingCore extends AbstractThing {
 
     fill = new ColorPart("fill", data);
     register("fill", fill);
+    
+    register("render", new DoodadRenderPart(this, transform));
   }
 
 }

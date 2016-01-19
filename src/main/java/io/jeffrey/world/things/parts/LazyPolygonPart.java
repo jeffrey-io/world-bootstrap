@@ -5,6 +5,7 @@ import java.util.Set;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
@@ -22,11 +23,16 @@ public class LazyPolygonPart implements Part, IsSelectable {
   }
 
   @Override
-  public boolean contains(final double x, final double y, final ContainmentCheck check) {
+  public boolean contains(final double x, final double y) {
     if (polygon == null) {
       return false;
     }
     return polygon.contains(x, y);
+  }
+  
+  @Override
+  public boolean doesMouseEventPreserveExistingSelection(AdjustedMouseEvent event) {
+    return contains(event.position.x_1, event.position.y_1);
   }
 
   @Override

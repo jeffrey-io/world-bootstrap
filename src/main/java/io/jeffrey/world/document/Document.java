@@ -17,7 +17,9 @@ import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
+import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.zer.Camera;
@@ -250,17 +252,20 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
       if (!thing.selected() && onlySelected) {
         continue;
       }
-      for (final ControlDoodad doodad : thing.doodadCache.getDoodadsInWorldSpace()) {
-        if (n == 0) {
-          reg.set_0(doodad.u, doodad.v);
-          reg.set_1(doodad.u, doodad.v);
-        }
-        reg.x_0 = Math.min(reg.x_0, doodad.u);
-        reg.x_1 = Math.max(reg.x_1, doodad.u);
+      for (HasControlDoodadsInThingSpace space1 : thing.collect(HasControlDoodadsInThingSpace.class)) {
+        AdaptThingSpaceDoodadsIntoWorldSpace space2 = new AdaptThingSpaceDoodadsIntoWorldSpace(thing.getTransform(), space1);
+        for (final ControlDoodad doodad : space2.getDoodadsInWorldSpace()) {
+          if (n == 0) {
+            reg.set_0(doodad.u, doodad.v);
+            reg.set_1(doodad.u, doodad.v);
+          }
+          reg.x_0 = Math.min(reg.x_0, doodad.u);
+          reg.x_1 = Math.max(reg.x_1, doodad.u);
 
-        reg.y_0 = Math.min(reg.y_0, doodad.v);
-        reg.y_1 = Math.max(reg.y_1, doodad.v);
-        n++;
+          reg.y_0 = Math.min(reg.y_0, doodad.v);
+          reg.y_1 = Math.max(reg.y_1, doodad.v);
+          n++;
+        }
       }
     }
     return n;

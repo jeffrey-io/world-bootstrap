@@ -9,9 +9,13 @@ import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
+import io.jeffrey.world.things.base.Part;
+import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.behaviors.CanBeSelectedByWindow;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
+import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core__old_defunct.Thing;
@@ -27,7 +31,7 @@ import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.meta.GuideLine;
 import javafx.scene.shape.Polygon;
 
-public abstract class DefaultMouseInteraction {
+public abstract class MousePart implements Part, CanBeSelectedByWindow {
 
   private final EditingPart   editing;
 
@@ -40,7 +44,7 @@ public abstract class DefaultMouseInteraction {
 
   private final Transform     transform;
 
-  public DefaultMouseInteraction(final AbstractThing thing, final Transform transform) {
+  public MousePart(final AbstractThing thing, final Transform transform) {
     this.thing = thing;
     this.transform = transform;
     editing = thing.first(EditingPart.class);
@@ -50,11 +54,12 @@ public abstract class DefaultMouseInteraction {
     lifetime = thing.first(LifetimePart.class);
   }
 
-  public void aboutToBeginSelectionBasedOnWindow() {
+  @Override
+  public void beginSelectionWindow() {
     selectedPriorSelectionWindow = editing.selected.value();
   }
 
-  public void addSelectionMovers(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event, final Thing DEFUNCT_THING) {
+  public void beginMoving(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
     if (editing != null) {
       if (editing.locked.value() || !editing.selected.value()) {
         return;
@@ -65,12 +70,14 @@ public abstract class DefaultMouseInteraction {
     }
     transform.writeToThingSpace(event.position);
     final HashSet<ThingInteraction> local = new HashSet<>();
-    iterateMovers(local, event);
+    for (HasMover mover : thing.collect(HasMover.class)) {
+      mover.iterateMovers(local, event);
+    }
     final Collection<GuideLine> lines = thing.document.getGuideLines(layer.layer.getAsText());
 
-    final GuideLineEnforcer enforcer = null;
+    GuideLineEnforcer enforcer = null;
     if (lines.size() > 0) {
-      // enforcer = getGuideLineEnforcerX();
+      enforcer = getGuideLineEnforcer();
     }
     for (final ThingInteraction itRaw : local) {
       final ThingInteraction it;
@@ -79,7 +86,7 @@ public abstract class DefaultMouseInteraction {
       } else {
         it = itRaw;
       }
-      // thing.document.history.register(thing);
+      thing.document.history.register(thing);
       interactions.add(new ThingInteractionToMouseIteractionAdapter(thing.document.history, it, transform));
     }
   }
@@ -96,8 +103,6 @@ public abstract class DefaultMouseInteraction {
       return new SerialEnforcer(enforcers);
     }
   }
-
-  protected abstract void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event);
 
   public ThingInteraction start(final AdjustedMouseEvent event) {
     transform.writeToThingSpace(event.position);
@@ -178,5 +183,17 @@ public abstract class DefaultMouseInteraction {
     } else {
       editing.selected.value(false);
     }
+  }
+
+  @Override
+  public void act(String action, SharedActionSpace space) {
+  }
+
+  @Override
+  public void list(Set<String> actionsAvailable) {
+  }
+
+  @Override
+  public void update() {
   }
 }

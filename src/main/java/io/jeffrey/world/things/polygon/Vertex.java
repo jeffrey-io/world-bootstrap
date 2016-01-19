@@ -14,7 +14,7 @@ public class Vertex {
   public final double            x;
   public final double            y;
 
-  Vertex(final SelectablePoint2 point, final Syncable sync) {
+  public Vertex(final SelectablePoint2 point, final Syncable sync) {
     x = point.x;
     y = point.y;
     this.point = point;

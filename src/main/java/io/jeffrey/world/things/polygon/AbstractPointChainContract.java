@@ -35,16 +35,6 @@ public abstract class AbstractPointChainContract extends Thing implements HasEdg
   protected abstract boolean areTheNumberOfPointsFixed();
 
   /**
-   *
-   * @param document
-   *          the document that contains all
-   * @param event
-   *          the mouse event in the target space
-   * @return does the given click maintain the selection of this polygon
-   */
-  protected abstract boolean doesPointApplyMaintainSelection(Document document, AdjustedMouseEvent event);
-
-  /**
    * @param poly
    *          the given polygon (i.e. a selection window)
    * @return does the given polygon intersect with the subclassing figure

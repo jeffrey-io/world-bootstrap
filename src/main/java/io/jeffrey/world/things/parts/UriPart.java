@@ -8,7 +8,7 @@ import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 
-public abstract class UriPart implements Part {
+public class UriPart implements Part {
   public final EditString  uri;
   public final EditBoolean urilock;
 
@@ -31,5 +31,9 @@ public abstract class UriPart implements Part {
 
   @Override
   public void list(final Set<String> actionsAvailable) {
+  }
+
+  @Override
+  public void update() {
   }
 }

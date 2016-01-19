@@ -12,6 +12,7 @@ import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -35,8 +36,13 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   }
 
   @Override
-  public boolean contains(final double x, final double y, final ContainmentCheck check) {
+  public boolean contains(final double x, final double y) {
     return rect.contains(x, y);
+  }
+
+  @Override
+  public boolean doesMouseEventPreserveExistingSelection(AdjustedMouseEvent event) {
+    return rect.contains(event.position.x_1, event.position.y_1);
   }
 
   @Override

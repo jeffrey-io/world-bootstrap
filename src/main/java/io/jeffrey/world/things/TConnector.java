@@ -115,22 +115,6 @@ public class TConnector extends AbstractPointChain {
    * {@inheritDoc}
    */
   @Override
-  protected boolean doesContainTargetPoint(final double x, final double y) {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesPointApplyMaintainSelection(final Document document, final AdjustedMouseEvent event) {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   protected boolean doesPolygonIntersect(final Polygon p) {
     return false;
   }

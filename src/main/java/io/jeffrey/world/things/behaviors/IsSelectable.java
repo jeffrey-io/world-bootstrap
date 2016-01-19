@@ -1,5 +1,6 @@
 package io.jeffrey.world.things.behaviors;
 
+import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;
 
@@ -9,24 +10,26 @@ import javafx.scene.shape.Polygon;
  * @author jeffrey
  */
 public interface IsSelectable {
-
-  public static enum ContainmentCheck {
-    CloseEnoughToMaintainSelection, ExactlyInside
-  }
-
   /**
    * does the thing contain the given point
    *
    * @param x
    *          the x coordinate to check
    * @param y
-   *          the y coodinate to check
+   *          the y coordinate to check
    * @param check
    *          how well should we check
    * @return true if the point satisfies the containment check
    */
-  public boolean contains(final double x, final double y, ContainmentCheck check);
+  public boolean contains(final double x, final double y);
 
+  /**
+   * does the given mouse event preserve the existing selection
+   * @param event the mouse even
+   * @return whether or not the event will not mess with existing selection
+   */
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event);
+  
   /**
    * @param polygon
    *          the shape test

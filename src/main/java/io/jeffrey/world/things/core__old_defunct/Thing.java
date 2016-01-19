@@ -34,10 +34,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public abstract class Thing extends ThingCore implements HasControlDoodadsInThingSpace {
-  private boolean                             alreadySelected                = false;
-
   public AdaptThingSpaceDoodadsIntoWorldSpace doodadCache;
-
+  private final DefaultMouseInteraction defaultMouseInteraction;
+  
   /**
    * does the thing the given (x,y) point in world space
    *
@@ -58,6 +57,20 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   protected Thing(final Document document, final ThingData node) {
     super(document, node);
 
+    this.defaultMouseInteraction = new DefaultMouseInteraction(this, transform) {
+      @Override
+      protected ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event) {
+        return Thing.this.startTargetAdjustedInteraction(event);
+      }
+      
+      @Override
+      protected void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event) {
+        Thing.this.iterateMovers(interactions, event);
+      }
+    };
+    
+
+    
     doodadCache = new AdaptThingSpaceDoodadsIntoWorldSpace(transform, this);
   }
 
@@ -70,30 +83,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    *          the event in world space
    */
   public void addSelectionMovers(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
-    if (editing.locked.value() || lifetime.isDeleted()) {
-      return;
-    }
-    if (!selected()) {
-      return;
-    }
-    adjustAndBindEvent(event);
-    final HashSet<ThingInteraction> local = new HashSet<>();
-    iterateMovers(local, event);
-    final Collection<GuideLine> lines = document.getGuideLines(layer.layer.getAsText());
-
-    GuideLineEnforcer enforcer = null;
-    if (lines.size() > 0) {
-      // enforcer = getGuideLineEnforcerX();
-    }
-    for (final ThingInteraction itRaw : local) {
-      final ThingInteraction it;
-      if (lines.size() > 0 && enforcer != null) {
-        it = new ThingSnapper(document.camera, lines, enforcer, itRaw);
-      } else {
-        it = itRaw;
-      }
-      interactions.add(new ThingInteractionToMouseIteractionAdapter(document.history, it, this));
-    }
+    defaultMouseInteraction.addSelectionMovers(interactions, event, this);
   }
 
   /**
@@ -112,25 +102,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    *          the selection window
    */
   public void applySelection(final SelectionWindow window) {
-    if (lifetime.isDeleted()) {
-      return;
-    }
-    final double[] adjusted = window.rect();
-    final VectorRegister3 scratch = new VectorRegister8();
-    for (int k = 0; k < 8; k += 2) {
-      scratch.set_0(adjusted[k], adjusted[k + 1]);
-      writeToTarget(scratch);
-      adjusted[k] = scratch.x_1;
-      adjusted[k + 1] = scratch.y_1;
-    }
-    final Polygon polygon = new Polygon(adjusted);
-    final boolean touches = selectionIntersect(polygon, window.mode);
-    final boolean shouldSelect = window.mode.selected(alreadySelected, touches);
-    if (shouldSelect) {
-      editing.selected.value(true);
-    } else {
-      unselect();
-    }
+    defaultMouseInteraction.updateSelectionBasedOnWindow(window);
   }
 
   protected abstract void cacheSelection();
@@ -263,7 +235,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   }
 
   public void preSelectionWindow() {
-    alreadySelected = editing.selected.value();
+    defaultMouseInteraction.aboutToBeginSelectionBasedOnWindow();
     cacheSelection();
   }
 
@@ -344,13 +316,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
 
   private MouseInteraction startInteractionReal(final AdjustedMouseEvent event) {
     adjustAndBindEvent(event);
-    
-    DefaultMouseInteraction defaultMouseInteraction = new DefaultMouseInteraction(this, transform) {
-      @Override
-      protected ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event) {
-        return Thing.this.startTargetAdjustedInteraction(event);
-      }
-    };
     
     ThingInteraction interaction = defaultMouseInteraction.start(event);
     if (interaction == null) {

@@ -50,6 +50,7 @@ public class TImage extends Thing {
     super(document, node);
     cache = document.imageCache;
     rectangle = new RectanglePart(transform);
+    register("shapes", rectangle);
 
     uri = new UriPart("", data) {
 
@@ -58,6 +59,7 @@ public class TImage extends Thing {
         refresh();
       }
     };
+    register("uri", uri);
     refresh();
 
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(rectangle, position, rotation));

@@ -130,16 +130,14 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    */
   @Override
   public Map<String, Edit> getLinks(final boolean withHistory) {
-    final HashMap<String, Edit> links = new HashMap<>();
-    links.putAll(data.getLinks());
     if (withHistory) {
       final HashMap<String, Edit> actualLinks = new HashMap<>();
-      for (final Entry<String, Edit> link : links.entrySet()) {
+      for (final Entry<String, Edit> link : data.getLinks().entrySet()) {
         actualLinks.put(link.getKey(), new HistoryEditTrap(link.getValue(), document.history, this));
       }
       return actualLinks;
     } else {
-      return links;
+      return data.getLinks();
     }
   }
 

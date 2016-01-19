@@ -29,47 +29,34 @@ import javafx.scene.shape.Polygon;
 
 public abstract class DefaultMouseInteraction {
 
-  private final AbstractThing                 thing;
-  
-  private final EditingPart                   editing;
-  private final LayerPart                     layer;
-  private final RotationPart                  rotation;
-  private final ScalePart                     scale;
-  private final LifetimePart                  lifetime;
-  private final Transform                     transform;
+  private final EditingPart   editing;
 
-  private boolean selectedPriorSelectionWindow;
+  private final LayerPart     layer;
+  private final LifetimePart  lifetime;
+  private final RotationPart  rotation;
+  private final ScalePart     scale;
+  private boolean             selectedPriorSelectionWindow;
+  private final AbstractThing thing;
+
+  private final Transform     transform;
 
   public DefaultMouseInteraction(final AbstractThing thing, final Transform transform) {
     this.thing = thing;
     this.transform = transform;
-    this.editing = thing.first(EditingPart.class);
-    this.scale = thing.first(ScalePart.class);
-    this.rotation = thing.first(RotationPart.class);
-    this.layer = thing.first(LayerPart.class);
-    this.lifetime = thing.first(LifetimePart.class);
+    editing = thing.first(EditingPart.class);
+    scale = thing.first(ScalePart.class);
+    rotation = thing.first(RotationPart.class);
+    layer = thing.first(LayerPart.class);
+    lifetime = thing.first(LifetimePart.class);
   }
 
-  /**
-   * @return how to snap this to lines
-   */
-  protected GuideLineEnforcer getGuideLineEnforcer() {
-    final Collection<GuideLineEnforcer> enforcers = thing.collectAndMerge(HasGuideLineEnforcers.class, t -> t.getGuideLineEnforcers());
-
-    if (enforcers.isEmpty()) {
-      return null;
-    } else {
-      return new SerialEnforcer(enforcers);
-    }
-  }
-  
   public void aboutToBeginSelectionBasedOnWindow() {
-    this.selectedPriorSelectionWindow = editing.selected.value();
+    selectedPriorSelectionWindow = editing.selected.value();
   }
 
-  public void addSelectionMovers(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event, Thing DEFUNCT_THING) {
+  public void addSelectionMovers(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event, final Thing DEFUNCT_THING) {
     if (editing != null) {
-      if (editing.locked.value() || ! editing.selected.value()) {
+      if (editing.locked.value() || !editing.selected.value()) {
         return;
       }
     }
@@ -81,7 +68,7 @@ public abstract class DefaultMouseInteraction {
     iterateMovers(local, event);
     final Collection<GuideLine> lines = thing.document.getGuideLines(layer.layer.getAsText());
 
-    GuideLineEnforcer enforcer = null;
+    final GuideLineEnforcer enforcer = null;
     if (lines.size() > 0) {
       // enforcer = getGuideLineEnforcerX();
     }
@@ -96,33 +83,21 @@ public abstract class DefaultMouseInteraction {
       interactions.add(new ThingInteractionToMouseIteractionAdapter(thing.document.history, it, transform));
     }
   }
-  
-  public void updateSelectionBasedOnWindow(SelectionWindow window) {
-    if (lifetime.isDeleted()) {
-      return;
-    }
-    final double[] adjusted = window.rect();
-    final VectorRegister3 scratch = new VectorRegister8();
-    for (int k = 0; k < 8; k += 2) {
-      scratch.set_0(adjusted[k], adjusted[k + 1]);
-      transform.writeToThingSpace(scratch);
-      adjusted[k] = scratch.x_1;
-      adjusted[k + 1] = scratch.y_1;
-    }
-    final Polygon polygon = new Polygon(adjusted);
-    boolean touches = false;
-    for (boolean mayTouch : thing.collect(IsSelectable.class, t -> t.selectionIntersect(polygon, window.mode))) {
-      if (mayTouch) {
-        touches = true;
-      }
-    }
-    final boolean shouldSelect = window.mode.selected(selectedPriorSelectionWindow, touches);
-    if (shouldSelect) {
-      editing.selected.value(true);
+
+  /**
+   * @return how to snap this to lines
+   */
+  protected GuideLineEnforcer getGuideLineEnforcer() {
+    final Collection<GuideLineEnforcer> enforcers = thing.collectAndMerge(HasGuideLineEnforcers.class, t -> t.getGuideLineEnforcers());
+
+    if (enforcers.isEmpty()) {
+      return null;
     } else {
-      editing.selected.value(false);
+      return new SerialEnforcer(enforcers);
     }
   }
+
+  protected abstract void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event);
 
   public ThingInteraction start(final AdjustedMouseEvent event) {
     transform.writeToThingSpace(event.position);
@@ -178,5 +153,30 @@ public abstract class DefaultMouseInteraction {
 
   protected abstract ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event);
 
-  protected abstract void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event);
+  public void updateSelectionBasedOnWindow(final SelectionWindow window) {
+    if (lifetime.isDeleted()) {
+      return;
+    }
+    final double[] adjusted = window.rect();
+    final VectorRegister3 scratch = new VectorRegister8();
+    for (int k = 0; k < 8; k += 2) {
+      scratch.set_0(adjusted[k], adjusted[k + 1]);
+      transform.writeToThingSpace(scratch);
+      adjusted[k] = scratch.x_1;
+      adjusted[k + 1] = scratch.y_1;
+    }
+    final Polygon polygon = new Polygon(adjusted);
+    boolean touches = false;
+    for (final boolean mayTouch : thing.collect(IsSelectable.class, t -> t.selectionIntersect(polygon, window.mode))) {
+      if (mayTouch) {
+        touches = true;
+      }
+    }
+    final boolean shouldSelect = window.mode.selected(selectedPriorSelectionWindow, touches);
+    if (shouldSelect) {
+      editing.selected.value(true);
+    } else {
+      editing.selected.value(false);
+    }
+  }
 }

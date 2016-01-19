@@ -21,7 +21,7 @@ public class LifetimePart implements Part {
     if ("undelete".equals(action)) {
       deleted.value(false);
     }
-    if ("deleted".equals(action)) {
+    if ("delete".equals(action)) {
       deleted.value(true);
     }
   }

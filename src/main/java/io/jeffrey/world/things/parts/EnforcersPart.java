@@ -10,14 +10,18 @@ import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 
 public class EnforcersPart implements Part, HasGuideLineEnforcers {
-  
-  private ArrayList<GuideLineEnforcer> enforcers;
-  
-  public EnforcersPart(GuideLineEnforcer... enforcers) {
+
+  private final ArrayList<GuideLineEnforcer> enforcers;
+
+  public EnforcersPart(final GuideLineEnforcer... enforcers) {
     this.enforcers = new ArrayList<>(enforcers.length);
-    for (GuideLineEnforcer enforcer : enforcers) {
+    for (final GuideLineEnforcer enforcer : enforcers) {
       this.enforcers.add(enforcer);
     }
+  }
+
+  @Override
+  public void act(final String action, final SharedActionSpace space) {
   }
 
   @Override
@@ -26,11 +30,7 @@ public class EnforcersPart implements Part, HasGuideLineEnforcers {
   }
 
   @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
+  public void list(final Set<String> actionsAvailable) {
   }
 
   @Override

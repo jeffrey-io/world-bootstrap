@@ -304,11 +304,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     return pointsEditList;
   }
 
-  @Override
-  public void invalidate() {
-    cache.update();
-  }
-
   /**
    * {@inheritDoc}
    */

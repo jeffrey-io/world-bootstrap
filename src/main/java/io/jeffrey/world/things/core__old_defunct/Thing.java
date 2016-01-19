@@ -1,9 +1,8 @@
 package io.jeffrey.world.things.core__old_defunct;
 
+import java.awt.Desktop.Action;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -17,26 +16,23 @@ import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
-import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.interactions.DefaultMouseInteraction;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingInteractionToMouseIteractionAdapter;
-import io.jeffrey.world.things.interactions.ThingSnapper;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.meta.GuideLine;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public abstract class Thing extends ThingCore implements HasControlDoodadsInThingSpace {
+  private final DefaultMouseInteraction       defaultMouseInteraction;
   public AdaptThingSpaceDoodadsIntoWorldSpace doodadCache;
-  private final DefaultMouseInteraction defaultMouseInteraction;
-  
+
   /**
    * does the thing the given (x,y) point in world space
    *
@@ -57,20 +53,18 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   protected Thing(final Document document, final ThingData node) {
     super(document, node);
 
-    this.defaultMouseInteraction = new DefaultMouseInteraction(this, transform) {
+    defaultMouseInteraction = new DefaultMouseInteraction(this, transform) {
       @Override
-      protected ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event) {
-        return Thing.this.startTargetAdjustedInteraction(event);
-      }
-      
-      @Override
-      protected void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event) {
+      protected void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
         Thing.this.iterateMovers(interactions, event);
       }
-    };
-    
 
-    
+      @Override
+      protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
+        return Thing.this.startTargetAdjustedInteraction(event);
+      }
+    };
+
     doodadCache = new AdaptThingSpaceDoodadsIntoWorldSpace(transform, this);
   }
 
@@ -84,15 +78,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    */
   public void addSelectionMovers(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
     defaultMouseInteraction.addSelectionMovers(interactions, event, this);
-  }
-
-  /**
-   * take the given event, and bind it to this object
-   *
-   * @param event
-   */
-  public void adjustAndBindEvent(final AdjustedMouseEvent event) {
-    writeToTarget(event.position);
   }
 
   /**
@@ -172,7 +157,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     return actions;
   }
 
-
   @Override
   public Object invoke(final String action) {
 
@@ -182,10 +166,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
 
     invokeAction(action);
 
-    if ("unselect".equals(action)) {
-      unselect();
-      return true;
-    }
     if ("templatize".equals(action)) {
       final HashMap<String, String> template = new HashMap<String, String>();
       for (final Entry<String, Edit> link : getLinks(false).entrySet()) {
@@ -205,10 +185,10 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    * @return
    */
   public boolean isInCurrertSelection(final AdjustedMouseEvent event) {
-    if (!selected()) {
+    if (!editing.selected.value()) {
       return false;
     }
-    adjustAndBindEvent(event);
+    transform.writeToThingSpace(event.position);
     return doesPointApplyToSelection(event);
   }
 
@@ -230,7 +210,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    */
   public void preInteract(final AdjustedMouseEvent event) {
     if (!event.altdown) {
-      unselect();
+      this.invokeAction("unselect"); 
     }
   }
 
@@ -283,12 +263,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     gc.restore();
   }
 
-  /**
-   * @return is the thing selected?
-   */
-  public boolean selected() {
-    return editing.selected.value();
-  }
+
 
   /**
    * @param p
@@ -307,17 +282,13 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     if (lifetime.isDeleted()) {
       return null;
     }
-    final MouseInteraction mi = startInteractionReal(event);
     if (editing.locked.value()) {
       return null;
     }
-    return mi;
-  }
 
-  private MouseInteraction startInteractionReal(final AdjustedMouseEvent event) {
-    adjustAndBindEvent(event);
-    
-    ThingInteraction interaction = defaultMouseInteraction.start(event);
+    transform.writeToThingSpace(event.position);
+
+    final ThingInteraction interaction = defaultMouseInteraction.start(event);
     if (interaction == null) {
       return null;
     }
@@ -327,12 +298,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   }
 
   protected abstract ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event);
-
-  /**
-   * update any state before we render
-   */
-  @Override
-  public abstract void update();
 
   /**
    * convert the given (_x,_y) at vector 0 in world space into target space and write to vector 1 (vector 2 is used as scratch space)

@@ -9,7 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 /**
  * defines the canonical and most useful transfrom for things that have an (x,y) position, an angle, and is scalable.
- * 
+ *
  * @author jeffrey
  */
 public class StandardTransform implements Transform {

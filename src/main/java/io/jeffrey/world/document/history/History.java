@@ -7,7 +7,6 @@ import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
  * Very simple history of changes
@@ -94,11 +93,11 @@ public class History {
     }
   }
 
-  public void register(final ThingCore thing) {
-    if (watching.containsKey(thing.id())) {
+  public void register(final AbstractThing thing) {
+    if (watching.containsKey(thing.getID())) {
       return;
     }
-    watching.put(thing.id(), new Watch(thing));
+    watching.put(thing.getID(), new Watch(thing));
   }
 
   public void undo() {

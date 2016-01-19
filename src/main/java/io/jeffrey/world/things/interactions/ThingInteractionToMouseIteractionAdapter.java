@@ -2,7 +2,6 @@ package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.world.document.history.History;
 import io.jeffrey.world.things.base.Transform;
-import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;
 
@@ -13,7 +12,7 @@ import io.jeffrey.zer.MouseInteraction;
  */
 public class ThingInteractionToMouseIteractionAdapter implements MouseInteraction {
   private final ThingInteraction interaction;
-  private final Transform transform;
+  private final Transform        transform;
 
   /**
    * @param history

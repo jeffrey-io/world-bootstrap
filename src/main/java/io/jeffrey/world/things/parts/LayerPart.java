@@ -6,18 +6,19 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
+import io.jeffrey.world.things.base.Snap;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 import io.jeffrey.zer.edits.EditString;
 import io.jeffrey.zer.meta.LayerProperties;
 
-public class LayerPart implements Part {
+public class LayerPart implements Part, Snap {
   private LayerProperties  cachedLayerProperties;
   private final Document   document;
   public final EditString  layer;
   public final EditBoolean layerlock;
-
   public final EditDouble  order;
+  public final EditBoolean ignoreSnap;
 
   public LayerPart(final Document document, final LinkedDataMap data) {
     this.document = document;
@@ -25,6 +26,7 @@ public class LayerPart implements Part {
     layer.subscribe((t, u) -> update());
     order = data.getDouble("order", Double.MAX_VALUE);
     layerlock = data.getBoolean("layerlock", false);
+    ignoreSnap = data.getBoolean("ignoresnap", false);
     update();
   }
 
@@ -62,4 +64,23 @@ public class LayerPart implements Part {
     return 0;
   }
 
+  @Override
+  public double x(double x) {
+    return snapValue(x);
+  }
+
+  @Override
+  public double y(double y) {
+    return snapValue(y);
+  }
+
+  private double snapValue(final double v) {
+    if (ignoreSnap.value()) {
+      return v;
+    }
+    if (cachedLayerProperties != null) {
+      return cachedLayerProperties.snap(v);
+    }
+    return v;
+  }
 }

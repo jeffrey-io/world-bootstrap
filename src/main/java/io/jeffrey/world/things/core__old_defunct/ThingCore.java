@@ -1,19 +1,13 @@
 package io.jeffrey.world.things.core__old_defunct;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.Snap;
 import io.jeffrey.world.things.base.StandardTransform;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.parts.ColorPart;
 import io.jeffrey.world.things.parts.EditingPart;
-import io.jeffrey.world.things.parts.IdentityPart;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.LifetimePart;
 import io.jeffrey.world.things.parts.MetadataPart;
@@ -28,7 +22,6 @@ import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 
 public abstract class ThingCore extends AbstractThing implements Editable, Comparable<Thing> {
-  protected final EditingPart  editing;
   protected final ColorPart    fill;
   protected final LayerPart    layer;
   protected final LifetimePart lifetime;
@@ -77,9 +70,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
     lifetime = new LifetimePart(data);
     register("lifetime", lifetime);
 
-    editing = new EditingPart(data);
-    register("editing", editing);
-
     layer = new LayerPart(document, data);
     register("layer", layer);
 
@@ -113,35 +103,12 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   }
 
   /**
-   * delete the element
-   */
-  protected void delete() {
-    document.history.register(this);
-    unselect();
-    lifetime.delete();
-  }
-
-
-
-  /**
-   * @return the meta class of the thing
-   */
-  public String getMetaclass() {
-    return identity.metaclass.value();
-  }
-
-  /**
    * {@inheritDoc}
    */
   @Override
   public String id() {
     return identity.getID();
   }
-
-  /**
-   * indicate that the data has changed with force
-   */
-  public abstract void invalidate();
 
   /**
    * @return the thing's layer
@@ -153,6 +120,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   /**
    * @return the layer's order
    */
+  @Deprecated
   public int layerZ() {
     return layer.z();
   }
@@ -161,6 +129,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * {@inheritDoc}
    */
   @Override
+  @Deprecated
   public Edit metadataOf(final String key, final String defaultValue) {
     return metadata.metadataOf(key, defaultValue);
   }
@@ -168,6 +137,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   /**
    * @return the order
    */
+  @Deprecated
   public double order() {
     return layer.order.value();
   }
@@ -176,17 +146,9 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    * @param value
    *          the new order
    */
+  @Deprecated
   public void order(final double value) {
     layer.order.value(value);
-  }
-
-
-  /**
-   * helper to select the thing
-   */
-  public void select() {
-    unselect();
-    editing.selected.value(true);
   }
 
   /**
@@ -196,6 +158,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
    *          the value to snap
    * @return the resulting snap'd value
    */
+  @Deprecated
   private double snapValue(final double v) {
     final LayerProperties p = layer.getLayerProperties();
     if (p != null) {
@@ -207,11 +170,13 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
   /**
    * @return whether or not thing supports a color property
    */
+  @Deprecated
   protected abstract boolean supportsColor();
 
   /**
    * helper to unselect the thing
    */
+  @Deprecated
   public void unselect() {
     editing.selected.value(false);
     clearSelection();

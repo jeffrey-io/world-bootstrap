@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import org.codehaus.jackson.JsonNode;
 
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.core__old_defunct.ThingCore;
 import io.jeffrey.zer.edits.Edit;
 
 /**
@@ -36,16 +35,9 @@ public class Transition {
   final boolean                         keep;
   private final HashMap<String, String> redo;
 
-  private final AbstractThing               thing;
+  private final AbstractThing           thing;
 
   private final HashMap<String, String> undo;
-
-  private Transition(final boolean keep, final AbstractThing thing, final HashMap<String, String> redo, final HashMap<String, String> undo) {
-    this.keep = keep;
-    this.thing = thing;
-    this.redo = redo;
-    this.undo = undo;
-  }
 
   public Transition(final AbstractThing thing, final HashMap<String, String> before, final HashMap<String, String> after) {
     this.thing = thing;
@@ -69,6 +61,13 @@ public class Transition {
       redo.put(key, valueAfter);
     }
     keep = undo.size() > 0 || redo.size() > 0;
+  }
+
+  private Transition(final boolean keep, final AbstractThing thing, final HashMap<String, String> redo, final HashMap<String, String> undo) {
+    this.keep = keep;
+    this.thing = thing;
+    this.redo = redo;
+    this.undo = undo;
   }
 
   public void doRedo() {

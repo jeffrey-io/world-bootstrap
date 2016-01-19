@@ -111,10 +111,6 @@ public class TCircle extends Thing {
     return circle.getDoodadsInThingSpace();
   }
 
-  @Override
-  public void invalidate() {
-  }
-
   /**
    * {@inheritDoc}
    */

@@ -4,7 +4,7 @@ import io.jeffrey.world.things.base.ControlDoodad;
 
 /**
  * Declares whether or not something has control doodads in the thing space.
- * 
+ *
  * @author jeffrey
  */
 public interface HasControlDoodadsInThingSpace {

@@ -2,7 +2,7 @@ package io.jeffrey.world.things.base;
 
 /**
  * Informs how to snap coordinates onto their respective grid (or other thing)
- * 
+ *
  * @author jeffrey
  */
 public interface Snap {

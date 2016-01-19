@@ -6,7 +6,6 @@ import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
  * This mimics the needed contract for Stack<Change> but supports random reading and packing

@@ -138,11 +138,6 @@ public class TImage extends Thing {
     return rectangle.getDoodadsInThingSpace();
   }
 
-  @Override
-  public void invalidate() {
-    refresh();
-  }
-
   /**
    * {@inheritDoc}
    */

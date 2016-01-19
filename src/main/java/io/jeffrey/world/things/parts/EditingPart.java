@@ -20,9 +20,14 @@ public class EditingPart implements Part {
   public void act(final String action, final SharedActionSpace space) {
     if ("lock".equals(action)) {
       locked.value(true);
-    }
-    if ("unlock".equals(action)) {
+    } else if ("unlock".equals(action)) {
       locked.value(false);
+    } else if ("select".equals(action)) {
+      selected.value(true);
+    } else if ("unselect".equals(action)) {
+      selected.value(false);
+    } else if("inverse-selection".equals(action)) {
+      selected.value(!selected.value());
     }
   }
 
@@ -35,6 +40,8 @@ public class EditingPart implements Part {
     }
     if (selected.value()) {
       actionsAvailable.add("unselect");
+    } else {
+      actionsAvailable.add("select");
     }
   }
 

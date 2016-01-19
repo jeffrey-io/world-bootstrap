@@ -19,7 +19,6 @@ import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.core__old_defunct.Thing;
-import io.jeffrey.world.things.core__old_defunct.ThingCore;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.ObjectDataMap;
@@ -62,7 +61,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     thing.invoke("delete");
     history.register(thing);
     thing.invoke("undelete");
-    thing.select();
+    thing.invoke("select");
     history.capture();
   }
 

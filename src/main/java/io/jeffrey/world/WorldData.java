@@ -208,16 +208,12 @@ public class WorldData extends SurfaceData {
     final double at_y = context.cursor_y;
     if (action == SurfaceAction.SelectAll) {
       for (final Thing thing : document.getThings()) {
-        thing.select();
+        thing.invoke("select");
       }
     }
     if (action == SurfaceAction.InverseSelection) {
       for (final Thing thing : document.getThings()) {
-        if (thing.selected()) {
-          thing.unselect();
-        } else {
-          thing.select();
-        }
+        thing.invoke("inverse-selection");
       }
     }
     final boolean onlySelected = action == SurfaceAction.ZoomSelection;

@@ -3,7 +3,6 @@ package io.jeffrey.world.document.history;
 import java.util.HashMap;
 
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
  * Watch a thing by copying and it then build the transition
@@ -12,7 +11,7 @@ import io.jeffrey.world.things.core__old_defunct.ThingCore;
  */
 public class Watch {
   private final HashMap<String, String> before;
-  private final AbstractThing               thing;
+  private final AbstractThing           thing;
 
   public Watch(final AbstractThing thing) {
     this.thing = thing;

@@ -26,7 +26,7 @@ public class EditingPart implements Part {
       selected.value(true);
     } else if ("unselect".equals(action)) {
       selected.value(false);
-    } else if("inverse-selection".equals(action)) {
+    } else if ("inverse-selection".equals(action)) {
       selected.value(!selected.value());
     }
   }

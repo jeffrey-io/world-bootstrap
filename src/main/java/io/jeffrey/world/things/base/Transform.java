@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Controls how things are mapped from thing to space to world space
- * 
+ *
  * @author jeffrey
  */
 public interface Transform {

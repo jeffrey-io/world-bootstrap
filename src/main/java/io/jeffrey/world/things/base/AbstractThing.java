@@ -23,7 +23,7 @@ public class AbstractThing {
 
   protected final LinkedDataMap                  data;
   public final Document                          document;
-  protected final EditingPart   editing;
+  protected final EditingPart                    editing;
   protected final IdentityPart                   identity;
   private final HashMap<String, ArrayList<Part>> parts;
 
@@ -34,7 +34,7 @@ public class AbstractThing {
     identity = new IdentityPart(data);
     register("identity", identity);
     editing = new EditingPart(data);
-    register("editing", editing);    
+    register("editing", editing);
   }
 
   @SuppressWarnings("unchecked")
@@ -167,6 +167,10 @@ public class AbstractThing {
     }
   }
 
+  public String getMetaclass() {
+    return identity.metaclass.value();
+  }
+
   public SharedActionSpace invokeAction(final String action) {
     document.history.register(this);
     final SharedActionSpace sharedActionSpace = new SharedActionSpace();
@@ -196,6 +200,13 @@ public class AbstractThing {
     }
   }
 
+  /**
+   * @return is the thing selected?
+   */
+  public boolean selected() {
+    return editing.selected.value();
+  }
+
   public void update() {
     for (final ArrayList<Part> list : parts.values()) {
       for (final Part part : list) {
@@ -223,15 +234,4 @@ public class AbstractThing {
     }
   }
 
-  /**
-   * @return is the thing selected?
-   */
-  public boolean selected() {
-    return editing.selected.value();
-  }
-  
-  public String getMetaclass() {
-    return identity.metaclass.value();
-  }
-  
 }

@@ -150,14 +150,6 @@ public class TCircle extends Thing {
    * {@inheritDoc}
    */
   @Override
-  protected boolean supportsColor() {
-    return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public void update() {
   }
 }

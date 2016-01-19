@@ -192,14 +192,6 @@ public class TImage extends Thing {
    * {@inheritDoc}
    */
   @Override
-  protected boolean supportsColor() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public void update() {
     refresh();
   }

@@ -19,6 +19,7 @@ import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.ObjectDataMap;
@@ -63,6 +64,24 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     thing.invoke("undelete");
     thing.invoke("select");
     history.capture();
+  }
+
+  private int compare(final AbstractThing a, final AbstractThing b) {
+    final LayerPart layerA = a.first(LayerPart.class);
+    final LayerPart layerB = b.first(LayerPart.class);
+    if (layerA == null) {
+      if (layerB == null) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } else {
+      if (layerB == null) {
+        return -1;
+      } else {
+        return layerA.compareTo(layerB);
+      }
+    }
   }
 
   private HashMap<String, String> convert2(final JsonNode node) {
@@ -329,16 +348,20 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     if (things.size() == 0) {
       return;
     }
-    things.sort((o1, o2) -> o1.compareTo(o2));
-    int layerAt = things.get(0).layerZ();
+
+    things.sort((o1, o2) -> compare(o1, o2));
+    int layerAt = -1;
     int newOrder = 0;
-    for (final Thing thing : things) {
-      if (thing.layerZ() != layerAt) {
-        layerAt = thing.layerZ();
-        newOrder = 0;
+    for (final AbstractThing thing : things) {
+      final LayerPart layer = thing.first(LayerPart.class);
+      if (layer != null) {
+        if (layer.z() != layerAt) {
+          layerAt = layer.z();
+          newOrder = 0;
+        }
+        newOrder++;
+        layer.order(newOrder);
       }
-      newOrder++;
-      thing.order(newOrder);
     }
   }
 

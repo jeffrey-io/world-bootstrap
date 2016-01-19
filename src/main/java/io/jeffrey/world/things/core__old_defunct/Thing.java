@@ -1,6 +1,5 @@
 package io.jeffrey.world.things.core__old_defunct;
 
-import java.awt.Desktop.Action;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -210,7 +209,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    */
   public void preInteract(final AdjustedMouseEvent event) {
     if (!event.altdown) {
-      this.invokeAction("unselect"); 
+      invokeAction("unselect");
     }
   }
 
@@ -262,8 +261,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     draw(gc);
     gc.restore();
   }
-
-
 
   /**
    * @param p

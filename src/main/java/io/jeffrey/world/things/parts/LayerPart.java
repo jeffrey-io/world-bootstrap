@@ -12,13 +12,13 @@ import io.jeffrey.zer.edits.EditDouble;
 import io.jeffrey.zer.edits.EditString;
 import io.jeffrey.zer.meta.LayerProperties;
 
-public class LayerPart implements Part, Snap {
+public class LayerPart implements Part, Snap, Comparable<LayerPart> {
   private LayerProperties  cachedLayerProperties;
   private final Document   document;
+  public final EditBoolean ignoreSnap;
   public final EditString  layer;
   public final EditBoolean layerlock;
   public final EditDouble  order;
-  public final EditBoolean ignoreSnap;
 
   public LayerPart(final Document document, final LinkedDataMap data) {
     this.document = document;
@@ -42,6 +42,16 @@ public class LayerPart implements Part, Snap {
     }
   }
 
+  @Override
+  public int compareTo(final LayerPart o) {
+    return getEstimatedSortingKey().compareTo(o.getEstimatedSortingKey());
+  }
+
+  private Double getEstimatedSortingKey() {
+    final int z = cachedLayerProperties.zorder.value();
+    return z * document.getThings().size() + order.value();
+  }
+
   public LayerProperties getLayerProperties() {
     return cachedLayerProperties;
   }
@@ -52,26 +62,19 @@ public class LayerPart implements Part, Snap {
     actionsAvailable.add("push.down");
   }
 
-  @Override
-  public void update() {
-    cachedLayerProperties = document.layers.get(layer.getAsText());
+  /**
+   * @return the order
+   */
+  public double order() {
+    return order.value();
   }
 
-  public int z() {
-    if (cachedLayerProperties != null) {
-      return cachedLayerProperties.zorder.value();
-    }
-    return 0;
-  }
-
-  @Override
-  public double x(double x) {
-    return snapValue(x);
-  }
-
-  @Override
-  public double y(double y) {
-    return snapValue(y);
+  /**
+   * @param value
+   *          the new order
+   */
+  public void order(final double value) {
+    order.value(value);
   }
 
   private double snapValue(final double v) {
@@ -82,5 +85,27 @@ public class LayerPart implements Part, Snap {
       return cachedLayerProperties.snap(v);
     }
     return v;
+  }
+
+  @Override
+  public void update() {
+    cachedLayerProperties = document.layers.get(layer.getAsText());
+  }
+
+  @Override
+  public double x(final double x) {
+    return snapValue(x);
+  }
+
+  @Override
+  public double y(final double y) {
+    return snapValue(y);
+  }
+
+  public int z() {
+    if (cachedLayerProperties != null) {
+      return cachedLayerProperties.zorder.value();
+    }
+    return 0;
   }
 }

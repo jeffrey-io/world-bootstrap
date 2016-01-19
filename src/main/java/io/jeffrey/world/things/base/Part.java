@@ -21,7 +21,7 @@ public interface Part {
 
   /**
    * list all available actions
-   * 
+   *
    * @param actionsAvailable
    *          where the actions will go
    */

@@ -5,7 +5,7 @@ import javafx.scene.shape.Polygon;
 
 /**
  * Denotes whether or not the item is selectable or not
- * 
+ *
  * @author jeffrey
  */
 public interface IsSelectable {
@@ -16,7 +16,7 @@ public interface IsSelectable {
 
   /**
    * does the thing contain the given point
-   * 
+   *
    * @param x
    *          the x coordinate to check
    * @param y

@@ -25,6 +25,7 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryMouseInteractionTrapper;
 import io.jeffrey.world.things.core.guides.Picker;
 import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.polygon.PointChain;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
@@ -260,7 +261,10 @@ public class WorldData extends SurfaceData {
   public LayerProperties getActiveLayer() {
     for (final Thing thing : document.getThings()) {
       if (thing.selected()) {
-        return thing.layer();
+        final LayerPart layer = thing.first(LayerPart.class);
+        if (layer != null) {
+          return layer.getLayerProperties();
+        }
       }
     }
     return null;

@@ -432,14 +432,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    * {@inheritDoc}
    */
   @Override
-  protected boolean supportsColor() {
-    return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public void sync() {
     cache.update();
   }

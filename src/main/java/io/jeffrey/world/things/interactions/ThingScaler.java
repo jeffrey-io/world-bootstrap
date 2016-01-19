@@ -1,7 +1,6 @@
 package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.world.things.base.Transform;
-import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.world.things.parts.ScalePart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
@@ -11,12 +10,12 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  * @author jeffrey
  */
 public class ThingScaler implements ThingInteraction {
-  private final Transform transform;
-  private final ScalePart scale;
   private final double    ix;
   private final double    iy;
+  private final ScalePart scale;
   private final double    sx;
   private final double    sy;
+  private final Transform transform;
 
   /**
    * @param initial

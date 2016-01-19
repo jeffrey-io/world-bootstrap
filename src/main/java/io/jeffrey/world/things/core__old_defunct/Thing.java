@@ -19,6 +19,8 @@ import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.interactions.DefaultMouseInteraction;
+import io.jeffrey.world.things.interactions.ThingInteraction;
+import io.jeffrey.world.things.interactions.ThingInteractionToMouseIteractionAdapter;
 import io.jeffrey.world.things.interactions.ThingSnapper;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;

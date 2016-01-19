@@ -10,7 +10,7 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
-import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
+import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;

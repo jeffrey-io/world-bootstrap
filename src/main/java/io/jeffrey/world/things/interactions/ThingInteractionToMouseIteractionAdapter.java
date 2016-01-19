@@ -1,6 +1,7 @@
-package io.jeffrey.world.things.core__old_defunct;
+package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.world.document.history.History;
+import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;
 

@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.core__old_defunct;
+package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.zer.AdjustedMouseEvent;
 

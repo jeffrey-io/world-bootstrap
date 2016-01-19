@@ -1,6 +1,5 @@
 package io.jeffrey.world.things.interactions;
 
-import io.jeffrey.world.things.core__old_defunct.ThingInteraction;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.zer.AdjustedMouseEvent;

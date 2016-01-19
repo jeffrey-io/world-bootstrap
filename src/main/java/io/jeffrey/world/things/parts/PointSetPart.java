@@ -1,93 +1,91 @@
 package io.jeffrey.world.things.parts;
 
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import io.jeffrey.world.things.base.ControlDoodad;
+import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.base.LinkedDataMap;
-import io.jeffrey.world.things.base.Subscribers;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
+import io.jeffrey.world.things.base.Subscribers;
 import io.jeffrey.world.things.behaviors.CanCacheSelection;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
+import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.polygon.SelectablePoint2;
+import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
-import javafx.scene.transform.Scale;
+import javafx.scene.shape.Polygon;
 
-public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, CanCacheSelection {
+public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, CanCacheSelection, IsSelectable {
 
-  public final EditBoolean lock;
-  public final EditString vertices;
-  
-  private final ScalePart scale;
-  private final RotationPart rotation;
-  
-  private ControlDoodad[] doodads = new ControlDoodad[0];
-  private Subscribers<SharedMutableCache> notification;
-  
   public class SharedMutableCache {
+    public double       boundingRadiusForControls;
+    public double[]     inlineXYPairs;
     public PointSetPart owner;
-    public double   boundingRadiusForControls;
-    public double[] inlineXYPairs;
-    public double[] x;
-    public double[] y;
-    
+    public double[]     x;
+    public double[]     y;
+
     public SharedMutableCache() {
-      this.boundingRadiusForControls = 0;
-      this.inlineXYPairs = new double[0];
-      this.x = new double[0];
-      this.y = new double[0];
+      boundingRadiusForControls = 0;
+      inlineXYPairs = new double[0];
+      x = new double[0];
+      y = new double[0];
     }
   }
 
-  private final SharedMutableCache cache;
-  
-  public boolean outOfDate = false;
-  
+  private final SharedMutableCache              cache;
+
+  private ControlDoodad[]                       doodads   = new ControlDoodad[0];
+  public final EditBoolean                      lock;
+
+  private final Subscribers<SharedMutableCache> notification;
+  public boolean                                outOfDate = false;
+
+  private final RotationPart                    rotation;
+
+  private final ScalePart                       scale;
+
+  public final EditString                       vertices;
+
   public PointSetPart(final LinkedDataMap data, final ScalePart scale, final RotationPart rotation) {
-    this.lock = data.getBoolean("vlock", false);
+    lock = data.getBoolean("vlock", false);
     this.scale = scale;
     this.rotation = rotation;
-    this.cache = new SharedMutableCache();
-    
-    lock.subscribe(new BiConsumer<String, String>() {
-      @Override
-      public void accept(String t, String u) {
-        PointSetPart.this.dirty();
-      }
-    });
+    cache = new SharedMutableCache();
+
+    lock.subscribe((t, u) -> PointSetPart.this.dirty());
     outOfDate = true;
-    this.notification = new Subscribers<>();
-    
+    notification = new Subscribers<>();
+
     vertices = data.getString("points", "0,-1,1,1,-1,1");
     update();
   }
 
-  
   @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-  }
-  
-  public void subscribe(Consumer<SharedMutableCache> subscriber) {
-    subscriber.accept(cache);
-    notification.subscribe(subscriber);
+  public void act(final String action, final SharedActionSpace space) {
   }
 
   public abstract SelectablePoint2 at(int k);
-  
-  public abstract int getNumberOfPoints();
-  
-  public boolean hasStandardControls() {
-    return true;
+
+  @Override
+  public void cache() {
+    for (int k = 0; k < getNumberOfPoints(); k++) {
+      final SelectablePoint2 p = at(k);
+      p.alreadySelected = p.selected;
+    }
   }
-  
+
+  @Override
+  public boolean contains(final double x, final double y, final ContainmentCheck check) {
+    return false;
+  }
+
+  public void dirty() {
+    outOfDate = true;
+  }
+
   private void ensureCapacityIsCorrect(final int n, final int ds) {
     if (cache.x.length != n) {
       cache.inlineXYPairs = new double[n * 2];
@@ -101,24 +99,72 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       }
     }
   }
-  
-  public void dirty() {
-    outOfDate = true; 
+
+  @Override
+  public ControlDoodad[] getDoodadsInThingSpace() {
+    return doodads;
   }
-  
+
+  public abstract int getNumberOfPoints();
+
+  public boolean hasStandardControls() {
+    return true;
+  }
+
   public void invalidateNow() {
     dirty();
     update();
   }
-  
+
+  @Override
+  public void list(final Set<String> actionsAvailable) {
+  }
+
+  @Override
+  public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
+    boolean doUpdate = false;
+    boolean isSelected = false;
+    boolean anySelected = false;
+    final int n = getNumberOfPoints();
+    for (int k = 0; k < n; k++) {
+      final SelectablePoint2 point = at(k);
+      final boolean old = point.selected;
+      if (polygon.contains(point.x, point.y)) {
+        point.selected = true;
+        isSelected = true;
+      } else {
+        point.selected = false;
+      }
+      point.selected = mode.selected(point.alreadySelected, point.selected);
+      if (old != point.selected) {
+        doUpdate = true;
+      }
+      if (point.selected) {
+        anySelected = true;
+      }
+    }
+    if (doUpdate) {
+      invalidateNow();
+    }
+    if (mode == Mode.Subtract && anySelected) {
+      return false;
+    }
+    return isSelected;
+  }
+
+  public void subscribe(final Consumer<SharedMutableCache> subscriber) {
+    subscriber.accept(cache);
+    notification.subscribe(subscriber);
+  }
+
   @Override
   public void update() {
     if (!outOfDate) {
       return;
     }
     final int n = getNumberOfPoints();
-    final boolean canScale = scale.lock.value();
-    final boolean canRotate = rotation.lock.value();
+    final boolean canScale = !scale.lock.value();
+    final boolean canRotate = !rotation.lock.value();
     final int doff = lock.value() ? 0 : n;
     final int ds = doff + (canScale ? 4 : 0) + (canRotate ? 4 : 0);
     ensureCapacityIsCorrect(n, ds);
@@ -126,7 +172,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       return;
     }
     int k;
-    
+
     // walk the points
     cache.boundingRadiusForControls = 0;
     for (k = 0; k < n; k++) {
@@ -161,29 +207,15 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       }
       if (canRotate) {
         for (j = 0; j < 4; j++) {
-          doodads[k].type = Type.Scale;
+          doodads[k].type = Type.Rotate;
           doodads[k].u = Math.cos(ANGLES[j + 4]) * cache.boundingRadiusForControls;
           doodads[k].v = Math.sin(ANGLES[j + 4]) * cache.boundingRadiusForControls;
           k++;
         }
-      }      
+      }
     }
-    
+
     cache.owner = this;
     notification.publish(cache);
-  }
-
-
-  @Override
-  public ControlDoodad[] getDoodadsInThingSpace() {
-    return doodads;
-  }
-  
-  @Override
-  public void cache() {
-    for (int k = 0; k < getNumberOfPoints(); k++) {
-      SelectablePoint2 p = at(k);
-      p.alreadySelected = p.selected; 
-    }
   }
 }

@@ -8,8 +8,8 @@ import java.util.HashMap;
  * @author jeffrey
  */
 public class SharedActionSpace {
-  private HashMap<String, Object> pluginResults = null;
-  
+  private final HashMap<String, Object> pluginResults = null;
+
   public Object getPluginResults() {
     return pluginResults;
   }

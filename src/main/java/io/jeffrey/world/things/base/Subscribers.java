@@ -5,19 +5,19 @@ import java.util.function.Consumer;
 
 public class Subscribers<T> {
 
-  private ArrayList<Consumer<T>> events;
-  
+  private final ArrayList<Consumer<T>> events;
+
   public Subscribers() {
     this.events = new ArrayList<>();
   }
-  
-  public void subscribe(Consumer<T> event) {
-    this.events.add(event);
-  }
-  
-  public void publish(T value) {
-    for (Consumer<T> event : events) {
+
+  public void publish(final T value) {
+    for (final Consumer<T> event : events) {
       event.accept(value);
     }
+  }
+
+  public void subscribe(final Consumer<T> event) {
+    this.events.add(event);
   }
 }

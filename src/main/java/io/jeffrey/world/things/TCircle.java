@@ -11,7 +11,7 @@ import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
-import io.jeffrey.world.things.parts.CircleControlDoodadsPart;
+import io.jeffrey.world.things.parts.CirclePart;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
@@ -26,7 +26,7 @@ import javafx.scene.shape.Polygon;
  * @author jeffrey
  */
 public class TCircle extends Thing {
-  private final CircleControlDoodadsPart circle;
+  private final CirclePart circle;
 
   /**
    * @param document
@@ -37,7 +37,7 @@ public class TCircle extends Thing {
   public TCircle(final Document document, final ThingData node) {
     super(document, node);
 
-    circle = new CircleControlDoodadsPart();
+    circle = new CirclePart();
     register("shapes", circle);
 
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));

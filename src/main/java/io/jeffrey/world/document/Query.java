@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.edits.Edit;
 
 /**

@@ -2,16 +2,13 @@ package io.jeffrey.world.things.polygon;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.TPolygon;
 import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.parts.PointSetPart;
@@ -19,9 +16,6 @@ import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.Syncable;
-import io.jeffrey.zer.edits.AbstractEditList;
-import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.edits.EditBoolean;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -34,73 +28,29 @@ import javafx.scene.shape.Polygon;
  */
 public abstract class AbstractPointChain extends AbstractPointChainContract implements Syncable {
 
+  protected SharedMutableCache cache;
   /**
    * Defines how to render and interpret the points. This is lazily updated
    *
    * @author jeffrey
    */
   /*
-  public class VertexCache {
-    public double[] inlineXYPairs;
-    private boolean myvlock = false;
-    public double[] x;
-    public double[] y;
+   * public class VertexCache { public double[] inlineXYPairs; private boolean myvlock = false; public double[] x; public double[] y;
+   * 
+   * public VertexCache() { inlineXYPairs = new double[0]; x = new double[0]; y = new double[0];
+   * 
+   * }
+   * 
+   * private void apply_scale() { final double mx = scale.sx(); final double my = scale.sy(); scale.sx(1.0); scale.sy(1.0); if (inlineXYPairs.length == 0) { return; } for (final SelectablePoint2 p : chain) { p.x *= mx; p.y *= my; } update(); }
+   * 
+   * private void center() { if (inlineXYPairs.length == 0) { return; } double cx = 0; double cy = 0; final int n = chain.size(); for (int k = 0; k < n; k++) { final SelectablePoint2 p = chain.at(k); cx += p.x; cy += p.y; } cx /= n; cy /= n; for (int k = 0; k < n; k++) { final SelectablePoint2 p = chain.at(k); p.x -= cx; p.y -= cy; } // TODO: figure out the math about how to translate the parent object update(); }
+   * 
+   * public void update() { onCacheUpdated(); } }
+   */
 
-    public VertexCache() {
-      inlineXYPairs = new double[0];
-      x = new double[0];
-      y = new double[0];
+  protected final PointChain   chain;
+  protected final PointSetPart points;
 
-    }
-
-    private void apply_scale() {
-      final double mx = scale.sx();
-      final double my = scale.sy();
-      scale.sx(1.0);
-      scale.sy(1.0);
-      if (inlineXYPairs.length == 0) {
-        return;
-      }
-      for (final SelectablePoint2 p : chain) {
-        p.x *= mx;
-        p.y *= my;
-      }
-      update();
-    }
-
-    private void center() {
-      if (inlineXYPairs.length == 0) {
-        return;
-      }
-      double cx = 0;
-      double cy = 0;
-      final int n = chain.size();
-      for (int k = 0; k < n; k++) {
-        final SelectablePoint2 p = chain.at(k);
-        cx += p.x;
-        cy += p.y;
-      }
-      cx /= n;
-      cy /= n;
-      for (int k = 0; k < n; k++) {
-        final SelectablePoint2 p = chain.at(k);
-        p.x -= cx;
-        p.y -= cy;
-      }
-      // TODO: figure out the math about how to translate the parent object
-      update();
-    }
-
-    public void update() {
-      onCacheUpdated();
-    }
-  }
-  */
-
-  protected final PointChain     chain;
-  protected final PointSetPart   points;
-  protected SharedMutableCache cache;
-  
   /**
    * @param document
    *          the document
@@ -110,13 +60,13 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   protected AbstractPointChain(final Document document, final ThingData node) {
     super(document, node);
     chain = new PointChain(node.getString("points", "0,-1,1,1,-1,1").value());
-    
-    this.points = new PointSetPart(data, scale, rotation) {
+
+    points = new PointSetPart(data, scale, rotation) {
       @Override
-      public SelectablePoint2 at(int k) {
+      public SelectablePoint2 at(final int k) {
         return chain.at(k);
       }
-      
+
       @Override
       public int getNumberOfPoints() {
         return chain.size();
@@ -124,17 +74,13 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     };
     points.subscribe(c -> {
       AbstractPointChain.this.cache = c;
-    });    
-    
+    });
+
     register("data", points);
 
-    editing.selected.subscribe(new BiConsumer<String, String>() {
-
-      @Override
-      public void accept(String t, String u) {
-        if (u.equals("false")) {
-          clearSelectionOnPoints();
-        }
+    editing.selected.subscribe((t, u) -> {
+      if (u.equals("false")) {
+        clearSelectionOnPoints();
       }
     });
   }
@@ -228,19 +174,8 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   }
 
   /*
-  protected void populateLinks(final HashMap<String, Edit> links) {
-    pointsEditList.edits.clear();
-    cache.update();
-    int index = 0;
-    for (final SelectablePoint2 p : chain) {
-      pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true));
-      pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false));
-      index++;
-    }
-    links.put("points", pointsEditList);
-    populatePolygonalEditLinks(links);
-  }
-  */
+   * protected void populateLinks(final HashMap<String, Edit> links) { pointsEditList.edits.clear(); cache.update(); int index = 0; for (final SelectablePoint2 p : chain) { pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true)); pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false)); index++; } links.put("points", pointsEditList); populatePolygonalEditLinks(links); }
+   */
 
   @Override
   public Color queryTargetColor(final double x, final double y) {

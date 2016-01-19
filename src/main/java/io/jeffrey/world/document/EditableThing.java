@@ -16,11 +16,11 @@ import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 
 public class EditableThing implements Editable {
-  
-  private final Document document;
+
+  private final Document      document;
   private final AbstractThing thing;
-  
-  public EditableThing(Document document, AbstractThing thing) {
+
+  public EditableThing(final Document document, final AbstractThing thing) {
     this.document = document;
     this.thing = thing;
   }
@@ -30,7 +30,6 @@ public class EditableThing implements Editable {
     ThingEditor.buildUserInterface(document, data, this, builder, parent);
   }
 
-
   @Override
   public List<String> getActions() {
     final ArrayList<String> actions = new ArrayList<>();
@@ -39,7 +38,7 @@ public class EditableThing implements Editable {
   }
 
   @Override
-  public Map<String, Edit> getLinks(boolean withHistory) {
+  public Map<String, Edit> getLinks(final boolean withHistory) {
     return thing.getLinks(withHistory);
   }
 
@@ -49,10 +48,10 @@ public class EditableThing implements Editable {
   }
 
   @Override
-  public Object invoke(String action) {
+  public Object invoke(final String action) {
     if ("?".equals(action)) {
       return getActions();
-    } 
+    }
     if ("templatize".equals(action)) {
       final HashMap<String, String> template = new HashMap<String, String>();
       for (final Entry<String, Edit> link : getLinks(false).entrySet()) {
@@ -65,14 +64,12 @@ public class EditableThing implements Editable {
   }
 
   @Override
-  public Edit metadataOf(String key, String defaultValue) {
-    MetadataPart metadata = thing.first(MetadataPart.class);
+  public Edit metadataOf(final String key, final String defaultValue) {
+    final MetadataPart metadata = thing.first(MetadataPart.class);
     if (metadata != null) {
       metadata.metadataOf(key, defaultValue);
     }
     return null; // Maybe, we need a NoOp metadata?
   }
-  
-  
 
 }

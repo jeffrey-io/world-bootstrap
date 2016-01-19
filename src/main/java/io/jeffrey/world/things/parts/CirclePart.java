@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
-public class CircleControlDoodadsPart implements Part, HasControlDoodadsInThingSpace, IsSelectable {
+public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelectable {
   private static final Circle          CIRCLE = new Circle(1);
   private static final ControlDoodad[] DOODADS;
 
@@ -31,7 +31,7 @@ public class CircleControlDoodadsPart implements Part, HasControlDoodadsInThingS
     DOODADS = doodads.toArray(new ControlDoodad[doodads.size()]);
   }
 
-  public CircleControlDoodadsPart() {
+  public CirclePart() {
   }
 
   @Override

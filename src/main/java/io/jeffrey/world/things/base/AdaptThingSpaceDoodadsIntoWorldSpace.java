@@ -36,7 +36,7 @@ public class AdaptThingSpaceDoodadsIntoWorldSpace implements HasControlDoodadsIn
     for (int k = 0; k < original.length; k++) {
       final ControlDoodad doodad = original[k];
       W.set_0(doodad.u, doodad.v);
-      transform.writeToWorld(W);
+      transform.writeToWorldSpace(W);
       final ControlDoodad world = worldDoodadCache[k];
       world.type = doodad.type;
       world.u = W.x_1;

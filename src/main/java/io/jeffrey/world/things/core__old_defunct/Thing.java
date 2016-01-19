@@ -385,7 +385,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    * @return a vector representing the point in world space
    */
   public void writeToTarget(final VectorRegister3 reg) {
-    transform.writeToTarget(reg);
+    transform.writeToThingSpace(reg);
   }
 
   /**
@@ -398,7 +398,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    * @return a vector representing the point in world space
    */
   public void writeToWorld(final VectorRegister3 reg) {
-    transform.writeToWorld(reg);
+    transform.writeToWorldSpace(reg);
   }
 
   public double x() {

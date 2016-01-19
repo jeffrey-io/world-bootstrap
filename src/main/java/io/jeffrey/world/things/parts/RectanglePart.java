@@ -81,10 +81,10 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
     final VectorRegister3 W = new VectorRegister8();
 
     W.set_0(-rect.getWidth() / 2, -rect.getHeight() / 2);
-    transform.writeToWorld(W);
+    transform.writeToWorldSpace(W);
     W.extract_1(edges, 0);
     W.set_0(rect.getWidth() / 2, -rect.getHeight() / 2);
-    transform.writeToWorld(W);
+    transform.writeToWorldSpace(W);
     W.extract_1(edges, 2);
 
     /*
@@ -99,14 +99,14 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
     edges[5] = edges[3];
 
     W.set_0(rect.getWidth() / 2, rect.getHeight() / 2);
-    transform.writeToWorld(W);
+    transform.writeToWorldSpace(W);
     W.extract_1(edges, 6);
 
     edges[8] = edges[6];
     edges[9] = edges[7];
 
     W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2);
-    transform.writeToWorld(W);
+    transform.writeToWorldSpace(W);
     W.extract_1(edges, 10);
 
     edges[12] = edges[10];

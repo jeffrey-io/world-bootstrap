@@ -7,6 +7,11 @@ import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * defines the canonical and most useful transfrom for things that have an (x,y) position, an angle, and is scalable.
+ * 
+ * @author jeffrey
+ */
 public class StandardTransform implements Transform {
   private final PositionPart position;
   private final RotationPart rotation;
@@ -43,7 +48,7 @@ public class StandardTransform implements Transform {
    * {@inheritDoc}
    */
   @Override
-  public void writeToTarget(final VectorRegister3 reg) {
+  public void writeToThingSpace(final VectorRegister3 reg) {
     reg.copy_from_0_to_1();
     reg.set_2(position.x.value(), position.y.value());
     reg.sub_2_from_1();
@@ -58,7 +63,7 @@ public class StandardTransform implements Transform {
    * {@inheritDoc}
    */
   @Override
-  public void writeToWorld(final VectorRegister3 reg) {
+  public void writeToWorldSpace(final VectorRegister3 reg) {
     reg.copy_from_0_to_1();
     // add sheer
     reg.x_1 *= scale.x.value();

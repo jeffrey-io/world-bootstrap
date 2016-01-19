@@ -20,7 +20,6 @@ import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.meta.GuideLine;
 
 public abstract class DefaultMouseInteraction {
@@ -58,7 +57,7 @@ public abstract class DefaultMouseInteraction {
   
 
   public ThingInteraction start(final AdjustedMouseEvent event) {
-    transform.writeToTarget(event.position);
+    transform.writeToThingSpace(event.position);
     ThingInteraction interaction = null;
     final VectorRegister3 W = new VectorRegister3();
   
@@ -74,7 +73,7 @@ public abstract class DefaultMouseInteraction {
       }
 
       W.set_0(doodad.u, doodad.v);
-      transform.writeToWorld(W);
+      transform.writeToWorldSpace(W);
       final double d = event.doodadDistance(W.x_1, W.y_1);
       if (d <= document.controlPointSize) {
         if (doodad.type == Type.PointSelected || doodad.type == Type.PointSelected) {

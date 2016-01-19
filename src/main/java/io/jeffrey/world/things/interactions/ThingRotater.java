@@ -26,7 +26,7 @@ public class ThingRotater implements ThingInteraction {
   public ThingRotater(final AdjustedMouseEvent initial, final Transform transform, final RotationPart rotation) {
     origin = new VectorRegister8();
     origin.zero_out_0();
-    transform.writeToWorld(origin);
+    transform.writeToWorldSpace(origin);
     angle = rotation.angle();
     startingAngle = rotation.angle() + RADIANS_TO_DEGREES * Math.atan2(initial.position.y_0 - origin.y_1, initial.position.x_0 - origin.x_1);
     this.rotation = rotation;

@@ -47,7 +47,7 @@ public class ThingScaler implements ThingInteraction {
   public void moved(final AdjustedMouseEvent event) {
     scale.sx(sx);
     scale.sy(sy);
-    transform.writeToTarget(event.position);
+    transform.writeToThingSpace(event.position);
     final double mx = event.position.x_1 / ix;
     final double my = event.position.y_1 / iy;
     double nsx = sx * mx;

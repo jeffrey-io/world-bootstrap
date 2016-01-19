@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.codehaus.jackson.JsonNode;
 
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.ThingCore;
 import io.jeffrey.zer.edits.Edit;
 
@@ -17,7 +18,7 @@ import io.jeffrey.zer.edits.Edit;
  * @author jeffrey
  */
 public class Transition {
-  public static Transition fromJsonNode(final JsonNode node, final Map<String, ThingCore> lookup) {
+  public static Transition fromJsonNode(final JsonNode node, final Map<String, AbstractThing> lookup) {
     final String id = node.get("id").asText();
     return new Transition(true, lookup.get(id), mapOf(node.get("redo")), mapOf(node.get("undo")));
   }
@@ -35,18 +36,18 @@ public class Transition {
   final boolean                         keep;
   private final HashMap<String, String> redo;
 
-  private final ThingCore               thing;
+  private final AbstractThing               thing;
 
   private final HashMap<String, String> undo;
 
-  private Transition(final boolean keep, final ThingCore thing, final HashMap<String, String> redo, final HashMap<String, String> undo) {
+  private Transition(final boolean keep, final AbstractThing thing, final HashMap<String, String> redo, final HashMap<String, String> undo) {
     this.keep = keep;
     this.thing = thing;
     this.redo = redo;
     this.undo = undo;
   }
 
-  public Transition(final ThingCore thing, final HashMap<String, String> before, final HashMap<String, String> after) {
+  public Transition(final AbstractThing thing, final HashMap<String, String> before, final HashMap<String, String> after) {
     this.thing = thing;
     undo = new HashMap<String, String>();
     redo = new HashMap<String, String>();
@@ -75,7 +76,6 @@ public class Transition {
     for (final Entry<String, String> task : redo.entrySet()) {
       links.get(task.getKey()).set(task.getValue());
     }
-    thing.invalidate();
   }
 
   public void doUndo() {
@@ -83,7 +83,6 @@ public class Transition {
     for (final Entry<String, String> task : undo.entrySet()) {
       links.get(task.getKey()).set(task.getValue());
     }
-    thing.invalidate();
   }
 
   public Map<String, Object> pack() {
@@ -91,7 +90,7 @@ public class Transition {
       return null;
     }
     final HashMap<String, Object> packed = new HashMap<>();
-    packed.put("id", thing.id());
+    packed.put("id", thing.getID());
     packed.put("undo", undo);
     packed.put("redo", redo);
     return packed;

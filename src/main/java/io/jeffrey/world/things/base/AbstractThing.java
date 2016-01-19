@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.document.history.HistoryEditTrap;
+import io.jeffrey.world.things.parts.IdentityPart;
+import io.jeffrey.zer.edits.Edit;
 
 public class AbstractThing {
   private static final boolean                   DEBUG_MODE = false;
@@ -18,11 +23,18 @@ public class AbstractThing {
   protected final LinkedDataMap                  data;
   public final Document                       document;
   private final HashMap<String, ArrayList<Part>> parts;
+  protected final IdentityPart identity;
 
   public AbstractThing(final Document document, final ThingData node) {
     this.document = document;
     data = new LinkedDataMap(node);
     parts = new HashMap<>();
+    identity = new IdentityPart(data);
+    register("identity", identity);
+  }
+
+  public String getID() {
+    return identity.getID();
   }
 
   @SuppressWarnings("unchecked")
@@ -180,4 +192,30 @@ public class AbstractThing {
       consumer.accept((T) p);
     }
   }
+
+  public Map<String, Edit> getLinks(final boolean withHistory) {
+    if (withHistory) {
+      final HashMap<String, Edit> actualLinks = new HashMap<>();
+      for (final Entry<String, Edit> link : data.getLinks().entrySet()) {
+        actualLinks.put(link.getKey(), new HistoryEditTrap(link.getValue(), document.history, this));
+      }
+      return actualLinks;
+    } else {
+      return data.getLinks();
+    }
+  }
+  
+  /**
+   * save the data from things thing to the given map
+   *
+   * @param object
+   *          the data container
+   */
+  public void saveTo(final Map<String, String> object) {
+    final Map<String, Edit> myLinks = data.getLinks();
+    for (final String key : myLinks.keySet()) {
+      object.put(key, myLinks.get(key).getAsText());
+    }
+  }
+
 }

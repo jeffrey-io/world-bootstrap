@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
@@ -37,7 +38,7 @@ public class ChangeStack {
     return copy;
   }
 
-  public void load(final JsonNode node, final Map<String, ThingCore> lookup) {
+  public void load(final JsonNode node, final Map<String, AbstractThing> lookup) {
     if (node == null) {
       return;
     }

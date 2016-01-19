@@ -30,7 +30,6 @@ import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 public abstract class ThingCore extends AbstractThing implements Editable, Comparable<Thing> {
   protected final EditingPart  editing;
   protected final ColorPart    fill;
-  protected final IdentityPart identity;
   protected final LayerPart    layer;
   protected final LifetimePart lifetime;
   protected final MetadataPart metadata;
@@ -69,9 +68,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
 
     rotation = new RotationPart(data);
     register("rotation", rotation);
-
-    identity = new IdentityPart(data);
-    register("identity", identity);
 
     transform = new StandardTransform(position, scale, rotation);
 
@@ -125,21 +121,7 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
     lifetime.delete();
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Map<String, Edit> getLinks(final boolean withHistory) {
-    if (withHistory) {
-      final HashMap<String, Edit> actualLinks = new HashMap<>();
-      for (final Entry<String, Edit> link : data.getLinks().entrySet()) {
-        actualLinks.put(link.getKey(), new HistoryEditTrap(link.getValue(), document.history, this));
-      }
-      return actualLinks;
-    } else {
-      return data.getLinks();
-    }
-  }
+
 
   /**
    * @return the meta class of the thing
@@ -198,18 +180,6 @@ public abstract class ThingCore extends AbstractThing implements Editable, Compa
     layer.order.value(value);
   }
 
-  /**
-   * save the data from things thing to the given map
-   *
-   * @param object
-   *          the data container
-   */
-  public void saveTo(final Map<String, String> object) {
-    final Map<String, Edit> myLinks = getLinks(false);
-    for (final String key : myLinks.keySet()) {
-      object.put(key, myLinks.get(key).getAsText());
-    }
-  }
 
   /**
    * helper to select the thing

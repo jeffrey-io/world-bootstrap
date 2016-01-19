@@ -2,6 +2,7 @@ package io.jeffrey.world.document.history;
 
 import java.util.HashMap;
 
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
@@ -11,9 +12,9 @@ import io.jeffrey.world.things.core__old_defunct.ThingCore;
  */
 public class Watch {
   private final HashMap<String, String> before;
-  private final ThingCore               thing;
+  private final AbstractThing               thing;
 
-  public Watch(final ThingCore thing) {
+  public Watch(final AbstractThing thing) {
     this.thing = thing;
     before = new HashMap<String, String>();
     thing.saveTo(before);

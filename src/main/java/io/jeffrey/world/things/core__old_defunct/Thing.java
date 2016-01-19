@@ -321,8 +321,9 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     if (interaction == null) {
       return null;
     }
-    
-    return new ThingInteractionToMouseIteractionAdapter(document.history, interaction, this);
+    document.history.register(this);
+
+    return new ThingInteractionToMouseIteractionAdapter(document.history, interaction, transform);
   }
 
   protected abstract ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event);

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
@@ -55,9 +56,9 @@ public class History {
     watching.clear();
   }
 
-  public void focus(final String name, final ThingCore thing) {
-    final String sanityName = name + ":" + thing.id();
-    if (watching.containsKey(thing.id())) {
+  public void focus(final String name, final AbstractThing thing) {
+    final String sanityName = name + ":" + thing.getID();
+    if (watching.containsKey(thing.getID())) {
       if (sanityName.equals(focusOn)) {
         return;
       }
@@ -66,10 +67,10 @@ public class History {
     if (watching.size() > 0) {
       capture();
     }
-    watching.put(thing.id(), new Watch(thing));
+    watching.put(thing.getID(), new Watch(thing));
   }
 
-  public void load(final JsonNode node, final Map<String, ThingCore> lookup) {
+  public void load(final JsonNode node, final Map<String, AbstractThing> lookup) {
     applied.clear();
     changes.clear();
     focusOn = "";

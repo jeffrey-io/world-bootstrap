@@ -93,7 +93,7 @@ public abstract class DefaultMouseInteraction {
         it = itRaw;
       }
       // thing.document.history.register(thing);
-      interactions.add(new ThingInteractionToMouseIteractionAdapter(thing.document.history, it, DEFUNCT_THING));
+      interactions.add(new ThingInteractionToMouseIteractionAdapter(thing.document.history, it, transform));
     }
   }
   

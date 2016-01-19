@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
 
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.ThingCore;
 
 /**
@@ -16,7 +17,7 @@ import io.jeffrey.world.things.core__old_defunct.ThingCore;
  * @author jeffrey
  */
 public class Change {
-  public static Change fromJsonNode(final JsonNode node, final Map<String, ThingCore> lookup) {
+  public static Change fromJsonNode(final JsonNode node, final Map<String, AbstractThing> lookup) {
     final JsonNode changesPacked = node.get("changes");
     final JsonNode alternatePacked = node.get("alternate");
     final Set<Transition> transitions = new HashSet<>();

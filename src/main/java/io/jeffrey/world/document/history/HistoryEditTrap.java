@@ -1,5 +1,6 @@
 package io.jeffrey.world.document.history;
 
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.ThingCore;
 import io.jeffrey.zer.edits.Edit;
 
@@ -12,7 +13,7 @@ public class HistoryEditTrap extends Edit {
 
   private final Edit      delegate;
   private final History   history;
-  private final ThingCore target;
+  private final AbstractThing target;
 
   /**
    * @param delegate
@@ -22,7 +23,7 @@ public class HistoryEditTrap extends Edit {
    * @param target
    *          the thing we are focused on
    */
-  public HistoryEditTrap(final Edit delegate, final History history, final ThingCore target) {
+  public HistoryEditTrap(final Edit delegate, final History history, final AbstractThing target) {
     this.delegate = delegate;
     this.history = history;
     this.target = target;

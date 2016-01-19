@@ -16,6 +16,7 @@ import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.WorldData;
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.core__old_defunct.ThingCore;
@@ -164,7 +165,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     loadLP(tree.get("layers"));
 
     final JsonNode thingsToLoad = tree.get("things");
-    final HashMap<String, ThingCore> lookup = new HashMap<String, ThingCore>();
+    final HashMap<String, AbstractThing> lookup = new HashMap<>();
     for (int k = 0; k < thingsToLoad.size(); k++) {
       final HashMap<String, String> tdata = new HashMap<String, String>();
       final JsonNode thing = thingsToLoad.get(k);

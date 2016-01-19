@@ -1,6 +1,7 @@
 package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.world.document.history.History;
+import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;
@@ -12,7 +13,7 @@ import io.jeffrey.zer.MouseInteraction;
  */
 public class ThingInteractionToMouseIteractionAdapter implements MouseInteraction {
   private final ThingInteraction interaction;
-  private final Thing            target;
+  private final Transform transform;
 
   /**
    * @param history
@@ -22,10 +23,9 @@ public class ThingInteractionToMouseIteractionAdapter implements MouseInteractio
    * @param target
    *          the thing we are going to be interacting with
    */
-  public ThingInteractionToMouseIteractionAdapter(final History history, final ThingInteraction interaction, final Thing target) {
+  public ThingInteractionToMouseIteractionAdapter(final History history, final ThingInteraction interaction, final Transform transform) {
     this.interaction = interaction;
-    this.target = target;
-    history.register(target);
+    this.transform = transform;
   }
 
   /**
@@ -48,7 +48,7 @@ public class ThingInteractionToMouseIteractionAdapter implements MouseInteractio
    */
   @Override
   public void moved(final AdjustedMouseEvent event) {
-    target.adjustAndBindEvent(event);
+    transform.writeToThingSpace(event.position);
     interaction.moved(event);
   }
 }

@@ -8,7 +8,6 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
-import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingInteraction;
@@ -51,8 +50,8 @@ public class TCircle extends Thing {
     doodads.add(new ControlDoodad(Type.Scale, -0.7, 0.7));
     doodads.add(new ControlDoodad(Type.Scale, -0.7, -0.7));
     this.doodads = doodads.toArray(new ControlDoodad[doodads.size()]);
-    
-    EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
+
+    final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
     register("enforcers", enforcers);
   }
 

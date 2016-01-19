@@ -5,7 +5,6 @@ import java.util.Map;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
@@ -36,10 +35,8 @@ public class TPolygon extends AbstractPointChain {
   public TPolygon(final Document document, final ThingData node) {
     super(document, node);
     cache.update();
-    
-    EnforcersPart enforcers = new EnforcersPart(
-        new OriginEnforcer(position),
-        new EdgeEnforcer(this, position, rotation));
+
+    final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(this, position, rotation));
     register("enforcers", enforcers);
   }
 

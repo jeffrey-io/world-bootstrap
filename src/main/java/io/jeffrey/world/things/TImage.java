@@ -7,7 +7,6 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.behaviors.IsSelectable.ContainmentCheck;
-import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
@@ -60,13 +59,10 @@ public class TImage extends Thing {
       }
     };
     refresh();
-    
-    EnforcersPart enforcers = new EnforcersPart(
-        new OriginEnforcer(position),
-        new EdgeEnforcer(rectangle, position, rotation));
+
+    final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(rectangle, position, rotation));
     register("enforcers", enforcers);
 
-    
   }
 
   /**

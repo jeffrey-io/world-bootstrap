@@ -12,22 +12,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.IdentityPart;
 import io.jeffrey.zer.edits.Edit;
+import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class AbstractThing {
-  private static final boolean                   DEBUG_MODE = false;
-
-  protected final LinkedDataMap                  data;
   public final Document                          document;
+  
+  protected final LinkedDataMap                  data;
   protected final EditingPart                    editing;
   protected final IdentityPart                   identity;
   private final HashMap<String, ArrayList<Part>> parts;
 
-  public AbstractThing(final Document document, final ThingData node) {
+  /**
+   * @param document the owner of all things
+   * @param node where the data lives
+   */
+  public AbstractThing(final Document document, final ObjectDataMap node) {
     this.document = document;
     data = new LinkedDataMap(node);
     parts = new HashMap<>();
@@ -35,6 +38,20 @@ public class AbstractThing {
     register("identity", identity);
     editing = new EditingPart(data);
     register("editing", editing);
+  }
+
+  /**
+   * add the part to the thing
+   * @param key the keyspace for the thing (there may be multiple parts per key)
+   * @param part the part
+   */
+  protected synchronized <T extends Part> void register(final String key, final T part) {
+    ArrayList<Part> subkey = parts.get(key);
+    if (subkey == null) {
+      subkey = new ArrayList<>();
+      parts.put(key, subkey);
+    }
+    subkey.add(part);
   }
 
   @SuppressWarnings("unchecked")
@@ -109,38 +126,60 @@ public class AbstractThing {
 
   @SuppressWarnings("unchecked")
   public <T> T first(final Class<T> clazz) {
-    T result = null;
     for (final ArrayList<Part> list : parts.values()) {
       for (final Part part : list) {
         if (clazz.isAssignableFrom(part.getClass())) {
-          result = (T) part;
-          if (!DEBUG_MODE) {
-            return result;
-          }
+          return (T) part;
         }
       }
     }
-    return result;
+    return null;
   }
 
   @SuppressWarnings("unchecked")
   public <T> T first(final String key, final Class<T> clazz) {
-    T result = null;
     final ArrayList<Part> list = parts.get(key);
     if (list == null) {
       return null;
     }
     for (final Part part : list) {
       if (clazz.isAssignableFrom(part.getClass())) {
-        result = (T) part;
-        if (!DEBUG_MODE) {
-          return result;
-        }
+        return (T) part;
       }
     }
-    return result;
+    return null;
+  }
+  
+  /**
+   * apply the consumer to every part
+   * @param consumer the consumer that will touch every part
+   */
+  public void walk(final Consumer<Part> consumer) {
+    for (final ArrayList<Part> list : parts.values()) {
+      for (final Part part : list) {
+        consumer.accept(part);
+      }
+    }
   }
 
+  /**
+   * apply the consumer to only parts in the given key
+   * @param key the keyspace to walk
+   * @param consumer the consumer that will touch every part in the given keyspace
+   */
+  public void walk(final String key, final Consumer<Part> consumer) {
+    final ArrayList<Part> subkey = parts.get(key);
+    if (subkey == null) {
+      return; // we are done, nothing to do
+    }
+    for (final Part p : subkey) {
+      consumer.accept(p);
+    }
+  }
+  
+  /**
+   * @return all actions available given the current state of the thing
+   */
   public Set<String> getActionsAvailable() {
     final TreeSet<String> actions = new TreeSet<>();
     for (final ArrayList<Part> list : parts.values()) {
@@ -151,10 +190,42 @@ public class AbstractThing {
     return actions;
   }
 
+  /**
+   * perform the given action 
+   * @param action the action to perform
+   * @param withHistory should the results be record to history
+   * @return
+   */
+  public SharedActionSpace invokeAction(final String action, boolean withHistory) {
+    if (withHistory) {
+      document.history.register(this);
+    }
+    final SharedActionSpace sharedActionSpace = new SharedActionSpace();
+    walk(part -> part.act(action, sharedActionSpace));
+    if (withHistory) {
+      document.history.capture();
+    }
+    return sharedActionSpace;
+  }
+
+  /**
+   * @return the unique id for the things
+   */
   public String getID() {
     return identity.getID();
   }
+  
+  /**
+   * @return the metaclass; this allows for scripting to find this thing
+   */
+  public String getMetaclass() {
+    return identity.metaclass.value();
+  }
 
+  /**
+   * @param withHistory if true, then any changes will be captured to the history
+   * @return a map containing a model of the data that will allow for editing
+   */
   public Map<String, Edit> getLinks(final boolean withHistory) {
     if (withHistory) {
       final HashMap<String, Edit> actualLinks = new HashMap<>();
@@ -165,26 +236,6 @@ public class AbstractThing {
     } else {
       return data.getLinks();
     }
-  }
-
-  public String getMetaclass() {
-    return identity.metaclass.value();
-  }
-
-  public SharedActionSpace invokeAction(final String action) {
-    document.history.register(this);
-    final SharedActionSpace sharedActionSpace = new SharedActionSpace();
-    walk(part -> part.act(action, sharedActionSpace));
-    return sharedActionSpace;
-  }
-
-  protected synchronized <T extends Part> void register(final String key, final T part) {
-    ArrayList<Part> subkey = parts.get(key);
-    if (subkey == null) {
-      subkey = new ArrayList<>();
-      parts.put(key, subkey);
-    }
-    subkey.add(part);
   }
 
   /**
@@ -207,6 +258,9 @@ public class AbstractThing {
     return editing.selected.value();
   }
 
+  /**
+   * invoke update on all the parts
+   */
   public void update() {
     for (final ArrayList<Part> list : parts.values()) {
       for (final Part part : list) {
@@ -214,24 +268,4 @@ public class AbstractThing {
       }
     }
   }
-
-  public void walk(final Consumer<Part> consumer) {
-    for (final ArrayList<Part> list : parts.values()) {
-      for (final Part part : list) {
-        consumer.accept(part);
-      }
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  public <T extends Part> void walk(final String key, final Consumer<T> consumer) {
-    final ArrayList<Part> subkey = parts.get(key);
-    if (subkey == null) {
-      return; // we are done, nothing to do
-    }
-    for (final Part p : subkey) {
-      consumer.accept((T) p);
-    }
-  }
-
 }

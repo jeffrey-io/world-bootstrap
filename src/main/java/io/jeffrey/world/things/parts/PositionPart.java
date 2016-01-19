@@ -29,11 +29,6 @@ public class PositionPart implements Part {
   }
 
   @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
   public void update() {
     // no-op
   }

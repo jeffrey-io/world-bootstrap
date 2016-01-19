@@ -1,26 +1,24 @@
 package io.jeffrey.world.things;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
+import io.jeffrey.world.things.behaviors.IsSelectable.ContainmentCheck;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
+import io.jeffrey.world.things.parts.CircleControlDoodadsPart;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Shape;
 
 /**
  * A thing that is a circle
@@ -28,8 +26,7 @@ import javafx.scene.shape.Shape;
  * @author jeffrey
  */
 public class TCircle extends Thing {
-  private static final Circle   CIRCLE = new Circle(1);
-  private final ControlDoodad[] doodads;
+  private final CircleControlDoodadsPart circle;
 
   /**
    * @param document
@@ -40,16 +37,8 @@ public class TCircle extends Thing {
   public TCircle(final Document document, final ThingData node) {
     super(document, node);
 
-    final ArrayList<ControlDoodad> doodads = new ArrayList<>();
-    doodads.add(new ControlDoodad(Type.Rotate, -1, 0));
-    doodads.add(new ControlDoodad(Type.Rotate, 1, 0));
-    doodads.add(new ControlDoodad(Type.Rotate, 0, -1));
-    doodads.add(new ControlDoodad(Type.Rotate, 0, 1));
-    doodads.add(new ControlDoodad(Type.Scale, 0.7, 0.7));
-    doodads.add(new ControlDoodad(Type.Scale, 0.7, -0.7));
-    doodads.add(new ControlDoodad(Type.Scale, -0.7, 0.7));
-    doodads.add(new ControlDoodad(Type.Scale, -0.7, -0.7));
-    this.doodads = doodads.toArray(new ControlDoodad[doodads.size()]);
+    circle = new CircleControlDoodadsPart();
+    register("shapes", circle);
 
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
     register("enforcers", enforcers);
@@ -81,8 +70,7 @@ public class TCircle extends Thing {
    */
   @Override
   protected boolean doesContainTargetPoint(final double x, final double y) {
-    final double d = x * x + y * y;
-    return Math.sqrt(d) <= 1.0;
+    return circle.contains(x, y, ContainmentCheck.ExactlyInside);
   }
 
   /**
@@ -120,7 +108,7 @@ public class TCircle extends Thing {
    */
   @Override
   public ControlDoodad[] getDoodadsInThingSpace() {
-    return doodads;
+    return circle.getDoodadsInThingSpace();
   }
 
   @Override
@@ -148,7 +136,7 @@ public class TCircle extends Thing {
    */
   @Override
   protected boolean selectionIntersect(final Polygon p, final Mode mode) {
-    return Shape.intersect(CIRCLE, p).getBoundsInLocal().getWidth() > 0;
+    return circle.selectionIntersect(p, mode);
   }
 
   /**

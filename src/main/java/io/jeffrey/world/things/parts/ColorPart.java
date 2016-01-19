@@ -27,11 +27,6 @@ public class ColorPart implements Part {
   }
 
   @Override
-  public boolean unique() {
-    return false;
-  }
-
-  @Override
   public void update() {
   }
 }

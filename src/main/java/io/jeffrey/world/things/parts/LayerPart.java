@@ -51,11 +51,6 @@ public class LayerPart implements Part {
   }
 
   @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
   public void update() {
     cachedLayerProperties = document.layers.get(layer.getAsText());
   }

@@ -34,11 +34,6 @@ public class EnforcersPart implements Part, HasGuideLineEnforcers {
   }
 
   @Override
-  public boolean unique() {
-    return false;
-  }
-
-  @Override
   public void update() {
   }
 }

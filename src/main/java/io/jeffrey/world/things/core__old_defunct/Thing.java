@@ -345,16 +345,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   private MouseInteraction startInteractionReal(final AdjustedMouseEvent event) {
     adjustAndBindEvent(event);
     
-    DefaultMouseInteraction defaultMouseInteraction = new DefaultMouseInteraction(
-        this,
-        this,
-        document,
-        transform,
-        editing,
-        position,
-        scale,
-        rotation,
-        layer) {
+    DefaultMouseInteraction defaultMouseInteraction = new DefaultMouseInteraction(this, transform) {
       @Override
       protected ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event) {
         return Thing.this.startTargetAdjustedInteraction(event);

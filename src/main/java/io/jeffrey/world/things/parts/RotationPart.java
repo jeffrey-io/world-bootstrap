@@ -59,11 +59,6 @@ public class RotationPart implements Part {
   }
 
   @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
   public void update() {
     cx = Math.cos(DEGREES_TO_RADIANS * angle.value());
     cy = Math.sin(DEGREES_TO_RADIANS * angle.value());

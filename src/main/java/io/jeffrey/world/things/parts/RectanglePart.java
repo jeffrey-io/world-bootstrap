@@ -67,11 +67,6 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   }
 
   @Override
-  public boolean unique() {
-    return false;
-  }
-
-  @Override
   public void update() {
   }
 

@@ -66,11 +66,6 @@ public class ScalePart implements Part {
   }
 
   @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
   public void update() {
   }
 

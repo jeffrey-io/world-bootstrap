@@ -51,11 +51,6 @@ public class LifetimePart implements Part {
   }
 
   @Override
-  public boolean unique() {
-    return true;
-  }
-
-  @Override
   public void update() {
   }
 

@@ -24,11 +24,6 @@ public interface Part {
   public void list(Set<String> actionsAvailable);
 
   /**
-   * @return whether or not the part is unique to a thing
-   */
-  public boolean unique();
-
-  /**
    * data has changed, refresh it
    */
   public void update();

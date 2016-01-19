@@ -13,8 +13,10 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 
 public class AbstractThing {
+  private static final boolean                   DEBUG_MODE = false;
+
   protected final LinkedDataMap                  data;
-  protected final Document                       document;
+  public final Document                       document;
   private final HashMap<String, ArrayList<Part>> parts;
 
   public AbstractThing(final Document document, final ThingData node) {
@@ -23,13 +25,107 @@ public class AbstractThing {
     parts = new HashMap<>();
   }
 
-  public <T, O> Set<O> collect(final Class<T> clazz, final Function<T, Collection<O>> collector) {
+  @SuppressWarnings("unchecked")
+  public <T, O> Set<O> collect(final Class<T> clazz, final Function<T, O> collector) {
+    final HashSet<O> result = new HashSet<>();
+    walk(part -> {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        result.add(collector.apply((T) part));
+      }
+    });
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T, O> Set<O> collect(final String key, final Class<T> clazz, final Function<T, O> collector) {
+    final HashSet<O> result = new HashSet<>();
+    walk(key, part -> {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        result.add(collector.apply((T) part));
+      }
+    });
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T, O> Set<O> collectAndMerge(final Class<T> clazz, final Function<T, Collection<O>> collector) {
     final HashSet<O> result = new HashSet<>();
     walk(part -> {
       if (clazz.isAssignableFrom(part.getClass())) {
         result.addAll(collector.apply((T) part));
       }
     });
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T, O> Set<O> collectAndMerge(final String key, final Class<T> clazz, final Function<T, Collection<O>> collector) {
+    final HashSet<O> result = new HashSet<>();
+    walk(key, part -> {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        result.addAll(collector.apply((T) part));
+      }
+    });
+    return result;
+  }
+  
+  @SuppressWarnings("unchecked")
+  public <T, O> Set<O> collectAndMergeOverArray(final Class<T> clazz, final Function<T, O[]> collector) {
+    final HashSet<O> result = new HashSet<>();
+    walk(part -> {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        for (O o : collector.apply((T) part)) {
+          result.add(o);
+        }
+      }
+    });
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T, O> Set<O> collectAndMergeOverArray(final String key, final Class<T> clazz, final Function<T, O[]> collector) {
+    final HashSet<O> result = new HashSet<>();
+    walk(key, part -> {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        for (O o : collector.apply((T) part)) {
+          result.add(o);
+        }
+      }
+    });
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T first(final Class<T> clazz) {
+    T result = null;
+    for (final ArrayList<Part> list : parts.values()) {
+      for (final Part part : list) {
+        if (clazz.isAssignableFrom(part.getClass())) {
+          result = (T) part;
+          if (!DEBUG_MODE) {
+            return result;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T first(final String key, final Class<T> clazz) {
+    T result = null;
+    final ArrayList<Part> list = parts.get(key);
+    if (list == null) {
+      return null;
+    }
+    for (final Part part : list) {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        result = (T) part;
+        if (!DEBUG_MODE) {
+          return result;
+        }
+      }
+    }
     return result;
   }
 
@@ -54,9 +150,6 @@ public class AbstractThing {
     if (subkey == null) {
       subkey = new ArrayList<>();
       parts.put(key, subkey);
-    }
-    if (part.unique() && subkey.size() != 0) {
-      throw new IllegalStateException("there is already a part defined for " + key);
     }
     subkey.add(part);
   }

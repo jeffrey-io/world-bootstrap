@@ -32,9 +32,4 @@ public abstract class UriPart implements Part {
   @Override
   public void list(final Set<String> actionsAvailable) {
   }
-
-  @Override
-  public boolean unique() {
-    return false;
-  }
 }

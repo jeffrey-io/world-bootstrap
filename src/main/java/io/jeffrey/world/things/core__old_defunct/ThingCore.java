@@ -55,7 +55,7 @@ public abstract class ThingCore extends AbstractThing {
 
     fill = new ColorPart("fill", data);
     register("fill", fill);
-    
+
     register("render", new DoodadRenderPart(this, transform));
   }
 

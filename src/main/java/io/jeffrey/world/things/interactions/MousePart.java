@@ -18,7 +18,6 @@ import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
 import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
-import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.enforcer.SerialEnforcer;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.LayerPart;
@@ -55,8 +54,7 @@ public abstract class MousePart implements Part, CanBeSelectedByWindow {
   }
 
   @Override
-  public void beginSelectionWindow() {
-    selectedPriorSelectionWindow = editing.selected.value();
+  public void act(final String action, final SharedActionSpace space) {
   }
 
   public void beginMoving(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
@@ -70,7 +68,7 @@ public abstract class MousePart implements Part, CanBeSelectedByWindow {
     }
     transform.writeToThingSpace(event.position);
     final HashSet<ThingInteraction> local = new HashSet<>();
-    for (HasMover mover : thing.collect(HasMover.class)) {
+    for (final HasMover mover : thing.collect(HasMover.class)) {
       mover.iterateMovers(local, event);
     }
     final Collection<GuideLine> lines = thing.document.getGuideLines(layer.layer.getAsText());
@@ -91,6 +89,11 @@ public abstract class MousePart implements Part, CanBeSelectedByWindow {
     }
   }
 
+  @Override
+  public void beginSelectionWindow() {
+    selectedPriorSelectionWindow = editing.selected.value();
+  }
+
   /**
    * @return how to snap this to lines
    */
@@ -102,6 +105,10 @@ public abstract class MousePart implements Part, CanBeSelectedByWindow {
     } else {
       return new SerialEnforcer(enforcers);
     }
+  }
+
+  @Override
+  public void list(final Set<String> actionsAvailable) {
   }
 
   public ThingInteraction start(final AdjustedMouseEvent event) {
@@ -158,6 +165,10 @@ public abstract class MousePart implements Part, CanBeSelectedByWindow {
 
   protected abstract ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event);
 
+  @Override
+  public void update() {
+  }
+
   public void updateSelectionBasedOnWindow(final SelectionWindow window) {
     if (lifetime.isDeleted()) {
       return;
@@ -183,17 +194,5 @@ public abstract class MousePart implements Part, CanBeSelectedByWindow {
     } else {
       editing.selected.value(false);
     }
-  }
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-  }
-
-  @Override
-  public void update() {
   }
 }

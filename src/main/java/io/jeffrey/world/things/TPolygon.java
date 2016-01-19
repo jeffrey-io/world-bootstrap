@@ -5,13 +5,11 @@ import java.util.Map;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.behaviors.IsSelectable.ContainmentCheck;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.LazyPolygonPart;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
-import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.Edit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -62,22 +60,6 @@ public class TPolygon extends AbstractPointChain {
   @Override
   protected boolean areTheNumberOfPointsFixed() {
     return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesContainTargetPoint(final double x, final double y) {
-    return lazyPolygonPart.contains(x, y, ContainmentCheck.ExactlyInside);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesPointApplyMaintainSelection(final Document document, final AdjustedMouseEvent event) {
-    return lazyPolygonPart.contains(event.position.x_1, event.position.y_1, ContainmentCheck.ExactlyInside);
   }
 
   /**

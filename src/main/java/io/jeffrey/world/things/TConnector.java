@@ -10,7 +10,6 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
 import io.jeffrey.world.things.polygon.SelectablePoint2;
-import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.canvas.GraphicsContext;

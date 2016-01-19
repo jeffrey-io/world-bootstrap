@@ -25,11 +25,13 @@ public interface IsSelectable {
 
   /**
    * does the given mouse event preserve the existing selection
-   * @param event the mouse even
+   * 
+   * @param event
+   *          the mouse even
    * @return whether or not the event will not mess with existing selection
    */
   public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event);
-  
+
   /**
    * @param polygon
    *          the shape test

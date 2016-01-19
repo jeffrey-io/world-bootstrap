@@ -37,7 +37,7 @@ public class TCircle extends Thing {
 
     circle = new CirclePart();
     register("shapes", circle);
-    
+
     register("render", new CircleRenderPart(transform, document, fill, fill, scale, editing));
 
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
@@ -52,7 +52,6 @@ public class TCircle extends Thing {
   protected void describePossibleActions(final List<String> actions) {
   }
 
-
   /**
    * {@inheritDoc}
    */
@@ -61,7 +60,6 @@ public class TCircle extends Thing {
     return circle.getDoodadsInThingSpace();
   }
 
-  
   /**
    * {@inheritDoc}
    */
@@ -75,7 +73,7 @@ public class TCircle extends Thing {
    */
   @Override
   protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
-    for (IsSelectable isSelectable : collect(IsSelectable.class)) {
+    for (final IsSelectable isSelectable : collect(IsSelectable.class)) {
       if (isSelectable.doesMouseEventPreserveExistingSelection(event)) {
         return new ThingMover(event, position, rotation);
       }

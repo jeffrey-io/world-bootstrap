@@ -44,9 +44,9 @@ public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelect
     final double d = x * x + y * y;
     return Math.sqrt(d) <= 1.0;
   }
-  
+
   @Override
-  public boolean doesMouseEventPreserveExistingSelection(AdjustedMouseEvent event) {
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
     return contains(event.position.x_1, event.position.y_1);
   }
 

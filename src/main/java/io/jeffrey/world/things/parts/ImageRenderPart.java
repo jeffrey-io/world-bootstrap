@@ -14,13 +14,17 @@ import javafx.scene.paint.Color;
 
 public class ImageRenderPart extends CanRenderInThingSpace implements Part, EmitsColor {
 
-  protected final UriPart uri;
-  protected final EditingPart editing;
-  private Image               img = null;
+  private static int clamp(final int value, final int low, final int high) {
+    return Math.min(high, Math.max(low, value));
+  }
+
+  protected final EditingPart   editing;
+  private Image                 img = null;
   protected final RectanglePart rectangle;
-  
-  
-  public ImageRenderPart(Transform transform, Document document, UriPart uri, EditingPart editing, RectanglePart rectangle) {
+
+  protected final UriPart       uri;
+
+  public ImageRenderPart(final Transform transform, final Document document, final UriPart uri, final EditingPart editing, final RectanglePart rectangle) {
     super(transform, document);
     this.uri = uri;
     this.editing = editing;
@@ -29,23 +33,11 @@ public class ImageRenderPart extends CanRenderInThingSpace implements Part, Emit
   }
 
   @Override
-  public void act(String action, SharedActionSpace space) {
+  public void act(final String action, final SharedActionSpace space) {
   }
 
   @Override
-  public void list(Set<String> actionsAvailable) {
-  }
-
-  @Override
-  public void update() {
-    img = document.imageCache.of(document.find(uri.uri.value()));
-    if (img != null) {
-      rectangle.set(-img.getWidth() / 2, -img.getHeight() / 2, img.getWidth(), img.getHeight());
-    }
-  }
-
-  @Override
-  public void draw(GraphicsContext gc) {
+  public void draw(final GraphicsContext gc) {
     update();
     gc.drawImage(img, -img.getWidth() / 2.0, -img.getHeight() / 2.0);
     if (editing.selected.value()) {
@@ -56,7 +48,11 @@ public class ImageRenderPart extends CanRenderInThingSpace implements Part, Emit
       gc.restore();
     }
   }
-  
+
+  @Override
+  public void list(final Set<String> actionsAvailable) {
+  }
+
   @Override
   public Color queryTargetColor(final double x, final double y) {
     if (rectangle.contains(x, y)) {
@@ -66,8 +62,13 @@ public class ImageRenderPart extends CanRenderInThingSpace implements Part, Emit
     }
     return null;
   }
-  private static int clamp(final int value, final int low, final int high) {
-    return Math.min(high, Math.max(low, value));
+
+  @Override
+  public void update() {
+    img = document.imageCache.of(document.find(uri.uri.value()));
+    if (img != null) {
+      rectangle.set(-img.getWidth() / 2, -img.getHeight() / 2, img.getWidth(), img.getHeight());
+    }
   }
 
 }

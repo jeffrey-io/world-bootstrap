@@ -25,7 +25,7 @@ public class AbstractThing {
   protected final EditingPart                    editing;
   protected final IdentityPart                   identity;
   private final HashMap<String, ArrayList<Part>> parts;
-  private long sequencer;
+  private long                                   sequencer;
 
   /**
    * @param document
@@ -56,22 +56,22 @@ public class AbstractThing {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> Set<T> collect(final String key, final Class<T> clazz) {
-    final HashSet<T> result = new HashSet<>();
-    walk(key, part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        result.add((T) part);
-      }
-    });
-    return result;
-  }
-  
-  @SuppressWarnings("unchecked")
   public <T, O> Set<O> collect(final Class<T> clazz, final Function<T, O> collector) {
     final HashSet<O> result = new HashSet<>();
     walk(part -> {
       if (clazz.isAssignableFrom(part.getClass())) {
         result.add(collector.apply((T) part));
+      }
+    });
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> Set<T> collect(final String key, final Class<T> clazz) {
+    final HashSet<T> result = new HashSet<>();
+    walk(key, part -> {
+      if (clazz.isAssignableFrom(part.getClass())) {
+        result.add((T) part);
       }
     });
     return result;
@@ -214,8 +214,15 @@ public class AbstractThing {
   }
 
   /**
+   * @return a sequencer to be able to know if there are new things in the image
+   */
+  public long getSequencer() {
+    return sequencer;
+  }
+
+  /**
    * perform the given action
-   * 
+   *
    * @param action
    *          the action to perform
    * @param withHistory
@@ -236,7 +243,7 @@ public class AbstractThing {
 
   /**
    * add the part to the thing
-   * 
+   *
    * @param key
    *          the keyspace for the thing (there may be multiple parts per key)
    * @param part
@@ -251,7 +258,7 @@ public class AbstractThing {
     }
     subkey.add(part);
   }
-  
+
   /**
    * save the data from things thing to the given map
    *
@@ -285,7 +292,7 @@ public class AbstractThing {
 
   /**
    * apply the consumer to every part
-   * 
+   *
    * @param consumer
    *          the consumer that will touch every part
    */
@@ -299,7 +306,7 @@ public class AbstractThing {
 
   /**
    * apply the consumer to only parts in the given key
-   * 
+   *
    * @param key
    *          the keyspace to walk
    * @param consumer
@@ -313,12 +320,5 @@ public class AbstractThing {
     for (final Part p : subkey) {
       consumer.accept(p);
     }
-  }
-  
-  /**
-   * @return a sequencer to be able to know if there are new things in the image
-   */
-  public long getSequencer() {
-    return sequencer;
   }
 }

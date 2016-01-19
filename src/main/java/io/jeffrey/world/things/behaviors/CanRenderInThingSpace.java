@@ -5,17 +5,19 @@ import io.jeffrey.world.things.base.Transform;
 import javafx.scene.canvas.GraphicsContext;
 
 public abstract class CanRenderInThingSpace implements CanRenderInWorldSpace {
-  
+
+  protected final Document  document;
   protected final Transform transform;
-  protected final Document document;
-  
-  public CanRenderInThingSpace(Transform transform, Document document) {
+
+  public CanRenderInThingSpace(final Transform transform, final Document document) {
     this.transform = transform;
     this.document = document;
   }
 
+  public abstract void draw(GraphicsContext gc);
+
   @Override
-  public void render(GraphicsContext gc) {
+  public void render(final GraphicsContext gc) {
     gc.save();
     gc.translate(document.camera.tX, document.camera.tY);
     gc.scale(document.camera.scale, document.camera.scale);
@@ -23,6 +25,4 @@ public abstract class CanRenderInThingSpace implements CanRenderInWorldSpace {
     draw(gc);
     gc.restore();
   }
-
-  public abstract void draw(GraphicsContext gc);
 }

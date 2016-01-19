@@ -9,35 +9,30 @@ import io.jeffrey.world.things.behaviors.IsSelectable;
 import javafx.scene.paint.Color;
 
 public class SingleColorEmitterPart implements Part, EmitsColor {
-  
-  protected ColorPart color;
+
+  protected ColorPart    color;
   protected IsSelectable selectable;
-  
-  
-  public SingleColorEmitterPart(ColorPart color, IsSelectable selectable) {
+
+  public SingleColorEmitterPart(final ColorPart color, final IsSelectable selectable) {
     this.color = color;
     this.selectable = selectable;
   }
 
+  @Override
+  public void act(final String action, final SharedActionSpace space) {
+  }
 
   @Override
-  public Color queryTargetColor(double x, double y) {
+  public void list(final Set<String> actionsAvailable) {
+  }
+
+  @Override
+  public Color queryTargetColor(final double x, final double y) {
     if (selectable.contains(x, y)) {
       return Color.valueOf(color.color.getAsText());
     }
     return null;
   }
-
-
-  @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
-  }
-
 
   @Override
   public void update() {

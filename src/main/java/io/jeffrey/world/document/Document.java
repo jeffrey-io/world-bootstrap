@@ -252,8 +252,8 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
       if (!thing.selected() && onlySelected) {
         continue;
       }
-      for (HasControlDoodadsInThingSpace space1 : thing.collect(HasControlDoodadsInThingSpace.class)) {
-        AdaptThingSpaceDoodadsIntoWorldSpace space2 = new AdaptThingSpaceDoodadsIntoWorldSpace(thing.getTransform(), space1);
+      for (final HasControlDoodadsInThingSpace space1 : thing.collect(HasControlDoodadsInThingSpace.class)) {
+        final AdaptThingSpaceDoodadsIntoWorldSpace space2 = new AdaptThingSpaceDoodadsIntoWorldSpace(thing.getTransform(), space1);
         for (final ControlDoodad doodad : space2.getDoodadsInWorldSpace()) {
           if (n == 0) {
             reg.set_0(doodad.u, doodad.v);

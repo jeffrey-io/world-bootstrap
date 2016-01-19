@@ -44,12 +44,12 @@ public class TImage extends Thing {
 
     uri = new UriPart("", data);
     register("uri", uri);
-    
+
     register("render", new ImageRenderPart(transform, document, uri, editing, rectangle));
 
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(rectangle, position, rotation));
     register("enforcers", enforcers);
-    
+
     register("control", new GenericMoverPart(position, rotation));
 
   }
@@ -82,7 +82,7 @@ public class TImage extends Thing {
    */
   @Override
   protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
-    for (IsSelectable isSelectable : collect(IsSelectable.class)) {
+    for (final IsSelectable isSelectable : collect(IsSelectable.class)) {
       if (isSelectable.doesMouseEventPreserveExistingSelection(event)) {
         return new ThingMover(event, position, rotation);
       }

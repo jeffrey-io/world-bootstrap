@@ -41,7 +41,7 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   }
 
   @Override
-  public boolean doesMouseEventPreserveExistingSelection(AdjustedMouseEvent event) {
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
     return rect.contains(event.position.x_1, event.position.y_1);
   }
 

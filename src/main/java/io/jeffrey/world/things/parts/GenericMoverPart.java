@@ -13,23 +13,23 @@ public class GenericMoverPart implements Part, HasMover {
 
   private final PositionPart position;
   private final RotationPart rotation;
-  
-  public GenericMoverPart(PositionPart position, RotationPart rotation) {
+
+  public GenericMoverPart(final PositionPart position, final RotationPart rotation) {
     this.position = position;
     this.rotation = rotation;
   }
-  
+
   @Override
-  public void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event) {
+  public void act(final String action, final SharedActionSpace space) {
+  }
+
+  @Override
+  public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     interactions.add(new ThingMover(event, position, rotation));
   }
 
   @Override
-  public void act(String action, SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(Set<String> actionsAvailable) {
+  public void list(final Set<String> actionsAvailable) {
   }
 
   @Override

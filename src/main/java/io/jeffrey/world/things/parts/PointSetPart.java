@@ -45,8 +45,8 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     }
   }
 
-  private final Document document;
   private final SharedMutableCache              cache;
+  private final Document                        document;
 
   private ControlDoodad[]                       doodads   = new ControlDoodad[0];
   public final EditBoolean                      lock;
@@ -54,10 +54,10 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   private final Subscribers<SharedMutableCache> notification;
   public boolean                                outOfDate = false;
 
-  private final Transform transform;
-  private final RotationPart                    rotation;
   private final PositionPart                    position;
+  private final RotationPart                    rotation;
   private final ScalePart                       scale;
+  private final Transform                       transform;
 
   public final EditString                       vertices;
 
@@ -96,12 +96,16 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   public boolean contains(final double x, final double y) {
     return false;
   }
-  
+
+  public void dirty() {
+    outOfDate = true;
+  }
+
   @Override
-  public boolean doesMouseEventPreserveExistingSelection(AdjustedMouseEvent event) {
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
     if (document != null) {
-      int n = getNumberOfPoints();
+      final int n = getNumberOfPoints();
       for (int k = 0; k < n; k++) {
         final SelectablePoint2 point = at(k);
         if (point.selected) {
@@ -114,10 +118,6 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       }
     }
     return false;
-  }
-
-  public void dirty() {
-    outOfDate = true;
   }
 
   private void ensureCapacityIsCorrect(final int n, final int ds) {
@@ -148,6 +148,35 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   public void invalidateNow() {
     dirty();
     update();
+  }
+
+  @Override
+  public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
+    boolean all = true;
+    boolean any = false;
+    final int n = getNumberOfPoints();
+    for (int k = 0; k < n; k++) {
+      final SelectablePoint2 point = at(k);
+      if (!point.selected) {
+        all = false;
+      } else {
+        any = true;
+      }
+    }
+    if (all || !any) {
+      // this will be faster
+      interactions.add(new ThingMover(event, position, rotation));
+      return;
+    }
+
+    final Syncable sync = () -> dirty();
+
+    for (int k = 0; k < n; k++) {
+      final SelectablePoint2 point = at(k);
+      if (point.selected) {
+        interactions.add(new VertexMover(new Vertex(point, sync), event));
+      }
+    }
   }
 
   @Override
@@ -251,39 +280,5 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
     cache.owner = this;
     notification.publish(cache);
-  }
-
-  @Override
-  public void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event) {
-    boolean all = true;
-    boolean any = false;
-    int n = getNumberOfPoints();
-    for (int k = 0; k < n; k++) {
-      final SelectablePoint2 point = at(k);
-      if (!point.selected) {
-        all = false;
-      } else {
-        any = true;
-      }
-    }
-    if (all || !any) {
-      // this will be faster
-      interactions.add(new ThingMover(event, position, rotation));
-      return;
-    }
-
-    Syncable sync = new Syncable() {
-      @Override
-      public void sync() {
-        dirty();
-      }
-    };
-
-    for (int k = 0; k < n; k++) {
-      final SelectablePoint2 point = at(k);
-      if (point.selected) {
-        interactions.add(new VertexMover(new Vertex(point, sync), event));
-      }
-    }
   }
 }

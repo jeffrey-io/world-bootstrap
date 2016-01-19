@@ -344,7 +344,7 @@ public class WorldData extends SurfaceData {
     document.history.capture();
     final HashSet<MouseInteraction> set = new HashSet<MouseInteraction>();
     for (final Thing thing : document.getThings()) {
-      MousePart mouse = thing.first("mouse", MousePart.class);
+      final MousePart mouse = thing.first("mouse", MousePart.class);
       if (mouse != null) {
         mouse.beginMoving(set, event);
       }
@@ -368,16 +368,16 @@ public class WorldData extends SurfaceData {
   @Override
   public void initiateSelectionWindow() {
     for (final Thing thing : document.getThings()) {
-      
+
       thing.collect(CanBeSelectedByWindow.class, t -> {
         t.beginSelectionWindow();
         return null;
       });
-      
+
       thing.collect(CanCacheSelection.class, t -> {
         t.cache();
         return null;
-      });      
+      });
     }
   }
 

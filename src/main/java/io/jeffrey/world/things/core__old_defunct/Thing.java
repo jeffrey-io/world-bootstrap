@@ -1,7 +1,6 @@
 package io.jeffrey.world.things.core__old_defunct;
 
 import java.util.List;
-import java.util.Set;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
@@ -9,10 +8,7 @@ import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
-import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.base.Transform;
-import io.jeffrey.world.things.behaviors.CanCacheSelection;
 import io.jeffrey.world.things.behaviors.CanRenderInWorldSpace;
 import io.jeffrey.world.things.behaviors.EmitsColor;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
@@ -30,7 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public abstract class Thing extends ThingCore implements HasControlDoodadsInThingSpace {
-  private final MousePart       defaultMouseInteraction;
+  private final MousePart                     defaultMouseInteraction;
   public AdaptThingSpaceDoodadsIntoWorldSpace doodadCache;
 
   /**
@@ -60,7 +56,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
         return Thing.this.startTargetAdjustedInteraction(event);
       }
     };
-    
+
     register("mouse", defaultMouseInteraction);
 
     doodadCache = new AdaptThingSpaceDoodadsIntoWorldSpace(transform, this);
@@ -79,7 +75,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   public boolean contains(final double x, final double y) {
     threadUnsafeContainmentScratch.set_0(x, y);
     writeToTarget(threadUnsafeContainmentScratch);
-    for (IsSelectable selectable : collect(IsSelectable.class)) {
+    for (final IsSelectable selectable : collect(IsSelectable.class)) {
       if (selectable.contains(threadUnsafeContainmentScratch.x_1, threadUnsafeContainmentScratch.y_1)) {
         return true;
       }
@@ -99,6 +95,10 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    */
   protected abstract void describePossibleActions(List<String> actions);
 
+  public Transform getTransform() {
+    return transform;
+  }
+
   /**
    * is the given point in the selection?
    *
@@ -111,11 +111,11 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
       return false;
     }
     transform.writeToThingSpace(event.position);
-    for (IsSelectable selectable : collect(IsSelectable.class)) {
+    for (final IsSelectable selectable : collect(IsSelectable.class)) {
       if (selectable.doesMouseEventPreserveExistingSelection(event)) {
         return true;
       }
-    }    
+    }
     return false;
   }
 
@@ -135,8 +135,8 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     final VectorRegister6 W = new VectorRegister6();
     W.set_0(x, y);
     writeToTarget(W);
-    for (EmitsColor emitsColor : collect(EmitsColor.class)) {
-      Color result = emitsColor.queryTargetColor(W.x_1, W.y_1);
+    for (final EmitsColor emitsColor : collect(EmitsColor.class)) {
+      final Color result = emitsColor.queryTargetColor(W.x_1, W.y_1);
       if (result != null) {
         return result;
       }
@@ -156,15 +156,11 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     if (lifetime.isDeleted()) {
       return;
     }
-    
-    for (CanRenderInWorldSpace renderer : collect(CanRenderInWorldSpace.class)) {
+
+    for (final CanRenderInWorldSpace renderer : collect(CanRenderInWorldSpace.class)) {
       renderer.render(gc);
     }
 
-
-  }
-  public Transform getTransform() {
-    return transform;
   }
 
   /**

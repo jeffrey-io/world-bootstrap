@@ -29,9 +29,9 @@ public class LazyPolygonPart implements Part, IsSelectable {
     }
     return polygon.contains(x, y);
   }
-  
+
   @Override
-  public boolean doesMouseEventPreserveExistingSelection(AdjustedMouseEvent event) {
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
     return contains(event.position.x_1, event.position.y_1);
   }
 

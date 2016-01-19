@@ -6,7 +6,6 @@ import java.util.Map;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
-import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.Edit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -43,22 +42,6 @@ public class TPath extends AbstractPointChain {
    */
   @Override
   protected boolean areTheNumberOfPointsFixed() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesContainTargetPoint(final double x, final double y) {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesPointApplyMaintainSelection(final Document document, final AdjustedMouseEvent event) {
     return false;
   }
 

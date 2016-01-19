@@ -2,20 +2,20 @@ package io.jeffrey.world.things.base;
 
 public abstract class AbstractThingSingleItemCache<T> {
 
-  private AbstractThing thing;
-  private long cachedAt;
-  private T cached;
-  
-  public AbstractThingSingleItemCache(AbstractThing thing) {
+  private T                   cached;
+  private long                cachedAt;
+  private final AbstractThing thing;
+
+  public AbstractThingSingleItemCache(final AbstractThing thing) {
     this.thing = thing;
     this.cachedAt = -1;
     this.cached = null;
   }
-  
+
   protected abstract T compute();
-  
+
   public T get() {
-    long current = thing.getSequencer();
+    final long current = thing.getSequencer();
     if (current != cachedAt || cached == null) {
       cached = compute();
       cachedAt = current;

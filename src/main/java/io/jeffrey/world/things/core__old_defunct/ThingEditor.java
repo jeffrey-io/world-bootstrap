@@ -152,7 +152,10 @@ public class ThingEditor {
         if (cls != null) {
           final SurfaceFourColumnGrid al = builder.startFourColumnGrid();
           for (final Entry<String, String> field : cls.fields.entrySet()) {
-            al.add(field.getKey(), editable.metadataOf(field.getKey(), field.getValue()));
+            Edit edit = editable.metadataOf(field.getKey(), field.getValue());
+            if (edit != null) {
+              al.add(field.getKey(), edit);
+            }
           }
         }
         builder.endBorder();

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.edits.Edit;
 
@@ -93,15 +94,15 @@ public class Query {
   /**
    * apply the query as a filter on a collection of things
    */
-  public Collection<Thing> applyAsFilter(final Collection<Thing> old) {
-    final HashSet<Thing> result = new HashSet<>();
+  public Collection<AbstractThing> applyAsFilter(final Collection<AbstractThing> old) {
+    final HashSet<AbstractThing> result = new HashSet<>();
 
     switch (typ) {
       case All:
         // NO-OP
         break;
       case ByClass:
-        for (final Thing thing : old) {
+        for (final AbstractThing thing : old) {
           boolean found = false;
           final String currentClass = thing.getMetaclass();
           for (final String wantedClass : args) {
@@ -115,9 +116,9 @@ public class Query {
         }
         break;
       case ById:
-        for (final Thing thing : old) {
+        for (final AbstractThing thing : old) {
           boolean found = false;
-          final String currentId = thing.id();
+          final String currentId = thing.getID();
           for (final String wantedId : args) {
             if (currentId.equals(wantedId)) {
               found = true;

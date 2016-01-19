@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import io.jeffrey.world.document.history.History;
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.edits.Edit;
@@ -56,7 +57,7 @@ public class ModeledDocument implements Model {
     cachedModel.clear();
     for (final Thing thing : things) {
       history.register(thing);
-      cachedModel.put(thing.id(), thing.getLinks(false));
+      cachedModel.put(thing.getID(), thing.getLinks(false));
     }
   }
 
@@ -94,14 +95,15 @@ public class ModeledDocument implements Model {
   @Override
   public String invokeAndReturnJson(final String query, final String method) {
     try {
-      Collection<Thing> result = things;
+      Collection<AbstractThing> result = new ArrayList<>();
+      result.addAll(things);
       final List<Query> parsed = Query.parse(query);
       for (final Query part : parsed) {
         result = part.applyAsFilter(result);
       }
       final HashMap<String, Object> toJson = new HashMap<>();
-      for (final Thing thing : result) {
-        toJson.put(thing.id(), thing.invoke(method));
+      for (final AbstractThing thing : result) {
+        toJson.put(thing.getID(), thing.invokeAction(method, false));
       }
       return mapper.writeValueAsString(toJson);
     } catch (final Exception failure) {

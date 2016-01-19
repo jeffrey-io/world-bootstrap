@@ -12,13 +12,8 @@ import io.jeffrey.world.things.parts.MetadataPart;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
-import io.jeffrey.zer.Editable;
-import io.jeffrey.zer.SurfaceData;
-import io.jeffrey.zer.Syncable;
-import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 
-public abstract class ThingCore extends AbstractThing implements Editable {
+public abstract class ThingCore extends AbstractThing {
   protected final ColorPart    fill;
   protected final LayerPart    layer;
   protected final LifetimePart lifetime;
@@ -59,36 +54,6 @@ public abstract class ThingCore extends AbstractThing implements Editable {
 
     fill = new ColorPart("fill", data);
     register("fill", fill);
-  }
-
-  /**
-   * reset the selection
-   */
-  protected abstract void clearSelection();
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void createEditor(final SurfaceData data, final SurfaceItemEditorBuilder builder, final Syncable parent) {
-    ThingEditor.buildUserInterface(document, data, this, builder, parent);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String id() {
-    return identity.getID();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  @Deprecated
-  public Edit metadataOf(final String key, final String defaultValue) {
-    return metadata.metadataOf(key, defaultValue);
   }
 
 }

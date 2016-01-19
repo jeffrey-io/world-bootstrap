@@ -78,13 +78,6 @@ public class TImage extends Thing {
    * {@inheritDoc}
    */
   @Override
-  protected void clearSelection() {
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   protected void describePossibleActions(final List<String> actions) {
   }
 
@@ -119,14 +112,6 @@ public class TImage extends Thing {
       gc.strokeRect(-img.getWidth() / 2.0, -img.getHeight() / 2.0, img.getWidth(), img.getHeight());
       gc.restore();
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected Object executeAction(final String action) {
-    return false;
   }
 
   /**

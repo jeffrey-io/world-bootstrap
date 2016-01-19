@@ -59,10 +59,10 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
   public void addThing(final Thing thing) {
     history.capture();
     things.add(thing);
-    thing.invoke("delete");
+    thing.invokeAction("delete", false);
     history.register(thing);
-    thing.invoke("undelete");
-    thing.invoke("select");
+    thing.invokeAction("undelete", false);
+    thing.invokeAction("select", false);
     history.capture();
   }
 
@@ -102,7 +102,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     history.capture();
     for (final Thing thing : things) {
       if (thing.selected()) {
-        thing.invoke("delete");
+        thing.invokeAction("delete", false);
       }
     }
     history.capture();
@@ -203,7 +203,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
       }
       final Thing thingToAdd = new ThingData(tdata).make(this);
       things.add(thingToAdd);
-      lookup.put(thingToAdd.id(), thingToAdd);
+      lookup.put(thingToAdd.getID(), thingToAdd);
     }
     history.load(tree.get("history"), lookup);
   }

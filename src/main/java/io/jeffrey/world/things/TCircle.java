@@ -55,13 +55,6 @@ public class TCircle extends Thing {
    * {@inheritDoc}
    */
   @Override
-  protected void clearSelection() {
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   protected void describePossibleActions(final List<String> actions) {
   }
 
@@ -93,14 +86,6 @@ public class TCircle extends Thing {
       gc.setLineWidth(4 / (scale.sx() + scale.sy()));
       gc.strokeArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected Object executeAction(final String action) {
-    return null;
   }
 
   /**

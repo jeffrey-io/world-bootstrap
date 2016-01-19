@@ -72,7 +72,7 @@ public class TConnector extends AbstractPointChain {
         pnt.y = to.y_1;
         cache.update();
         dirty = false;
-        link.value(currentThing.id());
+        link.value(currentThing.getID());
       }
     }
   }

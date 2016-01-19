@@ -20,6 +20,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.world.document.Document;
+import io.jeffrey.world.document.EditableThing;
 import io.jeffrey.world.document.Iconify;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryMouseInteractionTrapper;
@@ -209,12 +210,12 @@ public class WorldData extends SurfaceData {
     final double at_y = context.cursor_y;
     if (action == SurfaceAction.SelectAll) {
       for (final Thing thing : document.getThings()) {
-        thing.invoke("select");
+        thing.invokeAction("select", false);
       }
     }
     if (action == SurfaceAction.InverseSelection) {
       for (final Thing thing : document.getThings()) {
-        thing.invoke("inverse-selection");
+        thing.invokeAction("inverse-selection", false);
       }
     }
     final boolean onlySelected = action == SurfaceAction.ZoomSelection;
@@ -298,7 +299,7 @@ public class WorldData extends SurfaceData {
     for (final Thing thing : document.getThings()) {
       if (thing.selected()) {
         document.history.register(thing);
-        edits.add(thing);
+        edits.add(new EditableThing(document, thing));
       }
     }
     return edits;

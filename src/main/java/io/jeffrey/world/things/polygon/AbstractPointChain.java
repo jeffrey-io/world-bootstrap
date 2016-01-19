@@ -2,6 +2,7 @@ package io.jeffrey.world.things.polygon;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister5;
@@ -202,6 +203,16 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     vlock = node.getBoolean("vlock", false);
     chain = new PointChain(node.getString("points", "0,-1,1,1,-1,1").value());
     cache.update();
+    
+    editing.selected.subscribe(new BiConsumer<String, String>() {
+      
+      @Override
+      public void accept(String t, String u) {
+        if (u.equals("false")) {
+          clearSelectionOnPoints();
+        }
+      }
+    });
   }
 
   /**
@@ -214,11 +225,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void clearSelection() {
+  protected void clearSelectionOnPoints() {
     for (final SelectablePoint2 point : chain) {
       point.selected = false;
     }
@@ -269,10 +276,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     renderPolygon(document, gc);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
+  /*
   protected Object executeAction(final String action) {
     if ("self.center".equals(action)) {
       cache.center();
@@ -288,6 +292,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     }
     return false;
   }
+  */
 
   /**
    * {@inheritDoc}

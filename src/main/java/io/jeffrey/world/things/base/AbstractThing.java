@@ -207,6 +207,13 @@ public class AbstractThing {
     }
     return sharedActionSpace;
   }
+  
+  /**
+   * @return the name of the item
+   */
+  public String getName() {
+    return identity.name.value();
+  }
 
   /**
    * @return the unique id for the things

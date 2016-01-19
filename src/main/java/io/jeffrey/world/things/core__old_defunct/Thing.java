@@ -1,9 +1,6 @@
 package io.jeffrey.world.things.core__old_defunct;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import io.jeffrey.vector.VectorRegister3;
@@ -23,7 +20,6 @@ import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SelectionWindow.Mode;
-import io.jeffrey.zer.edits.Edit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -138,45 +134,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
   protected abstract void draw(GraphicsContext gc);
 
   /**
-   * execute an action
-   *
-   * @param action
-   *          the action to execute
-   */
-  protected abstract Object executeAction(String action);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<String> getActions() {
-    final ArrayList<String> actions = new ArrayList<>();
-    actions.addAll(getActionsAvailable());
-    describePossibleActions(actions);
-    return actions;
-  }
-
-  @Override
-  public Object invoke(final String action) {
-
-    if ("?".equals(action)) {
-      return getActions();
-    }
-
-    invokeAction(action);
-
-    if ("templatize".equals(action)) {
-      final HashMap<String, String> template = new HashMap<String, String>();
-      for (final Entry<String, Edit> link : getLinks(false).entrySet()) {
-        template.put(link.getKey(), link.getValue().getAsText());
-      }
-      document.templates.put(identity.name.getAsText(), template);
-      return true;
-    }
-    return executeAction(action);
-  }
-
-  /**
    * is the given point in the selection?
    *
    * @param document
@@ -209,7 +166,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    */
   public void preInteract(final AdjustedMouseEvent event) {
     if (!event.altdown) {
-      invokeAction("unselect");
+      invokeAction("unselect", false);
     }
   }
 

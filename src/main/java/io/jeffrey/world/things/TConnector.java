@@ -41,7 +41,6 @@ public class TConnector extends AbstractPointChain {
       W.set_0(pnt.x, pnt.y);
       transform.writeToWorldSpace(W);
       currentThing = document.selectFirstVisible(W.x_1, W.y_1);
-
       if (currentThing != null) {
         updateFast();
       } else {
@@ -55,6 +54,7 @@ public class TConnector extends AbstractPointChain {
         final PositionPart position = currentThing.first(PositionPart.class);
         if (position == null) {
           currentThing = null;
+          dirty = true;
           return;
         }
         to.set_0(position.x(), position.y());
@@ -87,30 +87,7 @@ public class TConnector extends AbstractPointChain {
     dirty = true;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void renderPolygon(final Document document, final GraphicsContext gc) {
-    if (cache.x.length == 0) {
-      return;
-    }
-    gc.setStroke(Color.valueOf(fill.color.getAsText()));
-    gc.beginPath();
-    final double s = 2.0 / (scale.sx() + scale.sy());
-    gc.setLineWidth(s);
-    gc.moveTo(cache.x[0], cache.y[0]);
-    for (int k = 1; k < cache.y.length; k++) {
-      gc.lineTo(cache.x[k], cache.y[k]);
-    }
-    gc.stroke();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void update() {
+  public void refresh() {
     if (dirty) {
       from.update(document);
       to.update(document);

@@ -6,6 +6,7 @@ import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.LazyPolygonPart;
+import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.parts.RenderPolygonPart;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,6 +44,7 @@ public class TPolygon extends AbstractPointChain {
     });
 
     register(new RenderPolygonPart(transform, document, points, list));
+    register(new RenderPathPart(transform, document, points, list));
   }
 
   /**
@@ -50,25 +52,6 @@ public class TPolygon extends AbstractPointChain {
    */
   protected boolean doesPolygonIntersectX(final Polygon p) {
     return Shape.intersect(p, polygon).getBoundsInLocal().getWidth() > 0;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void renderPolygon(final Document document, final GraphicsContext gc) {
-    if (cache == null) {
-      return;
-    }
-    gc.setFill(Color.valueOf(fill.color.getAsText()));
-    gc.fillPolygon(cache.x, cache.y, cache.y.length);
-    if (editing.selected.value() && cache.boundingRadiusForControls > 0) {
-      gc.setStroke(Color.RED);
-      gc.setLineWidth(2.0 / (scale.sx() + scale.sy()));
-      gc.moveTo(-cache.boundingRadiusForControls, 0);
-      gc.strokeArc(-cache.boundingRadiusForControls, -cache.boundingRadiusForControls, 2 * cache.boundingRadiusForControls, 2 * cache.boundingRadiusForControls, 0, 3601, ArcType.ROUND);
-      gc.strokePolygon(cache.x, cache.y, cache.y.length);
-    }
   }
 
   /**

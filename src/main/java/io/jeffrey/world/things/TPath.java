@@ -24,30 +24,4 @@ public class TPath extends AbstractPointChain {
     super(document, node);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void renderPolygon(final Document document, final GraphicsContext gc) {
-    if (cache.x.length == 0) {
-      return;
-    }
-    gc.setStroke(Color.valueOf(fill.color.getAsText()));
-    gc.beginPath();
-    final double s = 2.0 / (scale.sx() + scale.sy());
-    gc.setLineWidth(s);
-    gc.moveTo(cache.x[0], cache.y[0]);
-    for (int k = 1; k < cache.y.length; k++) {
-      gc.lineTo(cache.x[k], cache.y[k]);
-    }
-    gc.stroke();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void update() {
-  }
-
 }

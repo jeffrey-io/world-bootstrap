@@ -21,7 +21,9 @@ import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.LayerPart;
+import io.jeffrey.world.things.parts.LifetimePart;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.ObjectDataMap;
@@ -246,10 +248,17 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
   public int populateBounds(final VectorRegister2 reg, final boolean onlySelected) {
     int n = 0;
     for (final Thing thing : things) {
-      if (thing.deleted()) {
+      final EditingPart editing = thing.first(EditingPart.class);
+      final LifetimePart lifetime = thing.first(LifetimePart.class);
+
+      boolean selected = false;
+      if (editing != null) {
+        selected = editing.selected.value();
+      }
+      if (lifetime != null && lifetime.isDeleted()) {
         continue;
       }
-      if (!thing.selected() && onlySelected) {
+      if (!selected && onlySelected) {
         continue;
       }
       for (final HasControlDoodadsInThingSpace space1 : thing.collect(HasControlDoodadsInThingSpace.class)) {

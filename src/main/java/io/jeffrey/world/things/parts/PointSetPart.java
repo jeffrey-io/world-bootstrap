@@ -18,9 +18,9 @@ import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
-import io.jeffrey.world.things.polygon.SelectablePoint2;
-import io.jeffrey.world.things.polygon.Vertex;
-import io.jeffrey.world.things.polygon.VertexMover;
+import io.jeffrey.world.things.points.EventedPoint2;
+import io.jeffrey.world.things.points.EventedPoint2Mover;
+import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.Syncable;
@@ -80,16 +80,65 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
   @Override
   public void act(final String action, final SharedActionSpace space) {
+    if ("apply_scale_to_points_reset_scale".equals(action)) {
+      apply_scale_to_points_reset_scale();
+    }
+    if ("center_points_internally".equals(action)) {
+      center_points_internally();
+    }
   }
 
+  private void apply_scale_to_points_reset_scale() {
+    update();
+    final double mx = scale.sx();
+    final double my = scale.sy();
+    scale.sx(1.0);
+    scale.sy(1.0);
+    if (cache.inlineXYPairs.length == 0) {
+      return;
+    }
+    for (final SelectablePoint2 p : getSelectablePoints()) {
+      p.x *= mx;
+      p.y *= my;
+    }
+    update();
+    dirty();
+  }
+
+  @Deprecated
   public abstract SelectablePoint2 at(int k);
 
   @Override
   public void cache() {
-    for (int k = 0; k < getNumberOfPoints(); k++) {
-      final SelectablePoint2 p = at(k);
+    for (final SelectablePoint2 p : getSelectablePoints()) {
       p.alreadySelected = p.selected;
     }
+  }
+
+  private void center_points_internally() {
+    update();
+    if (cache.inlineXYPairs.length == 0) {
+      return;
+    }
+    double cx = 0;
+    double cy = 0;
+    int n = 0;
+    for (final SelectablePoint2 p : getSelectablePoints()) {
+      cx += p.x;
+      cy += p.y;
+      n++;
+    }
+    if (n == 0) {
+      return; // should be impossible
+    }
+    cx /= n;
+    cy /= n;
+    for (final SelectablePoint2 p : getSelectablePoints()) {
+      p.x -= cx;
+      p.y -= cy;
+    }
+    // TODO: figure out how to translate the parent by a meaningful amount
+    dirty();
   }
 
   @Override
@@ -105,9 +154,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
     if (document != null) {
-      final int n = getNumberOfPoints();
-      for (int k = 0; k < n; k++) {
-        final SelectablePoint2 point = at(k);
+      for (final SelectablePoint2 point : getSelectablePoints()) {
         if (point.selected) {
           W.set_0(point.x, point.y);
           transform.writeToWorldSpace(W);
@@ -139,11 +186,10 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     return doodads;
   }
 
+  @Deprecated
   public abstract int getNumberOfPoints();
 
-  public boolean hasStandardControls() {
-    return true;
-  }
+  public abstract Iterable<SelectablePoint2> getSelectablePoints();
 
   public void invalidateNow() {
     dirty();
@@ -154,9 +200,8 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     boolean all = true;
     boolean any = false;
-    final int n = getNumberOfPoints();
-    for (int k = 0; k < n; k++) {
-      final SelectablePoint2 point = at(k);
+
+    for (final SelectablePoint2 point : getSelectablePoints()) {
       if (!point.selected) {
         all = false;
       } else {
@@ -171,16 +216,17 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
     final Syncable sync = () -> dirty();
 
-    for (int k = 0; k < n; k++) {
-      final SelectablePoint2 point = at(k);
+    for (final SelectablePoint2 point : getSelectablePoints()) {
       if (point.selected) {
-        interactions.add(new VertexMover(new Vertex(point, sync), event));
+        interactions.add(new EventedPoint2Mover(new EventedPoint2(point, sync), event));
       }
     }
   }
 
   @Override
   public void list(final Set<String> actionsAvailable) {
+    actionsAvailable.add("apply_scale_to_points_reset_scale");
+    actionsAvailable.add("center_points_internally");
   }
 
   @Override
@@ -226,8 +272,8 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       return;
     }
     final int n = getNumberOfPoints();
-    final boolean canScale = !scale.lock.value();
-    final boolean canRotate = !rotation.lock.value();
+    final boolean canScale = scale != null && !scale.lock.value();
+    final boolean canRotate = rotation != null && !rotation.lock.value();
     final int doff = lock.value() ? 0 : n;
     final int ds = doff + (canScale ? 4 : 0) + (canRotate ? 4 : 0);
     ensureCapacityIsCorrect(n, ds);

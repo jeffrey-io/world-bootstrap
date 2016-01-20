@@ -1,7 +1,6 @@
 package io.jeffrey.world.things;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
@@ -117,13 +116,6 @@ public class TPolygon extends AbstractPointChain {
       gc.strokeArc(-cache.boundingRadiusForControls, -cache.boundingRadiusForControls, 2 * cache.boundingRadiusForControls, 2 * cache.boundingRadiusForControls, 0, 3601, ArcType.ROUND);
       gc.strokePolygon(cache.x, cache.y, cache.y.length);
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void saveOutPolygonalProperties(final Map<String, Object> object) {
   }
 
   /**

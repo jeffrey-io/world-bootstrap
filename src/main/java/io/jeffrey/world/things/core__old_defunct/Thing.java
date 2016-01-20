@@ -1,17 +1,13 @@
 package io.jeffrey.world.things.core__old_defunct;
 
-import java.util.List;
-
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.CanRenderInWorldSpace;
 import io.jeffrey.world.things.behaviors.EmitsColor;
-import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.MousePart;
 import io.jeffrey.world.things.interactions.ThingInteraction;
@@ -20,14 +16,11 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SelectionWindow;
-import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 
-public abstract class Thing extends ThingCore implements HasControlDoodadsInThingSpace {
-  private final MousePart                     defaultMouseInteraction;
-  public AdaptThingSpaceDoodadsIntoWorldSpace doodadCache;
+public abstract class Thing extends ThingCore {
+  private final MousePart defaultMouseInteraction;
 
   /**
    * does the thing the given (x,y) point in world space
@@ -38,7 +31,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    *          the y-coordinate
    * @return whether or not point is in the thing
    */
-  VectorRegister3                             threadUnsafeContainmentScratch = new VectorRegister8();
+  VectorRegister3         threadUnsafeContainmentScratch = new VectorRegister8();
 
   /**
    * @param document
@@ -48,18 +41,8 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
    */
   protected Thing(final Document document, final ThingData node) {
     super(document, node);
-
-    defaultMouseInteraction = new MousePart(this, transform) {
-
-      @Override
-      protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
-        return Thing.this.startTargetAdjustedInteraction(event);
-      }
-    };
-
+    defaultMouseInteraction = new MousePart(this, transform);
     register("mouse", defaultMouseInteraction);
-
-    doodadCache = new AdaptThingSpaceDoodadsIntoWorldSpace(transform, this);
   }
 
   /**
@@ -82,18 +65,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     }
     return false;
   }
-
-  public boolean deleted() {
-    return lifetime.isDeleted();
-  }
-
-  /**
-   * What are the possible no-argument actions that are available
-   *
-   * @param actions
-   *          where to accumulate actions
-   */
-  protected abstract void describePossibleActions(List<String> actions);
 
   public Transform getTransform() {
     return transform;
@@ -160,14 +131,7 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
     for (final CanRenderInWorldSpace renderer : collect(CanRenderInWorldSpace.class)) {
       renderer.render(gc);
     }
-
   }
-
-  /**
-   * @param p
-   * @return does the given polygon intersect this thing
-   */
-  protected abstract boolean selectionIntersect(Polygon p, Mode mode);
 
   /**
    * start a new interaction
@@ -194,8 +158,6 @@ public abstract class Thing extends ThingCore implements HasControlDoodadsInThin
 
     return new ThingInteractionToMouseIteractionAdapter(document.history, interaction, transform);
   }
-
-  protected abstract ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event);
 
   /**
    * convert the given (_x,_y) at vector 0 in world space into target space and write to vector 1 (vector 2 is used as scratch space)

@@ -1,15 +1,15 @@
 package io.jeffrey.world.things;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
-import io.jeffrey.world.things.polygon.SelectablePoint2;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.canvas.GraphicsContext;
@@ -34,7 +34,7 @@ public class TConnector extends AbstractPointChain {
     private final String           name;
     private final SelectablePoint2 pnt;
 
-    public LockedVertex(final SelectablePoint2 pnt, final ThingData node, final String name) {
+    public LockedVertex(final SelectablePoint2 pnt, final LinkedDataMap node, final String name) {
       link = node.getString(name, "");
       this.pnt = pnt;
       currentThing = null;
@@ -43,10 +43,6 @@ public class TConnector extends AbstractPointChain {
 
     private void addEditLink(final HashMap<String, Edit> links) {
       links.put(name, link);
-    }
-
-    private void saveOutChild(final Map<String, Object> object) {
-      object.put(name, link.value());
     }
 
     private void update(final Document document) {
@@ -88,8 +84,8 @@ public class TConnector extends AbstractPointChain {
    */
   public TConnector(final Document document, final ThingData node) {
     super(document, node);
-    from = new LockedVertex(chain.at(0), node, "from");
-    to = new LockedVertex(chain.at(1), node, "to");
+    from = new LockedVertex(chain.at(0), data, "from");
+    to = new LockedVertex(chain.at(1), data, "to");
     points.invalidateNow();
     dirty = true;
   }
@@ -168,15 +164,6 @@ public class TConnector extends AbstractPointChain {
       gc.lineTo(cache.x[k], cache.y[k]);
     }
     gc.stroke();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void saveOutPolygonalProperties(final Map<String, Object> object) {
-    from.saveOutChild(object);
-    to.saveOutChild(object);
   }
 
   /**

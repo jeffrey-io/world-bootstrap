@@ -2,9 +2,9 @@ package io.jeffrey.world.things.polygon.actions;
 
 import java.util.Random;
 
+import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.polygon.PointAddition;
 import io.jeffrey.world.things.polygon.PointChain;
-import io.jeffrey.world.things.polygon.SelectablePoint2;
 
 /**
  * Split an edge in two

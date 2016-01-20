@@ -35,6 +35,10 @@ public class LazyPolygonPart implements Part, IsSelectable {
     return contains(event.position.x_1, event.position.y_1);
   }
 
+  public final Polygon get() {
+    return polygon;
+  }
+
   @Override
   public void list(final Set<String> actionsAvailable) {
   }

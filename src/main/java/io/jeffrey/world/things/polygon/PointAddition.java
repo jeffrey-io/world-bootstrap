@@ -2,6 +2,8 @@ package io.jeffrey.world.things.polygon;
 
 import java.util.ArrayList;
 
+import io.jeffrey.world.things.points.SelectablePoint2;
+
 /**
  * Add a bunch of points
  *

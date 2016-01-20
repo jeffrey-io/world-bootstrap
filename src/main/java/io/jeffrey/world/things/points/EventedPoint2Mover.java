@@ -1,18 +1,18 @@
-package io.jeffrey.world.things.polygon;
+package io.jeffrey.world.things.points;
 
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
 /**
- * move a vertex
+ * update an point by moving it by some difference
  *
  * @author jeffrey
  */
-public class VertexMover implements ThingInteraction {
+public class EventedPoint2Mover implements ThingInteraction {
 
-  private final double ix;
-  private final double iy;
-  private final Vertex vertex;
+  private final double        ix;
+  private final double        iy;
+  private final EventedPoint2 vertex;
 
   /**
    * @param vertex
@@ -20,7 +20,7 @@ public class VertexMover implements ThingInteraction {
    * @param initial
    *          the initial event in thing space
    */
-  public VertexMover(final Vertex vertex, final AdjustedMouseEvent initial) {
+  public EventedPoint2Mover(final EventedPoint2 vertex, final AdjustedMouseEvent initial) {
     this.vertex = vertex;
     ix = initial.position.x_1;
     iy = initial.position.y_1;
@@ -39,7 +39,7 @@ public class VertexMover implements ThingInteraction {
    */
   @Override
   public void moved(final AdjustedMouseEvent event) {
-    vertex.update(event.position.x_1 - ix, event.position.y_1 - iy);
+    vertex.setChange(event.position.x_1 - ix, event.position.y_1 - iy);
   }
 
 }

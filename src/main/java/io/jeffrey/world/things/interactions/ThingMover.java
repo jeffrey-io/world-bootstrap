@@ -10,9 +10,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  * @author jeffrey
  */
 public class ThingMover implements ThingInteraction {
-
   private final double       angle;
-
   private final double       ix;
   private final double       iy;
   private final PositionPart position;
@@ -29,7 +27,12 @@ public class ThingMover implements ThingInteraction {
     y = position.y();
     ix = initial.position.x_0;
     iy = initial.position.y_0;
-    angle = rotation.angle();
+    if (rotation != null) {
+      // we need to capture the angle due to guide line enforcement
+      angle = rotation.angle();
+    } else {
+      angle = 0;
+    }
     this.position = position;
     this.rotation = rotation;
   }
@@ -41,7 +44,9 @@ public class ThingMover implements ThingInteraction {
   public void cancel() {
     position.x(x);
     position.y(y);
-    rotation.angle(angle);
+    if (rotation != null) {
+      rotation.angle(angle);
+    }
   }
 
   /**
@@ -51,7 +56,9 @@ public class ThingMover implements ThingInteraction {
   public void moved(final AdjustedMouseEvent event) {
     position.x(x + event.position.x_0 - ix);
     position.y(y + event.position.y_0 - iy);
-    rotation.angle(angle);
+    if (rotation != null) {
+      rotation.angle(angle);
+    }
   }
 
 }

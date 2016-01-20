@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.polygon;
+package io.jeffrey.world.things.points;
 
 /**
  * a very simple mutable point in two space
@@ -7,7 +7,7 @@ package io.jeffrey.world.things.polygon;
  */
 public class SelectablePoint2 {
   /**
-   * was the point already selected
+   * was the point already selected; this enables selection caching
    */
   public boolean alreadySelected = false;
 

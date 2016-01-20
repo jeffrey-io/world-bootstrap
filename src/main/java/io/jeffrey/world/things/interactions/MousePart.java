@@ -22,6 +22,7 @@ import io.jeffrey.world.things.enforcer.SerialEnforcer;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.LifetimePart;
+import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
 import io.jeffrey.zer.AdjustedMouseEvent;
@@ -30,12 +31,13 @@ import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.meta.GuideLine;
 import javafx.scene.shape.Polygon;
 
-public abstract class MousePart implements Part, CanBeSelectedByWindow {
+public class MousePart implements Part, CanBeSelectedByWindow {
 
   private final EditingPart   editing;
 
   private final LayerPart     layer;
   private final LifetimePart  lifetime;
+  private final PositionPart  position;
   private final RotationPart  rotation;
   private final ScalePart     scale;
   private boolean             selectedPriorSelectionWindow;
@@ -48,6 +50,7 @@ public abstract class MousePart implements Part, CanBeSelectedByWindow {
     this.transform = transform;
     editing = thing.first(EditingPart.class);
     scale = thing.first(ScalePart.class);
+    position = thing.first(PositionPart.class);
     rotation = thing.first(RotationPart.class);
     layer = thing.first(LayerPart.class);
     lifetime = thing.first(LifetimePart.class);
@@ -163,7 +166,14 @@ public abstract class MousePart implements Part, CanBeSelectedByWindow {
     return interaction;
   }
 
-  protected abstract ThingInteraction startTargetAdjustedInteraction(AdjustedMouseEvent event);
+  private ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
+    for (final IsSelectable isSelectable : thing.collect(IsSelectable.class)) {
+      if (isSelectable.doesMouseEventPreserveExistingSelection(event)) {
+        return new ThingMover(event, position, rotation);
+      }
+    }
+    return null;
+  }
 
   @Override
   public void update() {

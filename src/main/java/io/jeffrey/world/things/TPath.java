@@ -1,7 +1,6 @@
 package io.jeffrey.world.things;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
@@ -100,13 +99,6 @@ public class TPath extends AbstractPointChain {
       gc.lineTo(cache.x[k], cache.y[k]);
     }
     gc.stroke();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void saveOutPolygonalProperties(final Map<String, Object> object) {
   }
 
   /**

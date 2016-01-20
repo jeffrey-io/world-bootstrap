@@ -1,18 +1,18 @@
 package io.jeffrey.world.things.polygon;
 
-import java.util.List;
-
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister5;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.parts.PointSetPart;
 import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
+import io.jeffrey.world.things.points.EventedPoint2;
+import io.jeffrey.world.things.points.EventedPoint2Mover;
+import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.Syncable;
@@ -33,20 +33,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    *
    * @author jeffrey
    */
-  /*
-   * public class VertexCache { public double[] inlineXYPairs; private boolean myvlock = false; public double[] x; public double[] y;
-   *
-   * public VertexCache() { inlineXYPairs = new double[0]; x = new double[0]; y = new double[0];
-   *
-   * }
-   *
-   * private void apply_scale() { final double mx = scale.sx(); final double my = scale.sy(); scale.sx(1.0); scale.sy(1.0); if (inlineXYPairs.length == 0) { return; } for (final SelectablePoint2 p : chain) { p.x *= mx; p.y *= my; } update(); }
-   *
-   * private void center() { if (inlineXYPairs.length == 0) { return; } double cx = 0; double cy = 0; final int n = chain.size(); for (int k = 0; k < n; k++) { final SelectablePoint2 p = chain.at(k); cx += p.x; cy += p.y; } cx /= n; cy /= n; for (int k = 0; k < n; k++) { final SelectablePoint2 p = chain.at(k); p.x -= cx; p.y -= cy; } // TODO: figure out the math about how to translate the parent object update(); }
-   *
-   * public void update() { onCacheUpdated(); } }
-   */
-
   protected final PointChain   chain;
   protected final PointSetPart points;
 
@@ -61,6 +47,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     chain = new PointChain(node.getString("points", "0,-1,1,1,-1,1").value());
 
     points = new PointSetPart(data, document, transform, position, scale, rotation) {
+
       @Override
       public SelectablePoint2 at(final int k) {
         return chain.at(k);
@@ -69,6 +56,11 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       @Override
       public int getNumberOfPoints() {
         return chain.size();
+      }
+
+      @Override
+      public Iterable<SelectablePoint2> getSelectablePoints() {
+        return chain;
       }
     };
     points.subscribe(c -> {
@@ -94,15 +86,9 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   /**
    * {@inheritDoc}
    */
-  @Override
-  protected void describePossibleActions(final List<String> actions) {
-    if (areTheNumberOfPointsFixed()) {
-      return;
-    }
-    actions.add("apply.scale");
-    actions.add("self.center");
-    chain.describePossibleActionsBasedOnSelectedVertices(actions, isPolygonLooped());
-  }
+  /*
+   * @Override protected void describePossibleActions(final List<String> actions) { if (areTheNumberOfPointsFixed()) { return; } actions.add("apply.scale"); actions.add("self.center"); chain.describePossibleActionsBasedOnSelectedVertices(actions, isPolygonLooped()); }
+   */
 
   protected void draw(final GraphicsContext gc) {
     points.update();
@@ -113,15 +99,6 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    * protected Object executeAction(final String action) { if ("self.center".equals(action)) { cache.center(); return true; } if ("apply.scale".equals(action)) { cache.apply_scale(); return true; } if (chain.act(action, isPolygonLooped(), document, this)) { cache.update(); return true; } return false; }
    */
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public ControlDoodad[] getDoodadsInThingSpace() {
-    points.update();
-    return points.getDoodadsInThingSpace();
-  }
-
   /*
    * protected void populateLinks(final HashMap<String, Edit> links) { pointsEditList.edits.clear(); cache.update(); int index = 0; for (final SelectablePoint2 p : chain) { pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true)); pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false)); index++; } links.put("points", pointsEditList); populatePolygonalEditLinks(links); }
    */
@@ -129,8 +106,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   /**
    * {@inheritDoc}
    */
-  @Override
-  protected boolean selectionIntersect(final Polygon p, final Mode mode) {
+  protected boolean selectionIntersectXX(final Polygon p, final Mode mode) {
     boolean doUpdate = false;
     boolean isSelected = doesPolygonIntersect(p);
     boolean anySelected = false;
@@ -163,8 +139,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   /**
    * {@inheritDoc}
    */
-  @Override
-  protected ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
+  protected ThingInteraction startTargetAdjustedInteractionX(final AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
 
     for (final SelectablePoint2 point : chain) {
@@ -172,7 +147,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       writeToWorld(W);
       if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
         point.selected = true;
-        return new VertexMover(new Vertex(point, this), event);
+        return new EventedPoint2Mover(new EventedPoint2(point, this), event);
       }
     }
     if (allowEdgeSelect() && !points.lock.value()) {
@@ -199,7 +174,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
           if (event.doodadDistance(reg.x_0, reg.y_0) <= document.edgeWidthSize) {
             begin.selected = true;
             end.selected = true;
-            return new EdgeMover(new Vertex(begin, this), new Vertex(end, this), event);
+            return new EdgeMover(new EventedPoint2(begin, this), new EventedPoint2(end, this), event);
           }
         }
       }

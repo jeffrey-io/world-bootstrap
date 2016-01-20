@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.polygon;
+package io.jeffrey.world.things.points;
 
 import io.jeffrey.zer.Syncable;
 
@@ -8,13 +8,13 @@ import io.jeffrey.zer.Syncable;
  * @author jeffrey
  *
  */
-public class Vertex {
+public class EventedPoint2 {
   private final SelectablePoint2 point;
   private final Syncable         sync;
   public final double            x;
   public final double            y;
 
-  public Vertex(final SelectablePoint2 point, final Syncable sync) {
+  public EventedPoint2(final SelectablePoint2 point, final Syncable sync) {
     x = point.x;
     y = point.y;
     this.point = point;
@@ -22,10 +22,10 @@ public class Vertex {
   }
 
   public void reset() {
-    update(x, y);
+    setChange(0, 0);
   }
 
-  public void update(final double dx, final double dy) {
+  public void setChange(final double dx, final double dy) {
     point.x = x + dx;
     point.y = y + dy;
     sync.sync();

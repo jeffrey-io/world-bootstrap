@@ -6,8 +6,8 @@ import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.polygon.PointChain;
-import io.jeffrey.world.things.polygon.SelectablePoint2;
 
 public class NormalGrowth {
 

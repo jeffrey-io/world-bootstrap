@@ -2,9 +2,9 @@ package io.jeffrey.world.things.polygon.actions;
 
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.vector.math.Lines;
+import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.polygon.PointAddition;
 import io.jeffrey.world.things.polygon.PointChain;
-import io.jeffrey.world.things.polygon.SelectablePoint2;
 
 /**
  * This will attempt to smooth the polygon

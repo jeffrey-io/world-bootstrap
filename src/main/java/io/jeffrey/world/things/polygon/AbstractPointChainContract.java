@@ -1,7 +1,6 @@
 package io.jeffrey.world.things.polygon;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
@@ -72,12 +71,4 @@ public abstract class AbstractPointChainContract extends Thing implements HasEdg
    *          the graphics context where images are placed
    */
   protected abstract void renderPolygon(final Document document, final GraphicsContext gc);
-
-  /**
-   * write the specific polygonal properties out to disk
-   *
-   * @param object
-   *          the map containing all the objects to be put to disk/network
-   */
-  protected abstract void saveOutPolygonalProperties(Map<String, Object> object);
 }

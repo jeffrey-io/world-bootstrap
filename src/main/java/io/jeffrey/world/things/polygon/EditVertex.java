@@ -1,5 +1,6 @@
 package io.jeffrey.world.things.polygon;
 
+import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.zer.edits.Edit;
 
 /**
@@ -8,10 +9,10 @@ import io.jeffrey.zer.edits.Edit;
  * @author jeffrey
  */
 public class EditVertex extends Edit {
-  private final boolean isEditingX;
-  private final String  name;
-  private final double  value;
-  private final Vertex  vertex;
+  private final boolean       isEditingX;
+  private final String        name;
+  private final double        value;
+  private final EventedPoint2 vertex;
 
   /**
    * @param index
@@ -21,7 +22,7 @@ public class EditVertex extends Edit {
    * @param isEditingX
    *          are we editing the x coordinate as opposed to the y coordinate
    */
-  public EditVertex(final int index, final Vertex vertex, final boolean isEditingX) {
+  public EditVertex(final int index, final EventedPoint2 vertex, final boolean isEditingX) {
     name = Integer.toString(index);
     this.vertex = vertex;
     this.isEditingX = isEditingX;
@@ -52,9 +53,9 @@ public class EditVertex extends Edit {
     try {
       final double nv = Double.parseDouble(z);
       if (isEditingX) {
-        vertex.update(nv - value, 0);
+        vertex.setChange(nv - value, 0);
       } else {
-        vertex.update(0, nv - value);
+        vertex.setChange(0, nv - value);
       }
       return true;
     } catch (final NumberFormatException nfe) {

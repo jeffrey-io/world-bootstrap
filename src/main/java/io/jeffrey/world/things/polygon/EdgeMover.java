@@ -1,6 +1,8 @@
 package io.jeffrey.world.things.polygon;
 
 import io.jeffrey.world.things.interactions.ThingInteraction;
+import io.jeffrey.world.things.points.EventedPoint2;
+import io.jeffrey.world.things.points.EventedPoint2Mover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
 /**
@@ -9,8 +11,8 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  * @author jeffrey
  */
 public class EdgeMover implements ThingInteraction {
-  private final VertexMover a;
-  private final VertexMover b;
+  private final EventedPoint2Mover a;
+  private final EventedPoint2Mover b;
 
   /**
    * @param v0
@@ -20,9 +22,9 @@ public class EdgeMover implements ThingInteraction {
    * @param initial
    *          the initial event in thing space
    */
-  public EdgeMover(final Vertex v0, final Vertex v1, final AdjustedMouseEvent initial) {
-    a = new VertexMover(v0, initial);
-    b = new VertexMover(v1, initial);
+  public EdgeMover(final EventedPoint2 v0, final EventedPoint2 v1, final AdjustedMouseEvent initial) {
+    a = new EventedPoint2Mover(v0, initial);
+    b = new EventedPoint2Mover(v1, initial);
   }
 
   /**

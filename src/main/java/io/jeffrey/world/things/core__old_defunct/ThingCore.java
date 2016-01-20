@@ -8,7 +8,6 @@ import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.parts.ColorPart;
 import io.jeffrey.world.things.parts.DoodadRenderPart;
 import io.jeffrey.world.things.parts.LayerPart;
-import io.jeffrey.world.things.parts.LifetimePart;
 import io.jeffrey.world.things.parts.MetadataPart;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
@@ -17,7 +16,6 @@ import io.jeffrey.world.things.parts.ScalePart;
 public abstract class ThingCore extends AbstractThing {
   protected final ColorPart    fill;
   protected final LayerPart    layer;
-  protected final LifetimePart lifetime;
   protected final MetadataPart metadata;
   protected final PositionPart position;
   protected final RotationPart rotation;
@@ -50,13 +48,14 @@ public abstract class ThingCore extends AbstractThing {
     metadata = new MetadataPart("metadata_", data);
     register("metadata", metadata);
 
-    lifetime = new LifetimePart(data);
-    register("lifetime", lifetime);
-
     fill = new ColorPart("fill", data);
     register("fill", fill);
 
     register("render", new DoodadRenderPart(this, transform));
   }
 
+  @Override
+  public Transform transform() {
+    return transform;
+  }
 }

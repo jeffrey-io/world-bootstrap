@@ -15,15 +15,18 @@ import org.codehaus.jackson.JsonNode;
 import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
+import io.jeffrey.world.AbstractThingHelpers;
 import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
+import io.jeffrey.world.things.behaviors.CanRenderInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.LifetimePart;
+import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.ObjectDataMap;
@@ -104,8 +107,8 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 
   public void deleteSelection() {
     history.capture();
-    for (final Thing thing : things) {
-      if (thing.selected()) {
+    for (final AbstractThing thing : things) {
+      if (thing.editing.selected.value()) {
         thing.invokeAction("delete", false);
       }
     }
@@ -128,8 +131,13 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
       gc.strokeLine(seg.x_0, seg.y_0, seg.x_1, seg.y_1);
     }
     gc.restore();
-    for (final Thing thing : getThings()) {
-      thing.render(gc, camera);
+    for (final AbstractThing thing : getThings()) {
+      final LifetimePart lifetime = thing.first(LifetimePart.class);
+      if (lifetime != null && !lifetime.isDeleted()) {
+        for (final CanRenderInWorldSpace renderer : thing.collect(CanRenderInWorldSpace.class)) {
+          renderer.render(gc);
+        }
+      }
     }
     final double left = camera.projX(controlPointSize);
     final double top = camera.projY(controlPointSize);
@@ -168,7 +176,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     return new HashSet<>();
   }
 
-  public ArrayList<Thing> getThings() {
+  public ArrayList<AbstractThing> getThings() {
     return things;
   }
 
@@ -247,7 +255,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 
   public int populateBounds(final VectorRegister2 reg, final boolean onlySelected) {
     int n = 0;
-    for (final Thing thing : things) {
+    for (final AbstractThing thing : things) {
       final EditingPart editing = thing.first(EditingPart.class);
       final LifetimePart lifetime = thing.first(LifetimePart.class);
 
@@ -262,7 +270,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
         continue;
       }
       for (final HasControlDoodadsInThingSpace space1 : thing.collect(HasControlDoodadsInThingSpace.class)) {
-        final AdaptThingSpaceDoodadsIntoWorldSpace space2 = new AdaptThingSpaceDoodadsIntoWorldSpace(thing.getTransform(), space1);
+        final AdaptThingSpaceDoodadsIntoWorldSpace space2 = new AdaptThingSpaceDoodadsIntoWorldSpace(thing.transform(), space1);
         for (final ControlDoodad doodad : space2.getDoodadsInWorldSpace()) {
           if (n == 0) {
             reg.set_0(doodad.u, doodad.v);
@@ -281,11 +289,11 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
   }
 
   public Color query(final double x, final double y, final Thing skip) {
-    for (final Thing thing : things) {
+    for (final AbstractThing thing : things) {
       if (thing == skip) {
         continue;
       }
-      final Color color = thing.query(x, y);
+      final Color color = AbstractThingHelpers.query(thing, x, y);
       if (color != null) {
         return color;
       }
@@ -310,7 +318,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     tree.put("metaclasses", metaClassesPacked);
 
     final ArrayList<Object> store = new ArrayList<Object>();
-    for (final Thing t : things) {
+    for (final AbstractThing t : things) {
       final HashMap<String, String> tdata = new HashMap<String, String>();
       t.saveTo(tdata);
       store.add(tdata);
@@ -319,9 +327,9 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     Files.write(Paths.get(file.toURI()), mapper.writeValueAsBytes(tree));
   }
 
-  public Thing selectFirstVisible(final double x, final double y) {
-    for (final Thing thing : things) {
-      if (thing.contains(x, y)) {
+  public AbstractThing selectFirstVisible(final double x, final double y) {
+    for (final AbstractThing thing : things) {
+      if (AbstractThingHelpers.contains(thing, x, y)) {
         return thing;
       }
     }
@@ -333,10 +341,11 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     double x = 0;
     double y = 0;
     int c = 0;
-    for (final Thing t : things) {
-      if (t.selected()) {
-        x += t.x();
-        y += t.y();
+    for (final AbstractThing t : things) {
+      final PositionPart position = t.first(PositionPart.class);
+      if (t.editing.selected.value() && position != null) {
+        x += position.x();
+        y += position.y();
         c++;
       }
     }
@@ -345,12 +354,13 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     }
     x /= c;
     y /= c;
-    for (final Thing t : things) {
-      if (t.selected()) {
+    for (final AbstractThing t : things) {
+      final PositionPart position = t.first(PositionPart.class);
+      if (t.editing.selected.value() && position != null) {
         final HashMap<String, String> tdata = new HashMap<String, String>();
         t.saveTo(tdata);
-        tdata.put("x", Double.toString(t.x() - x));
-        tdata.put("y", Double.toString(t.y() - y));
+        tdata.put("x", Double.toString(position.x() - x));
+        tdata.put("y", Double.toString(position.y() - y));
         store.add(tdata);
       }
     }
@@ -381,8 +391,8 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
 
   public void update() {
     hasSomeSelection = false;
-    for (final Thing thing : things) {
-      if (thing.selected()) {
+    for (final AbstractThing thing : things) {
+      if (thing.editing.selected.value()) {
         hasSomeSelection = true;
       }
       thing.update();

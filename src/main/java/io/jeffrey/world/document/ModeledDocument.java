@@ -12,7 +12,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import io.jeffrey.world.document.history.History;
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.LayerProperties;
@@ -35,7 +34,7 @@ public class ModeledDocument implements Model {
   public final Notifications                    notifications;
   public final Map<String, Map<String, String>> templates;
 
-  protected final ArrayList<Thing>              things;
+  protected final ArrayList<AbstractThing>      things;
 
   public ModeledDocument() {
     history = new History();
@@ -55,7 +54,7 @@ public class ModeledDocument implements Model {
   @Override
   public void begin() {
     cachedModel.clear();
-    for (final Thing thing : things) {
+    for (final AbstractThing thing : things) {
       history.register(thing);
       cachedModel.put(thing.getID(), thing.getLinks(false));
     }

@@ -109,7 +109,7 @@ public class TPolygon extends AbstractPointChain {
     }
     gc.setFill(Color.valueOf(fill.color.getAsText()));
     gc.fillPolygon(cache.x, cache.y, cache.y.length);
-    if (selected() && cache.boundingRadiusForControls > 0) {
+    if (editing.selected.value() && cache.boundingRadiusForControls > 0) {
       gc.setStroke(Color.RED);
       gc.setLineWidth(2.0 / (scale.sx() + scale.sy()));
       gc.moveTo(-cache.boundingRadiusForControls, 0);

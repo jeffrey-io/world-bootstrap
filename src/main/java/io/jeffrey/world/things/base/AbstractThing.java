@@ -15,15 +15,17 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.IdentityPart;
+import io.jeffrey.world.things.parts.LifetimePart;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.ObjectDataMap;
 
-public class AbstractThing {
+public abstract class AbstractThing {
   protected final LinkedDataMap                  data;
 
   public final Document                          document;
-  protected final EditingPart                    editing;
-  protected final IdentityPart                   identity;
+  public final EditingPart                       editing;
+  public final IdentityPart                      identity;
+  public final LifetimePart                      lifetime;
   private final HashMap<String, ArrayList<Part>> parts;
   private long                                   sequencer;
 
@@ -38,9 +40,11 @@ public class AbstractThing {
     data = new LinkedDataMap(node);
     parts = new HashMap<>();
     identity = new IdentityPart(data);
-    register("identity", identity);
+    register("required", identity);
     editing = new EditingPart(data);
-    register("editing", editing);
+    register("required", editing);
+    lifetime = new LifetimePart(data);
+    register("required", lifetime);
     sequencer = 0;
   }
 
@@ -272,12 +276,7 @@ public class AbstractThing {
     }
   }
 
-  /**
-   * @return is the thing selected?
-   */
-  public boolean selected() {
-    return editing.selected.value();
-  }
+  public abstract Transform transform();
 
   /**
    * invoke update on all the parts

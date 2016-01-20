@@ -48,7 +48,7 @@ public class NormalGrowth {
           reg.add_0_to_1();
 
           W.set_0(reg.x_1, reg.y_1);
-          thing.writeToWorld(W);
+          thing.transform().writeToWorldSpace(W);
           if (document.query(W.x_1, W.y_1, thing) != null) {
             found = true;
             buffer[j * 2] = reg.x_1;

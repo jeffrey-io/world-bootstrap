@@ -6,8 +6,9 @@ import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.LinkedDataMap;
-import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
 import io.jeffrey.zer.edits.Edit;
@@ -29,7 +30,7 @@ public class TConnector extends AbstractPointChain {
    * @author jeffrey
    */
   private class LockedVertex {
-    private Thing                  currentThing;
+    private AbstractThing          currentThing;
     private final EditString       link;
     private final String           name;
     private final SelectablePoint2 pnt;
@@ -48,8 +49,9 @@ public class TConnector extends AbstractPointChain {
     private void update(final Document document) {
       final VectorRegister3 W = new VectorRegister3();
       W.set_0(pnt.x, pnt.y);
-      writeToTarget(W);
+      transform.writeToWorldSpace(W);
       currentThing = document.selectFirstVisible(W.x_1, W.y_1);
+
       if (currentThing != null) {
         updateFast();
       } else {
@@ -60,9 +62,13 @@ public class TConnector extends AbstractPointChain {
     private void updateFast() {
       if (currentThing != null) {
         final VectorRegister3 to = new VectorRegister8();
-        to.set_0(currentThing.x(), currentThing.y());
-        currentThing.writeToTarget(to);
-
+        final PositionPart position = currentThing.first(PositionPart.class);
+        if (position == null) {
+          currentThing = null;
+          return;
+        }
+        to.set_0(position.x(), position.y());
+        currentThing.transform().writeToThingSpace(to);
         pnt.x = to.x_1;
         pnt.y = to.y_1;
         points.invalidateNow();

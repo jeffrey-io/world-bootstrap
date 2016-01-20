@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.interactions;
+package io.jeffrey.world.things.parts;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,6 +12,7 @@ import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.behaviors.CanBeInteractedWithByMouse;
 import io.jeffrey.world.things.behaviors.CanBeSelectedByWindow;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
@@ -19,19 +20,19 @@ import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.SerialEnforcer;
-import io.jeffrey.world.things.parts.EditingPart;
-import io.jeffrey.world.things.parts.LayerPart;
-import io.jeffrey.world.things.parts.LifetimePart;
-import io.jeffrey.world.things.parts.PositionPart;
-import io.jeffrey.world.things.parts.RotationPart;
-import io.jeffrey.world.things.parts.ScalePart;
+import io.jeffrey.world.things.interactions.ThingInteraction;
+import io.jeffrey.world.things.interactions.ThingInteractionToMouseIteractionAdapter;
+import io.jeffrey.world.things.interactions.ThingMover;
+import io.jeffrey.world.things.interactions.ThingRotater;
+import io.jeffrey.world.things.interactions.ThingScaler;
+import io.jeffrey.world.things.interactions.ThingSnapper;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.meta.GuideLine;
 import javafx.scene.shape.Polygon;
 
-public class MousePart implements Part, CanBeSelectedByWindow {
+public class MousePart implements Part, CanBeSelectedByWindow, CanBeInteractedWithByMouse {
 
   private final EditingPart   editing;
 
@@ -114,7 +115,8 @@ public class MousePart implements Part, CanBeSelectedByWindow {
   public void list(final Set<String> actionsAvailable) {
   }
 
-  public ThingInteraction start(final AdjustedMouseEvent event) {
+  @Override
+  public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
     transform.writeToThingSpace(event.position);
     ThingInteraction interaction = null;
     final VectorRegister3 W = new VectorRegister3();
@@ -179,7 +181,8 @@ public class MousePart implements Part, CanBeSelectedByWindow {
   public void update() {
   }
 
-  public void updateSelectionBasedOnWindow(final SelectionWindow window) {
+  @Override
+  public void updateSelectionWindow(final SelectionWindow window) {
     if (lifetime.isDeleted()) {
       return;
     }

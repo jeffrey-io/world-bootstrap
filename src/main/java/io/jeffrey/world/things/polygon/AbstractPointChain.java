@@ -144,7 +144,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
 
     for (final SelectablePoint2 point : chain) {
       W.set_0(point.x, point.y);
-      writeToWorld(W);
+      transform.writeToWorldSpace(W);
       if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
         point.selected = true;
         return new EventedPoint2Mover(new EventedPoint2(point, this), event);
@@ -157,12 +157,12 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
         // transform the starting point to a temporary place
         final SelectablePoint2 begin = line[0];
         W.set_0(begin.x, begin.y);
-        writeToWorld(W);
+        transform.writeToWorldSpace(W);
 
         // transform the endpoint directly
         final SelectablePoint2 end = line[1];
         reg.set_0(end.x, end.y);
-        writeToWorld(reg);
+        transform.writeToWorldSpace(reg);
 
         // inject the starting point
         reg.set_0(W.x_1, W.y_1);
@@ -205,7 +205,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     final double[] targetEdges = chain.edges(isPolygonLooped());
     for (int k = 0; k + 1 < targetEdges.length; k += 2) {
       W.inject_0(targetEdges, k);
-      writeToWorld(W);
+      transform.writeToWorldSpace(W);
       W.extract_1(targetEdges, k);
     }
     return targetEdges;

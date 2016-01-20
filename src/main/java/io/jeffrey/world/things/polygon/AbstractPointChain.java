@@ -41,30 +41,16 @@ public abstract class AbstractPointChain extends BasicThing {
    */
   protected AbstractPointChain(final Document document, final ThingData node) {
     super(document, node);
-    list = new SelectablePoint2List(node.getString("points", "0,-1,1,1,-1,1").value(), false);
+    list = new SelectablePoint2List(node.getString("points", "0,-1,1,1,-1,1").value(), false, false);
 
-    points = new PointSetPart(data, document, transform, position, scale, rotation) {
-
-      @Override
-      public SelectablePoint2 at(final int k) {
-        return list.at(k);
-      }
-
-      @Override
-      public int getNumberOfPoints() {
-        return list.size();
-      }
-
-      @Override
-      public Iterable<SelectablePoint2> getSelectablePoints() {
-        return list;
-      }
-    };
+    points = new PointSetPart(data, document, transform, position, scale, rotation, list);
+    
     points.subscribe(c -> {
       AbstractPointChain.this.cache = c;
     });
 
     register(points);
+    register(list);
     register(new MousePart(this, transform));
 
     editing.selected.subscribe((t, u) -> {
@@ -77,21 +63,6 @@ public abstract class AbstractPointChain extends BasicThing {
     });
     register(new EdgeMover(document, transform, list, points.lock, points));
   }
-
-  /*
-   * protected Object executeAction(final String action) { if ("self.center".equals(action)) { cache.center(); return true; } if ("apply.scale".equals(action)) { cache.apply_scale(); return true; } if (chain.act(action, isPolygonLooped(), document, this)) { cache.update(); return true; } return false; }
-   */
-
-  /*
-   * protected void populateLinks(final HashMap<String, Edit> links) { pointsEditList.edits.clear(); cache.update(); int index = 0; for (final SelectablePoint2 p : chain) { pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true)); pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false)); index++; } links.put("points", pointsEditList); populatePolygonalEditLinks(links); }
-   */
-
-  /**
-   * {@inheritDoc}
-   */
-  /*
-   * @Override protected void describePossibleActions(final List<String> actions) { if (areTheNumberOfPointsFixed()) { return; } actions.add("apply.scale"); actions.add("self.center"); chain.describePossibleActionsBasedOnSelectedVertices(actions, isPolygonLooped()); }
-   */
 
   protected void draw(final GraphicsContext gc) {
     points.requireUpToDate();

@@ -3,12 +3,16 @@ package io.jeffrey.world.things.points;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.Part;
+import io.jeffrey.world.things.base.SharedActionSpace;
+import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
+import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.points.list.actions.CleanEdges;
 import io.jeffrey.world.things.points.list.actions.ColinearReduction;
 import io.jeffrey.world.things.points.list.actions.DeleteVertices;
@@ -24,7 +28,7 @@ import io.jeffrey.world.things.points.list.actions.UniformEdgeSplit;
 import io.jeffrey.world.things.points.list.changes.IndexRemoval;
 import io.jeffrey.world.things.points.list.changes.PointAddition;
 
-public class SelectablePoint2List implements Iterable<SelectablePoint2>, Part, HasSelectableEdges, HasEdgesInWorldSpace {
+public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesInWorldSpace, HasActions, HasSelectablePoints {
   /**
    * convert the list of doubles into a string
    *
@@ -46,15 +50,17 @@ public class SelectablePoint2List implements Iterable<SelectablePoint2>, Part, H
   }
 
   public final boolean                      looped;
+  public final boolean                      finite;
   private final ArrayList<SelectablePoint2> points;
 
   /**
    * @param raw
    *          the serialized form of the points
    */
-  public SelectablePoint2List(final String raw, final boolean looped) {
+  public SelectablePoint2List(final String raw, final boolean looped, final boolean finite) {
     points = parse(raw);
     this.looped = looped;
+    this.finite = finite;
   }
 
   /**
@@ -70,78 +76,43 @@ public class SelectablePoint2List implements Iterable<SelectablePoint2>, Part, H
    *          the things
    * @return true if the cache needs to be updated becauses the points where updated
    */
-  public boolean act(final String action, final Document document, final AbstractThing thing) {
+  @Override
+  public void invokeAction(String action, SharedActionSpace space) {
     if ("edge.colinear".equals(action)) {
       ColinearReduction.perform(this, looped);
-      return true;
-    }
-    if ("color.seek".equals(action)) {
-      NormalGrowth.seekColor(thing, document, this, looped);
-      return true;
-    }
-
-    if ("normal.contract".equals(action)) {
+    } else if ("color.seek".equals(action)) {
+      // NormalGrowth.seekColor(thing, document, this, looped);
+    } else if ("normal.contract".equals(action)) {
       NormalGrowth.contract(this, looped);
-      return true;
-    }
-    if ("random.normal.contract".equals(action)) {
+    } else if ("random.normal.contract".equals(action)) {
       NormalGrowth.contractRandomly(this, looped);
-      return true;
-    }
-
-    if ("normal.growth".equals(action)) {
+    } else if ("normal.growth".equals(action)) {
       NormalGrowth.expand(this, looped);
-      return true;
-    }
-    if ("random.normal.growth".equals(action)) {
+    } else if ("random.normal.growth".equals(action)) {
       NormalGrowth.expandRandomly(this, looped);
-      return true;
-    }
-    if ("edge.uniform".equals(action)) {
+    } else if ("edge.uniform".equals(action)) {
       UniformEdgeSplit.perform(this, looped);
-      return true;
-    }
-    if ("edge.erode".equals(action)) {
+    } else if ("edge.erode".equals(action)) {
       EdgeErode.perform(this, looped);
-      return true;
-    }
-    if ("edge.split".equals(action)) {
+    } else if ("edge.split".equals(action)) {
       EdgeSplit.perform(this, looped, false);
-      return true;
-    }
-    if ("edge.fracture".equals(action)) {
+    } else if ("edge.fracture".equals(action)) {
       FractureSplit.perform(this, looped);
-      return true;
-    }
-    if ("edge.smooth".equals(action)) {
+    } else if ("edge.smooth".equals(action)) {
       SmoothSplit.perform(this, looped);
-      return true;
-    }
-    if ("edge.split.random".equals(action)) {
+    } else if ("edge.split.random".equals(action)) {
       EdgeSplit.perform(this, looped, true);
-      return true;
-    }
-    if ("edge.collapse.1".equals(action)) {
+    } else if ("edge.collapse.1".equals(action)) {
       EdgeCollapseKeepEnds.perform(this, looped);
-      return true;
-    }
-    if ("edge.collapse.2".equals(action)) {
+    } else if ("edge.collapse.2".equals(action)) {
       EdgeCollapseAll.perform(this, looped);
-      return true;
-    }
-    if ("clean.edges".equals(action)) {
+    } else if ("clean.edges".equals(action)) {
       CleanEdges.perform(this, looped);
-      return true;
-    }
-    if ("delete.vertices".equals(action)) {
+    } else if ("delete.vertices".equals(action)) {
       DeleteVertices.perform(this, looped);
-      return true;
-    }
-    if ("springize".equals(action)) {
+    } else if ("springize".equals(action)) {
       Springize.perform(this, looped);
-      return true;
     }
-    return false;
   }
 
   /**
@@ -183,10 +154,15 @@ public class SelectablePoint2List implements Iterable<SelectablePoint2>, Part, H
    * @param asLoop
    *          should the chain work as a loop
    */
-  public void describePossibleActionsBasedOnSelectedVertices(final List<String> actions, final boolean asLoop) {
+
+  @Override
+  public void listActions(Set<String> actions) {
+    if (finite) {
+      return;
+    }
     boolean canSplit = false;
     final int n = points.size();
-    final int m = asLoop ? n : n - 1;
+    final int m = looped ? n : n - 1;
     boolean canDeleteVertices = false;
     for (int k = 0; k < m && !canSplit; k++) {
       final SelectablePoint2 p1 = points.get(k);
@@ -389,5 +365,10 @@ public class SelectablePoint2List implements Iterable<SelectablePoint2>, Part, H
       values.add(p.y);
     }
     return pack(values);
+  }
+
+  @Override
+  public int getNumberSelectablePoints() {
+    return points.size();
   }
 }

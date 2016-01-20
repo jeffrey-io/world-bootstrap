@@ -16,6 +16,7 @@ import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasInternalSelection;
 import io.jeffrey.world.things.behaviors.HasMover;
+import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.ThingInteraction;
@@ -29,7 +30,7 @@ import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
-public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMover, HasActions, HasUpdate {
+public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMover, HasActions, HasUpdate {
 
   public class SharedMutableCache {
     public double       boundingRadiusForControls;
@@ -61,9 +62,11 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   private final Transform                       transform;
 
   public final EditString                       vertices;
+  public final HasSelectablePoints points;
 
-  public PointSetPart(final LinkedDataMap data, final Document document, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation) {
+  public PointSetPart(final LinkedDataMap data, final Document document, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, HasSelectablePoints points) {
     lock = data.getBoolean("vlock", false);
+    this.points = points;
     this.document = document;
     this.scale = scale;
     this.rotation = rotation;
@@ -88,19 +91,16 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     if (cache.inlineXYPairs.length == 0) {
       return;
     }
-    for (final SelectablePoint2 p : getSelectablePoints()) {
+    for (final SelectablePoint2 p : points) {
       p.x *= mx;
       p.y *= my;
     }
     update();
   }
 
-  @Deprecated
-  public abstract SelectablePoint2 at(int k);
-
   @Override
   public void cacheInternalSelection() {
-    for (final SelectablePoint2 p : getSelectablePoints()) {
+    for (final SelectablePoint2 p : points) {
       p.alreadySelected = p.selected;
     }
   }
@@ -113,7 +113,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     double cx = 0;
     double cy = 0;
     int n = 0;
-    for (final SelectablePoint2 p : getSelectablePoints()) {
+    for (final SelectablePoint2 p : points) {
       cx += p.x;
       cy += p.y;
       n++;
@@ -123,7 +123,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     }
     cx /= n;
     cy /= n;
-    for (final SelectablePoint2 p : getSelectablePoints()) {
+    for (final SelectablePoint2 p : points) {
       p.x -= cx;
       p.y -= cy;
     }
@@ -140,7 +140,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
     if (document != null) {
-      for (final SelectablePoint2 point : getSelectablePoints()) {
+      for (final SelectablePoint2 point : points) {
         if (point.selected) {
           W.set_0(point.x, point.y);
           transform.writeToWorldSpace(W);
@@ -172,10 +172,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     return doodads;
   }
 
-  @Deprecated
-  public abstract int getNumberOfPoints();
 
-  public abstract Iterable<SelectablePoint2> getSelectablePoints();
 
   @Override
   public void invokeAction(final String action, final SharedActionSpace space) {
@@ -193,7 +190,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     boolean all = true;
     boolean any = false;
 
-    for (final SelectablePoint2 point : getSelectablePoints()) {
+    for (final SelectablePoint2 point : points) {
       if (!point.selected) {
         all = false;
       } else {
@@ -206,7 +203,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       return;
     }
 
-    for (final SelectablePoint2 point : getSelectablePoints()) {
+    for (final SelectablePoint2 point : points) {
       if (point.selected) {
         interactions.add(new EventedPoint2Mover(new EventedPoint2(point, this), event));
       }
@@ -224,7 +221,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       return;
     }
     outOfDate = false;
-    final int n = getNumberOfPoints();
+    final int n = points.getNumberSelectablePoints();
     final boolean canScale = scale != null && !scale.lock.value();
     final boolean canRotate = rotation != null && !rotation.lock.value();
     final int doff = lock.value() ? 0 : n;
@@ -237,8 +234,8 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
     // walk the points
     cache.boundingRadiusForControls = 0;
-    for (k = 0; k < n; k++) {
-      final SelectablePoint2 p = at(k);
+    k = 0;
+    for (SelectablePoint2 p : points) {
       cache.inlineXYPairs[2 * k] = p.x;
       cache.inlineXYPairs[2 * k + 1] = p.y;
       cache.x[k] = p.x;
@@ -249,6 +246,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
         doodads[k].v = p.y;
         doodads[k].type = p.selected ? Type.PointSelected : Type.PointUnselected;
       }
+      k++;
     }
 
     final double PI = 3.1415926535897932384626433832795;
@@ -287,9 +285,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     boolean doUpdate = false;
     boolean isSelected = false;
     boolean anySelected = false;
-    final int n = getNumberOfPoints();
-    for (int k = 0; k < n; k++) {
-      final SelectablePoint2 point = at(k);
+    for (SelectablePoint2 point : points) {
       final boolean old = point.selected;
       if (polygon.contains(point.x, point.y)) {
         point.selected = true;

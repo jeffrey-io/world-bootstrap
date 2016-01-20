@@ -49,6 +49,10 @@ public class EdgeMover implements Part, HasMover {
         final SelectablePoint2 end = line[1];
         reg.set_0(end.x, end.y);
         transform.writeToWorldSpace(reg);
+        
+        if (begin.selected || end.selected) {
+          continue;
+        }
 
         // inject the starting point
         reg.set_0(W.x_1, W.y_1);

@@ -1,10 +1,10 @@
-package io.jeffrey.world.things.points.actions;
+package io.jeffrey.world.things.points.list.actions;
 
 import java.util.Arrays;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.SelectablePoint2List;
-import io.jeffrey.world.things.polygon.IndexRemoval;
+import io.jeffrey.world.things.points.list.changes.IndexRemoval;
 
 public class EdgeErode {
 

@@ -12,16 +12,18 @@ import javafx.scene.paint.Color;
 public class RenderPolygonPart extends HasThingSpaceRendering implements Part {
 
   private SharedMutableCache cache;
+  private final PointSetPart pointset;
 
   public RenderPolygonPart(final Transform transform, final Document document, final PointSetPart pointset, final SelectablePoint2List pointlist) {
     super(transform, document);
     cache = null;
     pointset.subscribe(cache -> RenderPolygonPart.this.cache = cache);
+    this.pointset = pointset;
   }
 
   @Override
   public void draw(final GraphicsContext gc) {
-    System.out.println("wanting a draw");
+    pointset.requireUpToDate();
     if (cache == null) {
       return;
     }

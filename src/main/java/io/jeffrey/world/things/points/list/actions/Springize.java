@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.points.actions;
+package io.jeffrey.world.things.points.list.actions;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.SelectablePoint2List;

@@ -10,10 +10,10 @@ import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasUpdate;
+import io.jeffrey.world.things.interactions.PairEventPoint2Mover;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.world.things.polygon.PairEventPoint2Mover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.EditBoolean;
 

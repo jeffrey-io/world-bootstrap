@@ -1,6 +1,5 @@
-package io.jeffrey.world.things.polygon;
+package io.jeffrey.world.things.points;
 
-import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.zer.edits.Edit;
 
 /**

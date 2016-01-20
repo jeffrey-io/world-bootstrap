@@ -9,20 +9,20 @@ import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
-import io.jeffrey.world.things.points.actions.CleanEdges;
-import io.jeffrey.world.things.points.actions.ColinearReduction;
-import io.jeffrey.world.things.points.actions.DeleteVertices;
-import io.jeffrey.world.things.points.actions.EdgeCollapseAll;
-import io.jeffrey.world.things.points.actions.EdgeCollapseKeepEnds;
-import io.jeffrey.world.things.points.actions.EdgeErode;
-import io.jeffrey.world.things.points.actions.EdgeSplit;
-import io.jeffrey.world.things.points.actions.FractureSplit;
-import io.jeffrey.world.things.points.actions.NormalGrowth;
-import io.jeffrey.world.things.points.actions.SmoothSplit;
-import io.jeffrey.world.things.points.actions.Springize;
-import io.jeffrey.world.things.points.actions.UniformEdgeSplit;
-import io.jeffrey.world.things.polygon.IndexRemoval;
-import io.jeffrey.world.things.polygon.PointAddition;
+import io.jeffrey.world.things.points.list.actions.CleanEdges;
+import io.jeffrey.world.things.points.list.actions.ColinearReduction;
+import io.jeffrey.world.things.points.list.actions.DeleteVertices;
+import io.jeffrey.world.things.points.list.actions.EdgeCollapseAll;
+import io.jeffrey.world.things.points.list.actions.EdgeCollapseKeepEnds;
+import io.jeffrey.world.things.points.list.actions.EdgeErode;
+import io.jeffrey.world.things.points.list.actions.EdgeSplit;
+import io.jeffrey.world.things.points.list.actions.FractureSplit;
+import io.jeffrey.world.things.points.list.actions.NormalGrowth;
+import io.jeffrey.world.things.points.list.actions.SmoothSplit;
+import io.jeffrey.world.things.points.list.actions.Springize;
+import io.jeffrey.world.things.points.list.actions.UniformEdgeSplit;
+import io.jeffrey.world.things.points.list.changes.IndexRemoval;
+import io.jeffrey.world.things.points.list.changes.PointAddition;
 
 public class SelectablePoint2List implements Iterable<SelectablePoint2>, Part, HasSelectableEdges, HasEdgesInWorldSpace {
   /**

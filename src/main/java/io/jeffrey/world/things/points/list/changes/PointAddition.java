@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.polygon;
+package io.jeffrey.world.things.points.list.changes;
 
 import java.util.ArrayList;
 

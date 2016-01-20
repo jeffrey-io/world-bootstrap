@@ -1,6 +1,5 @@
-package io.jeffrey.world.things.polygon;
+package io.jeffrey.world.things.interactions;
 
-import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.world.things.points.EventedPoint2Mover;
 import io.jeffrey.zer.AdjustedMouseEvent;

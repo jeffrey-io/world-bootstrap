@@ -1,10 +1,10 @@
-package io.jeffrey.world.things.points.actions;
+package io.jeffrey.world.things.points.list.actions;
 
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.SelectablePoint2List;
-import io.jeffrey.world.things.polygon.PointAddition;
+import io.jeffrey.world.things.points.list.changes.PointAddition;
 
 public class CleanEdges {
   /**

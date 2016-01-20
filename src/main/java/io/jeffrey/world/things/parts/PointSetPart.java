@@ -44,10 +44,6 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       x = new double[0];
       y = new double[0];
     }
-
-    public boolean valid() {
-      return inlineXYPairs.length > 0;
-    }
   }
 
   private final SharedMutableCache              cache;
@@ -84,7 +80,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   private void apply_scale_to_points_reset_scale() {
-    refresh();
+    requireUpToDate();
     final double mx = scale.sx();
     final double my = scale.sy();
     scale.sx(1.0);
@@ -96,7 +92,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       p.x *= mx;
       p.y *= my;
     }
-    dirty();
+    update();
   }
 
   @Deprecated
@@ -110,7 +106,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   private void center_points_internally() {
-    refresh();
+    requireUpToDate();
     if (cache.inlineXYPairs.length == 0) {
       return;
     }
@@ -132,16 +128,12 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       p.y -= cy;
     }
     // TODO: figure out how to translate the parent by a meaningful amount
-    dirty();
+    update();
   }
 
   @Override
   public boolean contains(final double x, final double y) {
     return false;
-  }
-
-  public void dirty() {
-    outOfDate = true;
   }
 
   @Override
@@ -185,11 +177,6 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
   public abstract Iterable<SelectablePoint2> getSelectablePoints();
 
-  public void invalidate() {
-    update();
-    refresh();
-  }
-
   @Override
   public void invokeAction(final String action, final SharedActionSpace space) {
     if ("apply_scale_to_points_reset_scale".equals(action)) {
@@ -202,6 +189,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
   @Override
   public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
+    requireUpToDate();
     boolean all = true;
     boolean any = false;
 
@@ -231,7 +219,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     actionsAvailable.add("center_points_internally");
   }
 
-  public void refresh() {
+  public void requireUpToDate() {
     if (!outOfDate) {
       return;
     }
@@ -295,6 +283,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
   @Override
   public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
+    requireUpToDate();
     boolean doUpdate = false;
     boolean isSelected = false;
     boolean anySelected = false;
@@ -317,7 +306,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       }
     }
     if (doUpdate) {
-      refresh();
+      update();
     }
     if (mode == Mode.Subtract && anySelected) {
       return false;
@@ -326,14 +315,9 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   public void subscribe(final Consumer<SharedMutableCache> subscriber) {
-    if (!cache.valid()) {
-      update();
-      refresh();
-    }
-    if (cache.valid()) {
-      subscriber.accept(cache);
-      notification.subscribe(subscriber);
-    }
+    requireUpToDate();
+    subscriber.accept(cache);
+    notification.subscribe(subscriber);
   }
 
   @Override

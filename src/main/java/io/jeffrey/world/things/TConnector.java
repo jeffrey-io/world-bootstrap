@@ -28,14 +28,12 @@ public class TConnector extends AbstractPointChain {
   private class LockedVertex {
     private AbstractThing          currentThing;
     private final EditString       link;
-    private final String           name;
     private final SelectablePoint2 pnt;
 
     public LockedVertex(final SelectablePoint2 pnt, final LinkedDataMap node, final String name) {
       link = node.getString(name, "");
       this.pnt = pnt;
       currentThing = null;
-      this.name = name;
     }
 
     private void update(final Document document) {
@@ -63,7 +61,7 @@ public class TConnector extends AbstractPointChain {
         currentThing.transform().writeToThingSpace(to);
         pnt.x = to.x_1;
         pnt.y = to.y_1;
-        points.dirty();
+        points.update();
         dirty = false;
         link.value(currentThing.getID());
       }
@@ -84,7 +82,8 @@ public class TConnector extends AbstractPointChain {
     super(document, node);
     from = new LockedVertex(list.at(0), data, "from");
     to = new LockedVertex(list.at(1), data, "to");
-    points.dirty();
+    points.update();
+    points.requireUpToDate();
     dirty = true;
   }
 

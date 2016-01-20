@@ -9,9 +9,7 @@ import io.jeffrey.world.things.parts.PointSetPart;
 import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.SelectablePoint2List;
-import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.shape.Polygon;
 
 /**
  * Defines common operations on things that behave like polygons/lines/graph connects. That is, things that have a bunch of vertices connected on some kind of chain/loop
@@ -96,7 +94,7 @@ public abstract class AbstractPointChain extends BasicThing {
    */
 
   protected void draw(final GraphicsContext gc) {
-    points.update();
+    points.requireUpToDate();
     renderPolygon(document, gc);
   }
 
@@ -110,32 +108,4 @@ public abstract class AbstractPointChain extends BasicThing {
    */
   protected abstract void renderPolygon(final Document document, final GraphicsContext gc);
 
-  protected boolean selectionIntersectXX(final Polygon p, final Mode mode, boolean isSelected) {
-    boolean doUpdate = false;
-    boolean anySelected = false;
-    for (final SelectablePoint2 point : list) {
-      final boolean old = point.selected;
-      if (p.contains(point.x, point.y)) {
-        point.selected = true;
-        isSelected = true;
-      } else {
-        point.selected = false;
-      }
-      point.selected = mode.selected(point.alreadySelected, point.selected);
-      if (old != point.selected) {
-        doUpdate = true;
-      }
-      if (point.selected) {
-        anySelected = true;
-      }
-    }
-    if (doUpdate) {
-      points.dirty();
-      points.update();
-    }
-    if (mode == Mode.Subtract && anySelected) {
-      return false;
-    }
-    return isSelected;
-  }
 }

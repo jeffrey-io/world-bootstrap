@@ -25,7 +25,7 @@ public interface IsSelectable {
 
   /**
    * does the given mouse event preserve the existing selection
-   * 
+   *
    * @param event
    *          the mouse even
    * @return whether or not the event will not mess with existing selection

@@ -6,8 +6,8 @@ public class TestColorPart {
 
   @Test
   public void sanityCheck() {
-    PartHelper helper = new PartHelper();
-    ColorPart colorPart = new ColorPart("food", helper.getLinkedDataMap());
+    final PartHelper helper = new PartHelper();
+    final ColorPart colorPart = new ColorPart("food", helper.getLinkedDataMap());
     colorPart.color.set("ccc");
     helper.assertWritten("food_color", "ccc");
   }

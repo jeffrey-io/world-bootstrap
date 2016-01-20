@@ -9,22 +9,22 @@ import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class PartHelper {
   private final TreeMap<String, String> fields;
-  private final ObjectDataMap objectDataMap;
-  private final LinkedDataMap linkedDataMap;
-  
+  private final LinkedDataMap           linkedDataMap;
+  private final ObjectDataMap           objectDataMap;
+
   public PartHelper() {
-    this.fields = new TreeMap<>();
-    this.objectDataMap = new ObjectDataMap(fields);
-    this.linkedDataMap = new LinkedDataMap(objectDataMap);
+    fields = new TreeMap<>();
+    objectDataMap = new ObjectDataMap(fields);
+    linkedDataMap = new LinkedDataMap(objectDataMap);
   }
-  
-  public LinkedDataMap getLinkedDataMap() {
-    return linkedDataMap;
-  }
-  
-  public PartHelper assertWritten(String key, String expected) {
-    String actual = fields.get(key);
+
+  public PartHelper assertWritten(final String key, final String expected) {
+    final String actual = fields.get(key);
     Assert.assertEquals(expected, actual);
     return this;
+  }
+
+  public LinkedDataMap getLinkedDataMap() {
+    return linkedDataMap;
   }
 }

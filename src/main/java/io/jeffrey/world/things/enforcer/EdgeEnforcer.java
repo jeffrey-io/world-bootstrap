@@ -30,7 +30,7 @@ public class EdgeEnforcer implements GuideLineEnforcer {
     A /= AB;
     B /= AB;
     double angleToApply = 360;
-    double[] edges = thingWithEdges.worldSpaceEdges();
+    double[] edges = thingWithEdges.getWorldSpaceEdges();
     int at = -1;
     final VectorRegister5 temp = new VectorRegister5();
     for (int k = 0; k + 3 < edges.length; k += 4) {
@@ -64,7 +64,7 @@ public class EdgeEnforcer implements GuideLineEnforcer {
       double nextAngle = rotation.angle() + angleToApply;
       nextAngle = Math.round(nextAngle * 100) / 100.0;
       rotation.angle(nextAngle);
-      edges = thingWithEdges.worldSpaceEdges();
+      edges = thingWithEdges.getWorldSpaceEdges();
       line.writeSegment(camera, temp);
       temp.set_2(edges[at], edges[at + 1]);
       Lines.minimalDistanceV2toLineContainingV0V1_Destructive(temp);

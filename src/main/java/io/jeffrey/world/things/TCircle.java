@@ -26,10 +26,10 @@ public class TCircle extends Thing {
   public TCircle(final Document document, final ThingData node) {
     super(document, node);
     circle = new CirclePart();
-    register("shapes", circle);
-    register("render", new CircleRenderPart(transform, document, fill, fill, scale, editing));
+    register(circle);
+    register(new CircleRenderPart(transform, document, fill, fill, scale, editing));
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
-    register("enforcers", enforcers);
-    register("control", new GenericMoverPart(position, rotation));
+    register(enforcers);
+    register(new GenericMoverPart(position, rotation));
   }
 }

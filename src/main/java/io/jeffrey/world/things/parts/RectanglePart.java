@@ -1,13 +1,10 @@
 package io.jeffrey.world.things.parts;
 
-import java.util.Set;
-
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
@@ -32,10 +29,6 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   }
 
   @Override
-  public void act(final String action, final SharedActionSpace space) {
-  }
-
-  @Override
   public boolean contains(final double x, final double y) {
     return rect.contains(x, y);
   }
@@ -51,33 +44,7 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   }
 
   @Override
-  public void list(final Set<String> actionsAvailable) {
-
-  }
-
-  @Override
-  public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
-    return Shape.intersect(rect, polygon).getBoundsInLocal().getWidth() > 0;
-  }
-
-  public void set(final double x, final double y, final double width, final double height) {
-    rect = new Rectangle(x, y, width, height);
-    doodads[0] = new ControlDoodad(Type.Rotate, 0, rect.getHeight() / 2);
-    doodads[1] = new ControlDoodad(Type.Rotate, 0, -rect.getHeight() / 2);
-    doodads[2] = new ControlDoodad(Type.Rotate, -rect.getWidth() / 2, 0);
-    doodads[3] = new ControlDoodad(Type.Rotate, rect.getWidth() / 2, 0);
-    doodads[4] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, -rect.getHeight() / 2);
-    doodads[5] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, rect.getHeight() / 2);
-    doodads[6] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, -rect.getHeight() / 2);
-    doodads[7] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, rect.getHeight() / 2);
-  }
-
-  @Override
-  public void update() {
-  }
-
-  @Override
-  public double[] worldSpaceEdges() {
+  public double[] getWorldSpaceEdges() {
     final double[] edges = new double[16];
     final VectorRegister3 W = new VectorRegister8();
 
@@ -116,6 +83,23 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
     edges[15] = edges[1];
 
     return edges;
+  }
+
+  @Override
+  public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
+    return Shape.intersect(rect, polygon).getBoundsInLocal().getWidth() > 0;
+  }
+
+  public void set(final double x, final double y, final double width, final double height) {
+    rect = new Rectangle(x, y, width, height);
+    doodads[0] = new ControlDoodad(Type.Rotate, 0, rect.getHeight() / 2);
+    doodads[1] = new ControlDoodad(Type.Rotate, 0, -rect.getHeight() / 2);
+    doodads[2] = new ControlDoodad(Type.Rotate, -rect.getWidth() / 2, 0);
+    doodads[3] = new ControlDoodad(Type.Rotate, rect.getWidth() / 2, 0);
+    doodads[4] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, -rect.getHeight() / 2);
+    doodads[5] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, rect.getHeight() / 2);
+    doodads[6] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, -rect.getHeight() / 2);
+    doodads[7] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, rect.getHeight() / 2);
   }
 
 }

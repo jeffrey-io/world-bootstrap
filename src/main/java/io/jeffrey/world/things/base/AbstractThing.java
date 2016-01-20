@@ -8,11 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.history.HistoryEditTrap;
+import io.jeffrey.world.things.behaviors.HasActions;
+import io.jeffrey.world.things.behaviors.HasInternalStateThatMayNeedManualUpdating;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.IdentityPart;
 import io.jeffrey.world.things.parts.LifetimePart;
@@ -20,14 +21,14 @@ import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.ObjectDataMap;
 
 public abstract class AbstractThing {
-  protected final LinkedDataMap                  data;
-
-  public final Document                          document;
-  public final EditingPart                       editing;
-  public final IdentityPart                      identity;
-  public final LifetimePart                      lifetime;
-  private final HashMap<String, ArrayList<Part>> parts;
-  private long                                   sequencer;
+  private final HashMap<Class<?>, HashSet<Object>> cache;
+  protected final LinkedDataMap                    data;
+  public final Document                            document;
+  public final EditingPart                         editing;
+  public final IdentityPart                        identity;
+  public final LifetimePart                        lifetime;
+  private final ArrayList<Part>                    parts;
+  private long                                     sequencer;
 
   /**
    * @param document
@@ -37,133 +38,62 @@ public abstract class AbstractThing {
    */
   public AbstractThing(final Document document, final ObjectDataMap node) {
     this.document = document;
+    cache = new HashMap<>();
     data = new LinkedDataMap(node);
-    parts = new HashMap<>();
+    parts = new ArrayList<>();
     identity = new IdentityPart(data);
-    register("required", identity);
+    register(identity);
     editing = new EditingPart(data);
-    register("required", editing);
+    register(editing);
     lifetime = new LifetimePart(data);
-    register("required", lifetime);
+    register(lifetime);
     sequencer = 0;
   }
 
   @SuppressWarnings("unchecked")
   public <T> Set<T> collect(final Class<T> clazz) {
-    final HashSet<T> result = new HashSet<>();
-    walk(part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        result.add((T) part);
+    HashSet<Object> cached = cache.get(clazz);
+    if (cached == null) {
+      final HashSet<Object> result = new HashSet<>();
+      for (final Part part : parts) {
+        if (clazz.isAssignableFrom(part.getClass())) {
+          result.add(part);
+        }
       }
-    });
-    return result;
+      cache.put(clazz, result);
+      cached = result;
+    }
+    return (HashSet<T>) cached;
   }
 
-  @SuppressWarnings("unchecked")
   public <T, O> Set<O> collect(final Class<T> clazz, final Function<T, O> collector) {
     final HashSet<O> result = new HashSet<>();
-    walk(part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        result.add(collector.apply((T) part));
-      }
-    });
+    for (final T part : collect(clazz)) {
+      result.add(collector.apply(part));
+    }
     return result;
   }
 
-  @SuppressWarnings("unchecked")
-  public <T> Set<T> collect(final String key, final Class<T> clazz) {
-    final HashSet<T> result = new HashSet<>();
-    walk(key, part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        result.add((T) part);
-      }
-    });
-    return result;
-  }
-
-  @SuppressWarnings("unchecked")
-  public <T, O> Set<O> collect(final String key, final Class<T> clazz, final Function<T, O> collector) {
-    final HashSet<O> result = new HashSet<>();
-    walk(key, part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        result.add(collector.apply((T) part));
-      }
-    });
-    return result;
-  }
-
-  @SuppressWarnings("unchecked")
   public <T, O> Set<O> collectAndMerge(final Class<T> clazz, final Function<T, Collection<O>> collector) {
     final HashSet<O> result = new HashSet<>();
-    walk(part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        result.addAll(collector.apply((T) part));
-      }
-    });
+    for (final T part : collect(clazz)) {
+      result.addAll(collector.apply(part));
+    }
     return result;
   }
 
-  @SuppressWarnings("unchecked")
-  public <T, O> Set<O> collectAndMerge(final String key, final Class<T> clazz, final Function<T, Collection<O>> collector) {
-    final HashSet<O> result = new HashSet<>();
-    walk(key, part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        result.addAll(collector.apply((T) part));
-      }
-    });
-    return result;
-  }
-
-  @SuppressWarnings("unchecked")
   public <T, O> Set<O> collectAndMergeOverArray(final Class<T> clazz, final Function<T, O[]> collector) {
     final HashSet<O> result = new HashSet<>();
-    walk(part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        for (final O o : collector.apply((T) part)) {
-          result.add(o);
-        }
+    for (final T part : collect(clazz)) {
+      for (final O o : collector.apply(part)) {
+        result.add(o);
       }
-    });
+    }
     return result;
   }
 
-  @SuppressWarnings("unchecked")
-  public <T, O> Set<O> collectAndMergeOverArray(final String key, final Class<T> clazz, final Function<T, O[]> collector) {
-    final HashSet<O> result = new HashSet<>();
-    walk(key, part -> {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        for (final O o : collector.apply((T) part)) {
-          result.add(o);
-        }
-      }
-    });
-    return result;
-  }
-
-  @SuppressWarnings("unchecked")
   public <T> T first(final Class<T> clazz) {
-    for (final ArrayList<Part> list : parts.values()) {
-      for (final Part part : list) {
-        if (clazz.isAssignableFrom(part.getClass())) {
-          return (T) part;
-        }
-      }
-    }
-    return null;
-  }
-
-  @SuppressWarnings("unchecked")
-  public <T> T first(final String key, final Class<T> clazz) {
-    final ArrayList<Part> list = parts.get(key);
-    if (list == null) {
-      return null;
-    }
-    for (final Part part : list) {
-      if (clazz.isAssignableFrom(part.getClass())) {
-        return (T) part;
-      }
-    }
-    return null;
+    return collect(clazz).iterator().next();
   }
 
   /**
@@ -171,10 +101,8 @@ public abstract class AbstractThing {
    */
   public Set<String> getActionsAvailable() {
     final TreeSet<String> actions = new TreeSet<>();
-    for (final ArrayList<Part> list : parts.values()) {
-      for (final Part part : list) {
-        part.list(actions);
-      }
+    for (final HasActions part : collect(HasActions.class)) {
+      part.list(actions);
     }
     return actions;
   }
@@ -238,7 +166,9 @@ public abstract class AbstractThing {
       document.history.register(this);
     }
     final SharedActionSpace sharedActionSpace = new SharedActionSpace();
-    walk(part -> part.act(action, sharedActionSpace));
+    for (final HasActions part : collect(HasActions.class)) {
+      part.act(action, sharedActionSpace);
+    }
     if (withHistory) {
       document.history.capture();
     }
@@ -253,14 +183,10 @@ public abstract class AbstractThing {
    * @param part
    *          the part
    */
-  protected synchronized <T extends Part> void register(final String key, final T part) {
+  protected synchronized <T extends Part> void register(final T part) {
     sequencer++;
-    ArrayList<Part> subkey = parts.get(key);
-    if (subkey == null) {
-      subkey = new ArrayList<>();
-      parts.put(key, subkey);
-    }
-    subkey.add(part);
+    parts.add(part);
+    cache.clear();
   }
 
   /**
@@ -282,42 +208,8 @@ public abstract class AbstractThing {
    * invoke update on all the parts
    */
   public void update() {
-    for (final ArrayList<Part> list : parts.values()) {
-      for (final Part part : list) {
-        part.update();
-      }
-    }
-  }
-
-  /**
-   * apply the consumer to every part
-   *
-   * @param consumer
-   *          the consumer that will touch every part
-   */
-  public void walk(final Consumer<Part> consumer) {
-    for (final ArrayList<Part> list : parts.values()) {
-      for (final Part part : list) {
-        consumer.accept(part);
-      }
-    }
-  }
-
-  /**
-   * apply the consumer to only parts in the given key
-   *
-   * @param key
-   *          the keyspace to walk
-   * @param consumer
-   *          the consumer that will touch every part in the given keyspace
-   */
-  public void walk(final String key, final Consumer<Part> consumer) {
-    final ArrayList<Part> subkey = parts.get(key);
-    if (subkey == null) {
-      return; // we are done, nothing to do
-    }
-    for (final Part p : subkey) {
-      consumer.accept(p);
+    for (final HasInternalStateThatMayNeedManualUpdating updatable : collect(HasInternalStateThatMayNeedManualUpdating.class)) {
+      updatable.updateInternalState();
     }
   }
 }

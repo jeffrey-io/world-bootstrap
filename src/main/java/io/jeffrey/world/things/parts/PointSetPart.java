@@ -12,8 +12,10 @@ import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Subscribers;
 import io.jeffrey.world.things.base.Transform;
-import io.jeffrey.world.things.behaviors.CanCacheSelection;
+import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
+import io.jeffrey.world.things.behaviors.HasInternalSelection;
+import io.jeffrey.world.things.behaviors.HasInternalStateThatMayNeedManualUpdating;
 import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.ThingInteraction;
@@ -28,7 +30,7 @@ import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
-public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, CanCacheSelection, IsSelectable, HasMover {
+public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMover, HasActions, HasInternalStateThatMayNeedManualUpdating {
 
   public class SharedMutableCache {
     public double       boundingRadiusForControls;
@@ -75,7 +77,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     this.position = position;
 
     vertices = data.getString("points", "0,-1,1,1,-1,1");
-    update();
+    updateInternalState();
   }
 
   @Override
@@ -89,7 +91,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   private void apply_scale_to_points_reset_scale() {
-    update();
+    updateInternalState();
     final double mx = scale.sx();
     final double my = scale.sy();
     scale.sx(1.0);
@@ -101,7 +103,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       p.x *= mx;
       p.y *= my;
     }
-    update();
+    updateInternalState();
     dirty();
   }
 
@@ -109,14 +111,14 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   public abstract SelectablePoint2 at(int k);
 
   @Override
-  public void cache() {
+  public void cacheInternalSelection() {
     for (final SelectablePoint2 p : getSelectablePoints()) {
       p.alreadySelected = p.selected;
     }
   }
 
   private void center_points_internally() {
-    update();
+    updateInternalState();
     if (cache.inlineXYPairs.length == 0) {
       return;
     }
@@ -193,7 +195,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
   public void invalidateNow() {
     dirty();
-    update();
+    updateInternalState();
   }
 
   @Override
@@ -267,7 +269,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   @Override
-  public void update() {
+  public void updateInternalState() {
     if (!outOfDate) {
       return;
     }

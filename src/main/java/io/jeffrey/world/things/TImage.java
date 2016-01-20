@@ -31,12 +31,12 @@ public class TImage extends Thing {
   public TImage(final Document document, final ThingData node) {
     super(document, node);
     rectangle = new RectanglePart(transform);
-    register("shapes", rectangle);
+    register(rectangle);
     uri = new UriPart("", data);
-    register("uri", uri);
-    register("render", new ImageRenderPart(transform, document, uri, editing, rectangle));
+    register(uri);
+    register(new ImageRenderPart(transform, document, uri, editing, rectangle));
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(rectangle, position, rotation));
-    register("enforcers", enforcers);
-    register("control", new GenericMoverPart(position, rotation));
+    register(enforcers);
+    register(new GenericMoverPart(position, rotation));
   }
 }

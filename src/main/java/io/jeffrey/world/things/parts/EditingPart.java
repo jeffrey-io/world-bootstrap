@@ -5,9 +5,10 @@ import java.util.Set;
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
+import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.zer.edits.EditBoolean;
 
-public class EditingPart implements Part {
+public class EditingPart implements Part, HasActions {
   public final EditBoolean locked;
   public final EditBoolean selected;
 
@@ -43,9 +44,5 @@ public class EditingPart implements Part {
     } else {
       actionsAvailable.add("select");
     }
-  }
-
-  @Override
-  public void update() {
   }
 }

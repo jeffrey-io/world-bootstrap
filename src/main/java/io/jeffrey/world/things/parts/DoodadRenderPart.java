@@ -9,15 +9,14 @@ import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
-import io.jeffrey.world.things.behaviors.CanRenderInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInWorldSpace;
+import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
 import io.jeffrey.zer.Camera;
 import javafx.scene.canvas.GraphicsContext;
 
-public class DoodadRenderPart implements Part, CanRenderInWorldSpace {
+public class DoodadRenderPart implements Part, HasWorldSpaceRendering {
 
   private final AbstractThingSingleItemCache<Set<AdaptThingSpaceDoodadsIntoWorldSpace>> doodadCaches;
   private final EditingPart                                                             editing;
@@ -35,14 +34,6 @@ public class DoodadRenderPart implements Part, CanRenderInWorldSpace {
         return thing.collect(HasControlDoodadsInThingSpace.class, child -> new AdaptThingSpaceDoodadsIntoWorldSpace(transform, child));
       }
     };
-  }
-
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(final Set<String> actionsAvailable) {
   }
 
   @Override
@@ -69,9 +60,4 @@ public class DoodadRenderPart implements Part, CanRenderInWorldSpace {
       }
     }
   }
-
-  @Override
-  public void update() {
-  }
-
 }

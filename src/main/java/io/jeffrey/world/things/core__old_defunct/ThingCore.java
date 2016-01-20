@@ -32,26 +32,26 @@ public abstract class ThingCore extends AbstractThing {
     super(document, node);
 
     layer = new LayerPart(document, data);
-    register("layer", layer);
+    register(layer);
 
     position = new PositionPart(data, layer);
-    register("position", position);
+    register(position);
 
     scale = new ScalePart(data);
-    register("scale", scale);
+    register(scale);
 
     rotation = new RotationPart(data);
-    register("rotation", rotation);
+    register(rotation);
 
     transform = new StandardTransform(position, scale, rotation);
 
     metadata = new MetadataPart("metadata_", data);
-    register("metadata", metadata);
+    register(metadata);
 
     fill = new ColorPart("fill", data);
-    register("fill", fill);
+    register(fill);
 
-    register("render", new DoodadRenderPart(this, transform));
+    register(new DoodadRenderPart(this, transform));
   }
 
   @Override

@@ -71,11 +71,7 @@ public class Iconify implements IconResolver {
     sp.setFill(Color.TRANSPARENT);
     final WritableImage wi = new WritableImage(96, 96);
     final File file = File.createTempFile("bootstrap-icons-", ".png");
-
-    System.out.println(file.toString());
-
     ImageIO.write(SwingFXUtils.fromFXImage(canvas.snapshot(sp, wi), null), "png", file);
-
     icons.put(addable, new Image(file.toURI().toASCIIString()));
   }
 }

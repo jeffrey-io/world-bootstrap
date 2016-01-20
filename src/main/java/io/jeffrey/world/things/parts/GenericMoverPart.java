@@ -3,7 +3,6 @@ package io.jeffrey.world.things.parts;
 import java.util.Set;
 
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
@@ -20,19 +19,8 @@ public class GenericMoverPart implements Part, HasMover {
   }
 
   @Override
-  public void act(final String action, final SharedActionSpace space) {
-  }
-
-  @Override
   public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     interactions.add(new ThingMover(event, position, rotation));
   }
 
-  @Override
-  public void list(final Set<String> actionsAvailable) {
-  }
-
-  @Override
-  public void update() {
-  }
 }

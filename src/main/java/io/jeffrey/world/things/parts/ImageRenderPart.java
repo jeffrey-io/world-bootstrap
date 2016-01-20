@@ -1,18 +1,16 @@
 package io.jeffrey.world.things.parts;
 
-import java.util.Set;
-
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
-import io.jeffrey.world.things.behaviors.CanRenderInThingSpace;
-import io.jeffrey.world.things.behaviors.EmitsColor;
+import io.jeffrey.world.things.behaviors.HasColorsToEmit;
+import io.jeffrey.world.things.behaviors.HasInternalStateThatMayNeedManualUpdating;
+import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class ImageRenderPart extends CanRenderInThingSpace implements Part, EmitsColor {
+public class ImageRenderPart extends HasThingSpaceRendering implements Part, HasColorsToEmit, HasInternalStateThatMayNeedManualUpdating {
 
   private static int clamp(final int value, final int low, final int high) {
     return Math.min(high, Math.max(low, value));
@@ -29,16 +27,12 @@ public class ImageRenderPart extends CanRenderInThingSpace implements Part, Emit
     this.uri = uri;
     this.editing = editing;
     this.rectangle = rectangle;
-    update();
-  }
-
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
+    updateInternalState();
   }
 
   @Override
   public void draw(final GraphicsContext gc) {
-    update();
+    updateInternalState();
     gc.drawImage(img, -img.getWidth() / 2.0, -img.getHeight() / 2.0);
     if (editing.selected.value()) {
       gc.save();
@@ -47,10 +41,6 @@ public class ImageRenderPart extends CanRenderInThingSpace implements Part, Emit
       gc.strokeRect(-img.getWidth() / 2.0, -img.getHeight() / 2.0, img.getWidth(), img.getHeight());
       gc.restore();
     }
-  }
-
-  @Override
-  public void list(final Set<String> actionsAvailable) {
   }
 
   @Override
@@ -64,7 +54,7 @@ public class ImageRenderPart extends CanRenderInThingSpace implements Part, Emit
   }
 
   @Override
-  public void update() {
+  public void updateInternalState() {
     img = document.imageCache.of(document.find(uri.uri.value()));
     if (img != null) {
       rectangle.set(-img.getWidth() / 2, -img.getHeight() / 2, img.getWidth(), img.getHeight());

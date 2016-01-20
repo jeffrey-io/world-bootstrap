@@ -1,11 +1,9 @@
 package io.jeffrey.world.things.parts;
 
-import java.util.Set;
 import java.util.UUID;
 
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.zer.edits.EditString;
 
 public class IdentityPart implements Part {
@@ -21,10 +19,6 @@ public class IdentityPart implements Part {
     metaclass = data.getString("metaclass", "_");
   }
 
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
-  }
-
   public String getID() {
     return id.getAsText();
   }
@@ -33,12 +27,4 @@ public class IdentityPart implements Part {
     return type.getAsText();
   }
 
-  @Override
-  public void list(final Set<String> actionsAvailable) {
-
-  }
-
-  @Override
-  public void update() {
-  }
 }

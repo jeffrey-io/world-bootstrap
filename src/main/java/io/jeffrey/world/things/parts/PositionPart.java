@@ -1,10 +1,7 @@
 package io.jeffrey.world.things.parts;
 
-import java.util.Set;
-
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Snap;
 import io.jeffrey.zer.edits.EditDouble;
 
@@ -17,20 +14,6 @@ public class PositionPart implements Part {
     x = data.getDouble("x", 0.0);
     y = data.getDouble("y", 0.0);
     this.snap = snap;
-  }
-
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(final Set<String> actionsAvailable) {
-
-  }
-
-  @Override
-  public void update() {
-    // no-op
   }
 
   /**

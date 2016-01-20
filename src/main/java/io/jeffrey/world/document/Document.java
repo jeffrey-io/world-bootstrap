@@ -20,8 +20,8 @@ import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.behaviors.CanRenderInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
+import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
 import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.LayerPart;
@@ -134,7 +134,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     for (final AbstractThing thing : getThings()) {
       final LifetimePart lifetime = thing.first(LifetimePart.class);
       if (lifetime != null && !lifetime.isDeleted()) {
-        for (final CanRenderInWorldSpace renderer : thing.collect(CanRenderInWorldSpace.class)) {
+        for (final HasWorldSpaceRendering renderer : thing.collect(HasWorldSpaceRendering.class)) {
           renderer.render(gc);
         }
       }

@@ -1,11 +1,9 @@
 package io.jeffrey.world.things.parts;
 
 import java.util.HashMap;
-import java.util.Set;
 
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditString;
 
@@ -25,15 +23,6 @@ public class MetadataPart implements Part {
     }
   }
 
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
-  }
-
-  @Override
-  public void list(final Set<String> actionsAvailable) {
-
-  }
-
   public Edit metadataOf(final String key, final String defaultValue) {
     final EditString ed = metadata.get(key);
     if (ed == null) {
@@ -46,10 +35,6 @@ public class MetadataPart implements Part {
       };
     }
     return ed;
-  }
-
-  @Override
-  public void update() {
   }
 
 }

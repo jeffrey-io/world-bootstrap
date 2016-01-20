@@ -34,10 +34,10 @@ public class TPolygon extends AbstractPointChain {
   public TPolygon(final Document document, final ThingData node) {
     super(document, node);
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(this, position, rotation));
-    register("enforcers", enforcers);
+    register(enforcers);
 
     lazyPolygonPart = new LazyPolygonPart();
-    register("shapes", lazyPolygonPart);
+    register(lazyPolygonPart);
 
     points.subscribe(c -> {
       TPolygon.this.polygon = new Polygon(c.inlineXYPairs);

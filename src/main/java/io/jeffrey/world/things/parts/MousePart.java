@@ -10,13 +10,12 @@ import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
-import io.jeffrey.world.things.behaviors.CanBeInteractedWithByMouse;
-import io.jeffrey.world.things.behaviors.CanBeSelectedByWindow;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
+import io.jeffrey.world.things.behaviors.HasMouseInteractions;
 import io.jeffrey.world.things.behaviors.HasMover;
+import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.SerialEnforcer;
@@ -32,7 +31,7 @@ import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.meta.GuideLine;
 import javafx.scene.shape.Polygon;
 
-public class MousePart implements Part, CanBeSelectedByWindow, CanBeInteractedWithByMouse {
+public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractions {
 
   private final EditingPart   editing;
 
@@ -55,10 +54,6 @@ public class MousePart implements Part, CanBeSelectedByWindow, CanBeInteractedWi
     rotation = thing.first(RotationPart.class);
     layer = thing.first(LayerPart.class);
     lifetime = thing.first(LifetimePart.class);
-  }
-
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
   }
 
   public void beginMoving(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
@@ -109,10 +104,6 @@ public class MousePart implements Part, CanBeSelectedByWindow, CanBeInteractedWi
     } else {
       return new SerialEnforcer(enforcers);
     }
-  }
-
-  @Override
-  public void list(final Set<String> actionsAvailable) {
   }
 
   @Override
@@ -175,10 +166,6 @@ public class MousePart implements Part, CanBeSelectedByWindow, CanBeInteractedWi
       }
     }
     return null;
-  }
-
-  @Override
-  public void update() {
   }
 
   @Override

@@ -5,10 +5,11 @@ import java.util.Set;
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
+import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 
-public class ScalePart implements Part {
+public class ScalePart implements Part, HasActions {
   public final EditBoolean aspect;
   public final EditBoolean lock;
   public final EditDouble  x;
@@ -63,10 +64,6 @@ public class ScalePart implements Part {
    */
   public void sy(final double sy) {
     y.value(Math.min(10000.0, Math.max(0.1, sy)));
-  }
-
-  @Override
-  public void update() {
   }
 
 }

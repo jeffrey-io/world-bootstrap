@@ -1,9 +1,6 @@
 package io.jeffrey.world.things.parts;
 
-import java.util.Set;
-
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
@@ -16,10 +13,6 @@ public class LazyPolygonPart implements Part, IsSelectable {
 
   public LazyPolygonPart() {
     polygon = null;
-  }
-
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
   }
 
   @Override
@@ -40,10 +33,6 @@ public class LazyPolygonPart implements Part, IsSelectable {
   }
 
   @Override
-  public void list(final Set<String> actionsAvailable) {
-  }
-
-  @Override
   public boolean selectionIntersect(final Polygon incoming, final Mode mode) {
     if (polygon == null) {
       return false;
@@ -55,7 +44,4 @@ public class LazyPolygonPart implements Part, IsSelectable {
     this.polygon = polygon;
   }
 
-  @Override
-  public void update() {
-  }
 }

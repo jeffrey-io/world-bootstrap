@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.behaviors.CanBeInteractedWithByMouse;
-import io.jeffrey.world.things.behaviors.EmitsColor;
+import io.jeffrey.world.things.behaviors.HasColorsToEmit;
+import io.jeffrey.world.things.behaviors.HasMouseInteractions;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.MultiThingInteraction;
 import io.jeffrey.world.things.interactions.ThingInteraction;
@@ -53,7 +53,7 @@ public class AbstractThingHelpers {
     final VectorRegister6 W = new VectorRegister6();
     W.set_0(x, y);
     thing.transform().writeToThingSpace(W);
-    for (final EmitsColor emitsColor : thing.collect(EmitsColor.class)) {
+    for (final HasColorsToEmit emitsColor : thing.collect(HasColorsToEmit.class)) {
       final Color result = emitsColor.queryTargetColor(W.x_1, W.y_1);
       if (result != null) {
         return result;
@@ -80,7 +80,7 @@ public class AbstractThingHelpers {
     thing.transform().writeToThingSpace(event.position);
 
     final ArrayList<ThingInteraction> interactions = new ArrayList<>(1);
-    for (final CanBeInteractedWithByMouse mouse : thing.collect(CanBeInteractedWithByMouse.class)) {
+    for (final HasMouseInteractions mouse : thing.collect(HasMouseInteractions.class)) {
       final ThingInteraction interaction = mouse.startInteraction(event);
       if (interaction != null) {
         interactions.add(interaction);

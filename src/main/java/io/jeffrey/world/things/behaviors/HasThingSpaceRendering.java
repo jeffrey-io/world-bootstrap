@@ -4,12 +4,12 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.Transform;
 import javafx.scene.canvas.GraphicsContext;
 
-public abstract class CanRenderInThingSpace implements CanRenderInWorldSpace {
+public abstract class HasThingSpaceRendering implements HasWorldSpaceRendering {
 
   protected final Document  document;
   protected final Transform transform;
 
-  public CanRenderInThingSpace(final Transform transform, final Document document) {
+  public HasThingSpaceRendering(final Transform transform, final Document document) {
     this.transform = transform;
     this.document = document;
   }

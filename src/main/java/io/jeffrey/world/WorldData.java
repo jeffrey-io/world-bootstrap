@@ -25,8 +25,8 @@ import io.jeffrey.world.document.Iconify;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.document.history.HistoryMouseInteractionTrapper;
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.behaviors.CanBeSelectedByWindow;
-import io.jeffrey.world.things.behaviors.CanCacheSelection;
+import io.jeffrey.world.things.behaviors.HasInternalSelection;
+import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.core.guides.Picker;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.MousePart;
@@ -342,7 +342,7 @@ public class WorldData extends SurfaceData {
     document.history.capture();
     final HashSet<MouseInteraction> set = new HashSet<MouseInteraction>();
     for (final AbstractThing thing : document.getThings()) {
-      final MousePart mouse = thing.first("mouse", MousePart.class);
+      final MousePart mouse = thing.first(MousePart.class);
       if (mouse != null) {
         mouse.beginMoving(set, event);
       }
@@ -367,13 +367,13 @@ public class WorldData extends SurfaceData {
   public void initiateSelectionWindow() {
     for (final AbstractThing thing : document.getThings()) {
 
-      thing.collect(CanBeSelectedByWindow.class, t -> {
+      thing.collect(HasSelectionByWindow.class, t -> {
         t.beginSelectionWindow();
         return null;
       });
 
-      thing.collect(CanCacheSelection.class, t -> {
-        t.cache();
+      thing.collect(HasInternalSelection.class, t -> {
+        t.cacheInternalSelection();
         return null;
       });
     }
@@ -492,7 +492,7 @@ public class WorldData extends SurfaceData {
   @Override
   public void updateSelectionWindow(final SelectionWindow window) {
     for (final AbstractThing thing : document.getThings()) {
-      final MousePart mouse = thing.first("mouse", MousePart.class);
+      final MousePart mouse = thing.first(MousePart.class);
       if (mouse != null) {
         mouse.updateSelectionWindow(window);
       }

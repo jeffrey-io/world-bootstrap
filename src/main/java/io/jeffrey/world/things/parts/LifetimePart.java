@@ -5,9 +5,10 @@ import java.util.Set;
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
+import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.zer.edits.EditBoolean;
 
-public class LifetimePart implements Part {
+public class LifetimePart implements Part, HasActions {
   protected final EditBoolean deleted;
   public final EditBoolean    locklock;
 
@@ -48,10 +49,6 @@ public class LifetimePart implements Part {
 
   public void undelete() {
     deleted.value(false);
-  }
-
-  @Override
-  public void update() {
   }
 
 }

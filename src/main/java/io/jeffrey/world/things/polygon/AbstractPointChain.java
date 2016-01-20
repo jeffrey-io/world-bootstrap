@@ -67,7 +67,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
       AbstractPointChain.this.cache = c;
     });
 
-    register("data", points);
+    register(points);
 
     editing.selected.subscribe((t, u) -> {
       if (u.equals("false")) {
@@ -80,7 +80,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     for (final SelectablePoint2 point : chain) {
       point.selected = false;
     }
-    points.update();
+    points.updateInternalState();
   }
 
   /**
@@ -91,7 +91,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
    */
 
   protected void draw(final GraphicsContext gc) {
-    points.update();
+    points.updateInternalState();
     renderPolygon(document, gc);
   }
 
@@ -102,6 +102,21 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   /*
    * protected void populateLinks(final HashMap<String, Edit> links) { pointsEditList.edits.clear(); cache.update(); int index = 0; for (final SelectablePoint2 p : chain) { pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), true)); pointsEditList.edits.add(new EditVertex(index, new Vertex(p, this), false)); index++; } links.put("points", pointsEditList); populatePolygonalEditLinks(links); }
    */
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public double[] getWorldSpaceEdges() {
+    final VectorRegister5 W = new VectorRegister5();
+    final double[] targetEdges = chain.edges(isPolygonLooped());
+    for (int k = 0; k + 1 < targetEdges.length; k += 2) {
+      W.inject_0(targetEdges, k);
+      transform.writeToWorldSpace(W);
+      W.extract_1(targetEdges, k);
+    }
+    return targetEdges;
+  }
 
   /**
    * {@inheritDoc}
@@ -128,7 +143,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     }
     if (doUpdate) {
       points.dirty();
-      points.update();
+      points.updateInternalState();
     }
     if (mode == Mode.Subtract && anySelected) {
       return false;
@@ -193,22 +208,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
   @Override
   public void sync() {
     points.dirty();
-    points.update();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public double[] worldSpaceEdges() {
-    final VectorRegister5 W = new VectorRegister5();
-    final double[] targetEdges = chain.edges(isPolygonLooped());
-    for (int k = 0; k + 1 < targetEdges.length; k += 2) {
-      W.inject_0(targetEdges, k);
-      transform.writeToWorldSpace(W);
-      W.extract_1(targetEdges, k);
-    }
-    return targetEdges;
+    points.updateInternalState();
   }
 
 }

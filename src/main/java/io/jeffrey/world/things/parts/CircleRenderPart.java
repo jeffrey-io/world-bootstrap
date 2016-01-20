@@ -1,17 +1,14 @@
 package io.jeffrey.world.things.parts;
 
-import java.util.Set;
-
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Transform;
-import io.jeffrey.world.things.behaviors.CanRenderInThingSpace;
+import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 
-public class CircleRenderPart extends CanRenderInThingSpace implements Part {
+public class CircleRenderPart extends HasThingSpaceRendering implements Part {
 
   protected final ColorPart   edge;
   protected final EditingPart editing;
@@ -27,10 +24,6 @@ public class CircleRenderPart extends CanRenderInThingSpace implements Part {
   }
 
   @Override
-  public void act(final String action, final SharedActionSpace space) {
-  }
-
-  @Override
   public void draw(final GraphicsContext gc) {
     gc.setFill(Color.valueOf(fill.color.getAsText()));
     gc.fillArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
@@ -42,13 +35,5 @@ public class CircleRenderPart extends CanRenderInThingSpace implements Part {
       gc.setLineWidth(2 / (scale.sx() + scale.sy()));
       gc.strokeArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
     }
-  }
-
-  @Override
-  public void list(final Set<String> actionsAvailable) {
-  }
-
-  @Override
-  public void update() {
   }
 }

@@ -2,7 +2,7 @@ package io.jeffrey.world.things.behaviors;
 
 import io.jeffrey.zer.SelectionWindow;
 
-public interface CanBeSelectedByWindow {
+public interface HasSelectionByWindow {
 
   public void beginSelectionWindow();
 

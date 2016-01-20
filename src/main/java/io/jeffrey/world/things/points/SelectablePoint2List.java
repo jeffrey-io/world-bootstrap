@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.behaviors.HasActions;
@@ -49,8 +47,8 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
     return pV.toString();
   }
 
-  public final boolean                      looped;
   public final boolean                      finite;
+  public final boolean                      looped;
   private final ArrayList<SelectablePoint2> points;
 
   /**
@@ -61,58 +59,6 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
     points = parse(raw);
     this.looped = looped;
     this.finite = finite;
-  }
-
-  /**
-   * Perform the given action on the point chain
-   *
-   * @param action
-   *          the action to execute
-   * @param looped
-   *          should the chain be treated as a loop
-   * @param document
-   *          the owning document
-   * @param thing
-   *          the things
-   * @return true if the cache needs to be updated becauses the points where updated
-   */
-  @Override
-  public void invokeAction(String action, SharedActionSpace space) {
-    if ("edge.colinear".equals(action)) {
-      ColinearReduction.perform(this, looped);
-    } else if ("color.seek".equals(action)) {
-      // NormalGrowth.seekColor(thing, document, this, looped);
-    } else if ("normal.contract".equals(action)) {
-      NormalGrowth.contract(this, looped);
-    } else if ("random.normal.contract".equals(action)) {
-      NormalGrowth.contractRandomly(this, looped);
-    } else if ("normal.growth".equals(action)) {
-      NormalGrowth.expand(this, looped);
-    } else if ("random.normal.growth".equals(action)) {
-      NormalGrowth.expandRandomly(this, looped);
-    } else if ("edge.uniform".equals(action)) {
-      UniformEdgeSplit.perform(this, looped);
-    } else if ("edge.erode".equals(action)) {
-      EdgeErode.perform(this, looped);
-    } else if ("edge.split".equals(action)) {
-      EdgeSplit.perform(this, looped, false);
-    } else if ("edge.fracture".equals(action)) {
-      FractureSplit.perform(this, looped);
-    } else if ("edge.smooth".equals(action)) {
-      SmoothSplit.perform(this, looped);
-    } else if ("edge.split.random".equals(action)) {
-      EdgeSplit.perform(this, looped, true);
-    } else if ("edge.collapse.1".equals(action)) {
-      EdgeCollapseKeepEnds.perform(this, looped);
-    } else if ("edge.collapse.2".equals(action)) {
-      EdgeCollapseAll.perform(this, looped);
-    } else if ("clean.edges".equals(action)) {
-      CleanEdges.perform(this, looped);
-    } else if ("delete.vertices".equals(action)) {
-      DeleteVertices.perform(this, looped);
-    } else if ("springize".equals(action)) {
-      Springize.perform(this, looped);
-    }
   }
 
   /**
@@ -146,55 +92,9 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
     return points.get(k);
   }
 
-  /**
-   * Based on what is selected, what actions are available
-   *
-   * @param actions
-   *          the actions available
-   * @param asLoop
-   *          should the chain work as a loop
-   */
-
   @Override
-  public void listActions(Set<String> actions) {
-    if (finite) {
-      return;
-    }
-    boolean canSplit = false;
-    final int n = points.size();
-    final int m = looped ? n : n - 1;
-    boolean canDeleteVertices = false;
-    for (int k = 0; k < m && !canSplit; k++) {
-      final SelectablePoint2 p1 = points.get(k);
-      final SelectablePoint2 p2 = k + 1 < n ? points.get(k + 1) : points.get(0);
-      if (p1.selected || p2.selected) {
-        canDeleteVertices = true;
-      }
-      if (p1.selected && p2.selected) {
-        canSplit = true;
-      }
-    }
-    if (canSplit) {
-      actions.add("edge.split");
-      actions.add("edge.split.random");
-      actions.add("edge.erode");
-      actions.add("edge.collapse.1");
-      actions.add("edge.collapse.2");
-      actions.add("edge.fracture");
-      actions.add("edge.smooth");
-      actions.add("edge.uniform");
-      actions.add("edge.colinear");
-      actions.add("color.seek");
-      actions.add("clean.edges");
-      actions.add("normal.growth");
-      actions.add("random.normal.growth");
-      actions.add("normal.contract");
-      actions.add("random.normal.contract");
-      actions.add("springize");
-    }
-    if (canDeleteVertices) {
-      actions.add("delete.vertices");
-    }
+  public int getNumberSelectablePoints() {
+    return points.size();
   }
 
   /**
@@ -255,11 +155,114 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
   }
 
   /**
+   * Perform the given action on the point chain
+   *
+   * @param action
+   *          the action to execute
+   * @param looped
+   *          should the chain be treated as a loop
+   * @param document
+   *          the owning document
+   * @param thing
+   *          the things
+   * @return true if the cache needs to be updated becauses the points where updated
+   */
+  @Override
+  public void invokeAction(final String action, final SharedActionSpace space) {
+    if ("edge.colinear".equals(action)) {
+      ColinearReduction.perform(this, looped);
+    } else if ("color.seek".equals(action)) {
+      // NormalGrowth.seekColor(thing, document, this, looped);
+    } else if ("normal.contract".equals(action)) {
+      NormalGrowth.contract(this, looped);
+    } else if ("random.normal.contract".equals(action)) {
+      NormalGrowth.contractRandomly(this, looped);
+    } else if ("normal.growth".equals(action)) {
+      NormalGrowth.expand(this, looped);
+    } else if ("random.normal.growth".equals(action)) {
+      NormalGrowth.expandRandomly(this, looped);
+    } else if ("edge.uniform".equals(action)) {
+      UniformEdgeSplit.perform(this, looped);
+    } else if ("edge.erode".equals(action)) {
+      EdgeErode.perform(this, looped);
+    } else if ("edge.split".equals(action)) {
+      EdgeSplit.perform(this, looped, false);
+    } else if ("edge.fracture".equals(action)) {
+      FractureSplit.perform(this, looped);
+    } else if ("edge.smooth".equals(action)) {
+      SmoothSplit.perform(this, looped);
+    } else if ("edge.split.random".equals(action)) {
+      EdgeSplit.perform(this, looped, true);
+    } else if ("edge.collapse.1".equals(action)) {
+      EdgeCollapseKeepEnds.perform(this, looped);
+    } else if ("edge.collapse.2".equals(action)) {
+      EdgeCollapseAll.perform(this, looped);
+    } else if ("clean.edges".equals(action)) {
+      CleanEdges.perform(this, looped);
+    } else if ("delete.vertices".equals(action)) {
+      DeleteVertices.perform(this, looped);
+    } else if ("springize".equals(action)) {
+      Springize.perform(this, looped);
+    }
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
   public Iterator<SelectablePoint2> iterator() {
     return points.iterator();
+  }
+
+  /**
+   * Based on what is selected, what actions are available
+   *
+   * @param actions
+   *          the actions available
+   * @param asLoop
+   *          should the chain work as a loop
+   */
+
+  @Override
+  public void listActions(final Set<String> actions) {
+    if (finite) {
+      return;
+    }
+    boolean canSplit = false;
+    final int n = points.size();
+    final int m = looped ? n : n - 1;
+    boolean canDeleteVertices = false;
+    for (int k = 0; k < m && !canSplit; k++) {
+      final SelectablePoint2 p1 = points.get(k);
+      final SelectablePoint2 p2 = k + 1 < n ? points.get(k + 1) : points.get(0);
+      if (p1.selected || p2.selected) {
+        canDeleteVertices = true;
+      }
+      if (p1.selected && p2.selected) {
+        canSplit = true;
+      }
+    }
+    if (canSplit) {
+      actions.add("edge.split");
+      actions.add("edge.split.random");
+      actions.add("edge.erode");
+      actions.add("edge.collapse.1");
+      actions.add("edge.collapse.2");
+      actions.add("edge.fracture");
+      actions.add("edge.smooth");
+      actions.add("edge.uniform");
+      actions.add("edge.colinear");
+      actions.add("color.seek");
+      actions.add("clean.edges");
+      actions.add("normal.growth");
+      actions.add("random.normal.growth");
+      actions.add("normal.contract");
+      actions.add("random.normal.contract");
+      actions.add("springize");
+    }
+    if (canDeleteVertices) {
+      actions.add("delete.vertices");
+    }
   }
 
   /**
@@ -365,10 +368,5 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
       values.add(p.y);
     }
     return pack(values);
-  }
-
-  @Override
-  public int getNumberSelectablePoints() {
-    return points.size();
   }
 }

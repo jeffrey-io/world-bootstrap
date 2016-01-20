@@ -11,7 +11,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class ThingRotater implements ThingInteraction {
+public class ThingRotater extends ThingInteraction {
   private static final double   RADIANS_TO_DEGREES = 57.2957795;
   private final double          angle;
   private final VectorRegister3 origin;
@@ -51,6 +51,11 @@ public class ThingRotater implements ThingInteraction {
       nangle = Math.floor(nangle / 7.5) * 7.5;
     }
     rotation.angle(nangle);
+  }
+
+  @Override
+  public Order order() {
+    return Order.ThingLevel;
   }
 
 }

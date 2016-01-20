@@ -12,7 +12,7 @@ import io.jeffrey.zer.meta.GuideLine;
  *
  * @author jeffrey
  */
-public class ThingSnapper implements ThingInteraction {
+public class ThingSnapper extends ThingInteraction {
   private final Camera                camera;
   private final ThingInteraction      delegate;
   private final Collection<GuideLine> lines;
@@ -50,6 +50,11 @@ public class ThingSnapper implements ThingInteraction {
     for (final GuideLine line : lines) {
       link.attemptSnapTo(camera, line);
     }
+  }
+
+  @Override
+  public Order order() {
+    return delegate.order();
   }
 
 }

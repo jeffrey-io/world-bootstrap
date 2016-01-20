@@ -15,6 +15,7 @@ import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasInternalSelection;
+import io.jeffrey.world.things.behaviors.HasMouseInteractions;
 import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.behaviors.HasUpdate;
@@ -30,7 +31,7 @@ import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
-public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMover, HasActions, HasUpdate {
+public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMover, HasActions, HasUpdate, HasMouseInteractions {
 
   public class SharedMutableCache {
     public double       boundingRadiusForControls;
@@ -56,15 +57,15 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   private final Subscribers<SharedMutableCache> notification;
   public boolean                                outOfDate = false;
 
+  public final HasSelectablePoints              points;
   private final PositionPart                    position;
   private final RotationPart                    rotation;
   private final ScalePart                       scale;
+
   private final Transform                       transform;
-
   public final EditString                       vertices;
-  public final HasSelectablePoints points;
 
-  public PointSetPart(final LinkedDataMap data, final Document document, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, HasSelectablePoints points) {
+  public PointSetPart(final LinkedDataMap data, final Document document, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, final HasSelectablePoints points) {
     lock = data.getBoolean("vlock", false);
     this.points = points;
     this.document = document;
@@ -172,8 +173,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     return doodads;
   }
 
-
-
   @Override
   public void invokeAction(final String action, final SharedActionSpace space) {
     if ("apply_scale_to_points_reset_scale".equals(action)) {
@@ -184,11 +183,44 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     }
   }
 
+
+  @Override
+  public ThingInteraction startInteraction(AdjustedMouseEvent event) {
+    return startInteractionWithClear(event, true);
+  }
+  
+
+  public ThingInteraction startInteractionWithClear(AdjustedMouseEvent event, boolean withClear) {
+    final VectorRegister3 W = new VectorRegister3();
+    if (document != null) {
+      for (final SelectablePoint2 point : points) {
+        W.set_0(point.x, point.y);
+        transform.writeToWorldSpace(W);
+        if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
+          if (withClear) {
+            for (final SelectablePoint2 other : points) {
+              other.selected = false;
+            }
+          }
+          point.selected = true;
+          return new EventedPoint2Mover(new EventedPoint2(point, this), event);
+        }
+      }
+    }
+    return null;
+  }
+
   @Override
   public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     requireUpToDate();
     boolean all = true;
     boolean any = false;
+    
+    ThingInteraction singleVertex = startInteractionWithClear(event, false);
+    if (singleVertex != null) {
+      interactions.add(singleVertex);
+      any = true;
+    }
 
     for (final SelectablePoint2 point : points) {
       if (!point.selected) {
@@ -235,7 +267,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     // walk the points
     cache.boundingRadiusForControls = 0;
     k = 0;
-    for (SelectablePoint2 p : points) {
+    for (final SelectablePoint2 p : points) {
       cache.inlineXYPairs[2 * k] = p.x;
       cache.inlineXYPairs[2 * k + 1] = p.y;
       cache.x[k] = p.x;
@@ -285,7 +317,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     boolean doUpdate = false;
     boolean isSelected = false;
     boolean anySelected = false;
-    for (SelectablePoint2 point : points) {
+    for (final SelectablePoint2 point : points) {
       final boolean old = point.selected;
       if (polygon.contains(point.x, point.y)) {
         point.selected = true;
@@ -320,4 +352,5 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   public void update() {
     outOfDate = true;
   }
+
 }

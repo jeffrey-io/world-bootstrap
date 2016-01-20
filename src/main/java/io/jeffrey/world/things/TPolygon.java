@@ -6,12 +6,8 @@ import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.LazyPolygonPart;
-import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.parts.RenderPolygonPart;
-import io.jeffrey.world.things.polygon.AbstractPointChain;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
+import io.jeffrey.world.things.points.PointListThing;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
@@ -20,7 +16,7 @@ import javafx.scene.shape.Shape;
  *
  * @author jeffrey
  */
-public class TPolygon extends AbstractPointChain {
+public class TPolygon extends PointListThing {
   private final LazyPolygonPart lazyPolygonPart;
   private Polygon               polygon;
 
@@ -31,7 +27,7 @@ public class TPolygon extends AbstractPointChain {
    *          where the data for the thing iss
    */
   public TPolygon(final Document document, final ThingData node) {
-    super(document, node);
+    super(document, node, true, false);
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(list, position, rotation));
     register(enforcers);
 
@@ -44,7 +40,6 @@ public class TPolygon extends AbstractPointChain {
     });
 
     register(new RenderPolygonPart(transform, document, points, list));
-    register(new RenderPathPart(transform, document, points, list));
   }
 
   /**

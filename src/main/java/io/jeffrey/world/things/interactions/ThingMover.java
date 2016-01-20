@@ -9,7 +9,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class ThingMover implements ThingInteraction {
+public class ThingMover extends ThingInteraction {
   private final double       angle;
   private final double       ix;
   private final double       iy;
@@ -61,4 +61,8 @@ public class ThingMover implements ThingInteraction {
     }
   }
 
+  @Override
+  public Order order() {
+    return Order.ThingLevel;
+  }
 }

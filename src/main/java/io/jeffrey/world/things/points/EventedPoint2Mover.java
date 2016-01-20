@@ -8,7 +8,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class EventedPoint2Mover implements ThingInteraction {
+public class EventedPoint2Mover extends ThingInteraction {
 
   private final double        ix;
   private final double        iy;
@@ -40,6 +40,11 @@ public class EventedPoint2Mover implements ThingInteraction {
   @Override
   public void moved(final AdjustedMouseEvent event) {
     vertex.setChange(event.position.x_1 - ix, event.position.y_1 - iy);
+  }
+
+  @Override
+  public Order order() {
+    return Order.SingleOfThing;
   }
 
 }

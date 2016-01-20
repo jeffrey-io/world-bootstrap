@@ -8,7 +8,7 @@ import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
 import io.jeffrey.world.things.points.SelectablePoint2List;
 import javafx.scene.canvas.GraphicsContext;
 
-public class RenderPathPart extends HasThingSpaceRendering implements Part{
+public class RenderPathPart extends HasThingSpaceRendering implements Part {
 
   private SharedMutableCache cache;
   private final PointSetPart pointset;
@@ -28,7 +28,7 @@ public class RenderPathPart extends HasThingSpaceRendering implements Part{
     }
     // gc.setStroke(Color.valueOf(fill.color.getAsText()));
     gc.beginPath();
-    //final double s = 2.0 / (scale.sx() + scale.sy());
+    // final double s = 2.0 / (scale.sx() + scale.sy());
     // gc.setLineWidth(s);
     gc.moveTo(cache.x[0], cache.y[0]);
     for (int k = 1; k < cache.y.length; k++) {

@@ -7,12 +7,27 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public interface ThingInteraction {
+public abstract class ThingInteraction implements Comparable<ThingInteraction> {
+
+  public static enum Order {
+    SingleOfThing(2), SubsetOfThing(1), ThingLevel(0);
+
+    private final int ordinal;
+
+    private Order(final int ordinal) {
+      this.ordinal = ordinal;
+    }
+  }
 
   /**
    * abort the interaction
    */
-  public void cancel();
+  public abstract void cancel();
+
+  @Override
+  public int compareTo(final ThingInteraction o) {
+    return order().ordinal - o.order().ordinal;
+  }
 
   /**
    * the mouse has moved
@@ -20,5 +35,7 @@ public interface ThingInteraction {
    * @param event
    *          the event in the thing space
    */
-  public void moved(AdjustedMouseEvent event);
+  public abstract void moved(AdjustedMouseEvent event);
+
+  public abstract Order order();
 }

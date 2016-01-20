@@ -26,6 +26,7 @@ public class EventedPoint2 {
   }
 
   public void setChange(final double dx, final double dy) {
+    point.selected = true;
     point.x = x + dx;
     point.y = y + dy;
     update.update();

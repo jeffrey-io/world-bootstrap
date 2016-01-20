@@ -9,7 +9,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class PairEventPoint2Mover implements ThingInteraction {
+public class PairEventPoint2Mover extends ThingInteraction {
   private final EventedPoint2Mover a;
   private final EventedPoint2Mover b;
 
@@ -43,4 +43,10 @@ public class PairEventPoint2Mover implements ThingInteraction {
     a.moved(event);
     b.moved(event);
   }
+
+  @Override
+  public Order order() {
+    return Order.SubsetOfThing;
+  }
+
 }

@@ -7,18 +7,17 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.parts.PositionPart;
+import io.jeffrey.world.things.parts.RenderPathPart;
+import io.jeffrey.world.things.points.PointListThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.world.things.polygon.AbstractPointChain;
 import io.jeffrey.zer.edits.EditString;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 /**
  * A thing that connects to other things
  *
  * @author jeffrey
  */
-public class TConnector extends AbstractPointChain {
+public class TConnector extends PointListThing {
   /**
    *
    * Represnets a vertex that is locked by name; this provides the snap-to effect when a node is editted
@@ -79,12 +78,13 @@ public class TConnector extends AbstractPointChain {
    *          where the data for the thing iss
    */
   public TConnector(final Document document, final ThingData node) {
-    super(document, node);
+    super(document, node, false, true);
     from = new LockedVertex(list.at(0), data, "from");
     to = new LockedVertex(list.at(1), data, "to");
     points.update();
     points.requireUpToDate();
     dirty = true;
+    register(new RenderPathPart(transform, document, points, list));
   }
 
   public void refresh() {

@@ -9,7 +9,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class ThingScaler implements ThingInteraction {
+public class ThingScaler extends ThingInteraction {
   private final double    ix;
   private final double    iy;
   private final ScalePart scale;
@@ -57,5 +57,10 @@ public class ThingScaler implements ThingInteraction {
     }
     scale.sx(nsx);
     scale.sy(nsy);
+  }
+
+  @Override
+  public Order order() {
+    return Order.ThingLevel;
   }
 }

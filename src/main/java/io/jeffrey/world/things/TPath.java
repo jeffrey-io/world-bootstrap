@@ -2,9 +2,8 @@ package io.jeffrey.world.things;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.polygon.AbstractPointChain;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import io.jeffrey.world.things.parts.RenderPathPart;
+import io.jeffrey.world.things.points.PointListThing;
 
 /**
  * a point chain that is a path
@@ -12,7 +11,7 @@ import javafx.scene.paint.Color;
  * @author jeffrey
  *
  */
-public class TPath extends AbstractPointChain {
+public class TPath extends PointListThing {
 
   /**
    * @param document
@@ -21,7 +20,8 @@ public class TPath extends AbstractPointChain {
    *          where the data for the thing iss
    */
   public TPath(final Document document, final ThingData node) {
-    super(document, node);
+    super(document, node, false, false);
+    register(new RenderPathPart(transform, document, points, list));
   }
 
 }

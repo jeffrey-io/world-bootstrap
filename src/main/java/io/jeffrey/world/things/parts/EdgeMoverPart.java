@@ -7,6 +7,7 @@ import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.behaviors.HasMouseInteractions;
 import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasUpdate;
@@ -17,7 +18,7 @@ import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.EditBoolean;
 
-public class EdgeMover implements Part, HasMover {
+public class EdgeMoverPart implements Part, HasMouseInteractions, HasMover {
 
   private final Document           document;
   private final HasSelectableEdges edges;
@@ -25,7 +26,7 @@ public class EdgeMover implements Part, HasMover {
   private final Transform          transform;
   private final HasUpdate          update;
 
-  public EdgeMover(final Document document, final Transform transform, final HasSelectableEdges edges, final EditBoolean lock, final HasUpdate update) {
+  public EdgeMoverPart(final Document document, final Transform transform, final HasSelectableEdges edges, final EditBoolean lock, final HasUpdate update) {
     this.document = document;
     this.transform = transform;
     this.edges = edges;
@@ -34,7 +35,7 @@ public class EdgeMover implements Part, HasMover {
   }
 
   @Override
-  public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
+  public ThingInteraction startInteraction(AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
     if (!lock.value()) {
       final VectorRegister3 reg = new VectorRegister3();
@@ -49,7 +50,7 @@ public class EdgeMover implements Part, HasMover {
         final SelectablePoint2 end = line[1];
         reg.set_0(end.x, end.y);
         transform.writeToWorldSpace(reg);
-        
+
         if (begin.selected || end.selected) {
           continue;
         }
@@ -62,13 +63,19 @@ public class EdgeMover implements Part, HasMover {
         final double distance = Lines.minimalDistanceV2toLineSegmentV0V1_Destructive(reg);
         if (distance > 0) {
           if (event.doodadDistance(reg.x_0, reg.y_0) <= document.edgeWidthSize) {
-            begin.selected = true;
-            end.selected = true;
-            interactions.add(new PairEventPoint2Mover(new EventedPoint2(begin, update), new EventedPoint2(end, update), event));
-            return;
+            return new PairEventPoint2Mover(new EventedPoint2(begin, update), new EventedPoint2(end, update), event);
           }
         }
       }
+    }
+    return null;
+  }
+
+  @Override
+  public void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event) {
+    ThingInteraction interaction = startInteraction(event);
+    if (interaction != null) {
+      interactions.add(interaction);
     }
   }
 }

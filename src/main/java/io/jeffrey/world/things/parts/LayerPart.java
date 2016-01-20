@@ -33,18 +33,6 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
   }
 
   @Override
-  public void act(final String action, final SharedActionSpace space) {
-    if ("push.down".equals(action)) {
-      order.value(order.value() - 1.5);
-      return;
-    }
-    if ("bring.up".equals(action)) {
-      order.value(order.value() + 1.5);
-      return;
-    }
-  }
-
-  @Override
   public int compareTo(final LayerPart o) {
     return getEstimatedSortingKey().compareTo(o.getEstimatedSortingKey());
   }
@@ -59,7 +47,19 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
   }
 
   @Override
-  public void list(final Set<String> actionsAvailable) {
+  public void invokeAction(final String action, final SharedActionSpace space) {
+    if ("push.down".equals(action)) {
+      order.value(order.value() - 1.5);
+      return;
+    }
+    if ("bring.up".equals(action)) {
+      order.value(order.value() + 1.5);
+      return;
+    }
+  }
+
+  @Override
+  public void listActions(final Set<String> actionsAvailable) {
     actionsAvailable.add("bring.up");
     actionsAvailable.add("push.down");
   }

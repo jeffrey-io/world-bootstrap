@@ -102,7 +102,7 @@ public abstract class AbstractThing {
   public Set<String> getActionsAvailable() {
     final TreeSet<String> actions = new TreeSet<>();
     for (final HasActions part : collect(HasActions.class)) {
-      part.list(actions);
+      part.listActions(actions);
     }
     return actions;
   }
@@ -167,7 +167,7 @@ public abstract class AbstractThing {
     }
     final SharedActionSpace sharedActionSpace = new SharedActionSpace();
     for (final HasActions part : collect(HasActions.class)) {
-      part.act(action, sharedActionSpace);
+      part.invokeAction(action, sharedActionSpace);
     }
     if (withHistory) {
       document.history.capture();

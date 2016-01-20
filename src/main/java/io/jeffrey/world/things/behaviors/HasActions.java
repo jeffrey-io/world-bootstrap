@@ -13,7 +13,7 @@ public interface HasActions {
    * @param space
    *          the space to communicate with other actions in flight
    */
-  public void act(String action, SharedActionSpace space);
+  public void invokeAction(String action, SharedActionSpace space);
 
   /**
    * list all available actions
@@ -21,6 +21,6 @@ public interface HasActions {
    * @param actionsAvailable
    *          where the actions will go
    */
-  public void list(Set<String> actionsAvailable);
+  public void listActions(Set<String> actionsAvailable);
 
 }

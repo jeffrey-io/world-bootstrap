@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.base.BasicThing;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
-import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.zer.edits.Edit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Polygon;
@@ -16,7 +16,7 @@ import javafx.scene.shape.Polygon;
  * @author jeffrey
  *
  */
-public abstract class AbstractPointChainContract extends Thing implements HasEdgesInWorldSpace {
+public abstract class AbstractPointChainContract extends BasicThing implements HasEdgesInWorldSpace {
 
   protected AbstractPointChainContract(final Document document, final ThingData node) {
     super(document, node);

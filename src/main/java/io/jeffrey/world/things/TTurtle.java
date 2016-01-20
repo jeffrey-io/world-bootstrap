@@ -13,6 +13,7 @@ public class TTurtle extends TPolygon {
   public TTurtle(final Document document, final ThingData node) {
     super(document, node);
     final EditString scriptraw = data.getString("script", "forward 50;left 90; forward 50; left 90; forward 50; left 45; forward 100");
+
     // TODO: this is broken, need to put a filter/transformer in place
     script = new DelegateEdit(scriptraw) {
       @Override

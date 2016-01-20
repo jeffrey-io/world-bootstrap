@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.polygon.actions.CleanEdges;
 import io.jeffrey.world.things.polygon.actions.ColinearReduction;
@@ -63,7 +63,7 @@ public class PointChain implements Iterable<SelectablePoint2> {
    * @parm thing the things
    * @return true if the cache needs to be updated becauses the points where updated
    */
-  public boolean act(final String action, final boolean asLoop, final Document document, final Thing thing) {
+  public boolean act(final String action, final boolean asLoop, final Document document, final AbstractThing thing) {
     if ("edge.colinear".equals(action)) {
       ColinearReduction.perform(this, asLoop);
       return true;

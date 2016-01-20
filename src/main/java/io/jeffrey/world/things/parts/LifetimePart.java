@@ -17,8 +17,12 @@ public class LifetimePart implements Part, HasActions {
     locklock = data.getBoolean("locklock", false);
   }
 
+  public void delete() {
+    deleted.value(true);
+  }
+
   @Override
-  public void act(final String action, final SharedActionSpace space) {
+  public void invokeAction(final String action, final SharedActionSpace space) {
     if ("undelete".equals(action)) {
       deleted.value(false);
     }
@@ -27,16 +31,12 @@ public class LifetimePart implements Part, HasActions {
     }
   }
 
-  public void delete() {
-    deleted.value(true);
-  }
-
   public boolean isDeleted() {
     return deleted.value();
   }
 
   @Override
-  public void list(final Set<String> actionsAvailable) {
+  public void listActions(final Set<String> actionsAvailable) {
     if (!locklock.value()) {
       actionsAvailable.add("templatize");
     }

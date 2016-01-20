@@ -2,12 +2,13 @@ package io.jeffrey.world.things;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.base.BasicThing;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.GenericMoverPart;
 import io.jeffrey.world.things.parts.ImageRenderPart;
+import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.RectanglePart;
 import io.jeffrey.world.things.parts.UriPart;
 
@@ -17,7 +18,7 @@ import io.jeffrey.world.things.parts.UriPart;
  * @author jeffrey
  *
  */
-public class TImage extends Thing {
+public class TImage extends BasicThing {
 
   private final RectanglePart rectangle;
   private final UriPart       uri;
@@ -38,5 +39,6 @@ public class TImage extends Thing {
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(rectangle, position, rotation));
     register(enforcers);
     register(new GenericMoverPart(position, rotation));
+    register(new MousePart(this, transform));
   }
 }

@@ -8,6 +8,7 @@ import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
+import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.PointSetPart;
 import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
 import io.jeffrey.world.things.points.EventedPoint2;
@@ -68,6 +69,7 @@ public abstract class AbstractPointChain extends AbstractPointChainContract impl
     });
 
     register(points);
+    register(new MousePart(this, transform));
 
     editing.selected.subscribe((t, u) -> {
       if (u.equals("false")) {

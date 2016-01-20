@@ -5,7 +5,7 @@ import java.util.Random;
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.polygon.PointChain;
 
@@ -18,10 +18,10 @@ public class NormalGrowth {
   private static class ColorSeeker implements Augmenter {
 
     private final Document        document;
-    private final Thing           thing;
+    private final AbstractThing   thing;
     private final VectorRegister3 W;
 
-    public ColorSeeker(final Thing thing, final Document document) {
+    public ColorSeeker(final AbstractThing thing, final Document document) {
       this.thing = thing;
       this.document = document;
       W = new VectorRegister3();
@@ -144,7 +144,7 @@ public class NormalGrowth {
    * @param asLoop
    *          is it a loop
    */
-  public static void seekColor(final Thing thing, final Document document, final PointChain chain, final boolean asLoop) {
+  public static void seekColor(final AbstractThing thing, final Document document, final PointChain chain, final boolean asLoop) {
     augment(chain, asLoop, new ColorSeeker(thing, document));
   }
 }

@@ -1,10 +1,7 @@
-package io.jeffrey.world.things.core__old_defunct;
+package io.jeffrey.world.things.base;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.base.StandardTransform;
-import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.parts.ColorPart;
 import io.jeffrey.world.things.parts.DoodadRenderPart;
 import io.jeffrey.world.things.parts.LayerPart;
@@ -13,7 +10,7 @@ import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
 
-public abstract class ThingCore extends AbstractThing {
+public abstract class BasicThing extends AbstractThing {
   protected final ColorPart    fill;
   protected final LayerPart    layer;
   protected final MetadataPart metadata;
@@ -28,7 +25,7 @@ public abstract class ThingCore extends AbstractThing {
    * @param node
    *          where the data for the node comes from
    */
-  public ThingCore(final Document document, final ThingData node) {
+  public BasicThing(final Document document, final ThingData node) {
     super(document, node);
 
     layer = new LayerPart(document, data);

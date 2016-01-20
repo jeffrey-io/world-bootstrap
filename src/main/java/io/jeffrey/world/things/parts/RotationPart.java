@@ -25,13 +25,6 @@ public class RotationPart implements Part, HasActions, HasInternalStateThatMayNe
     updateInternalState();
   }
 
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
-    if ("reset.angle".equals(action)) {
-      angle(0);
-    }
-  }
-
   /**
    * @return the current angle (in degrees)
    */
@@ -56,7 +49,14 @@ public class RotationPart implements Part, HasActions, HasInternalStateThatMayNe
   }
 
   @Override
-  public void list(final Set<String> actionsAvailable) {
+  public void invokeAction(final String action, final SharedActionSpace space) {
+    if ("reset.angle".equals(action)) {
+      angle(0);
+    }
+  }
+
+  @Override
+  public void listActions(final Set<String> actionsAvailable) {
     actionsAvailable.add("reset.angle");
   }
 

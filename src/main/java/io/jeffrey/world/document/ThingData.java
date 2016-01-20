@@ -9,7 +9,7 @@ import io.jeffrey.world.things.TImage;
 import io.jeffrey.world.things.TPath;
 import io.jeffrey.world.things.TPolygon;
 import io.jeffrey.world.things.TTurtle;
-import io.jeffrey.world.things.core__old_defunct.Thing;
+import io.jeffrey.world.things.base.BasicThing;
 import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class ThingData extends ObjectDataMap {
@@ -23,7 +23,7 @@ public class ThingData extends ObjectDataMap {
     fields.put("_type", type);
   }
 
-  public Thing make(final Document document) {
+  public BasicThing make(final Document document) {
     if (fields.get("_type").equals("circle")) {
       return new TCircle(document, this);
     }

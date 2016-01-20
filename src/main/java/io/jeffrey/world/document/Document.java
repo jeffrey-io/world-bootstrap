@@ -22,7 +22,6 @@ import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.base.ControlDoodad;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
-import io.jeffrey.world.things.core__old_defunct.Thing;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.LifetimePart;
@@ -63,7 +62,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     VERTEX_ICON_SELECTED = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex_selected.png"));
   }
 
-  public void addThing(final Thing thing) {
+  public void addThing(final AbstractThing thing) {
     history.capture();
     things.add(thing);
     thing.invokeAction("delete", false);
@@ -213,7 +212,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
           tdata.put(key, value.asText());
         }
       }
-      final Thing thingToAdd = new ThingData(tdata).make(this);
+      final AbstractThing thingToAdd = new ThingData(tdata).make(this);
       things.add(thingToAdd);
       lookup.put(thingToAdd.getID(), thingToAdd);
     }
@@ -288,7 +287,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     return n;
   }
 
-  public Color query(final double x, final double y, final Thing skip) {
+  public Color query(final double x, final double y, final AbstractThing skip) {
     for (final AbstractThing thing : things) {
       if (thing == skip) {
         continue;

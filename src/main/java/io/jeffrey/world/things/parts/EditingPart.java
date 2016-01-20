@@ -18,7 +18,7 @@ public class EditingPart implements Part, HasActions {
   }
 
   @Override
-  public void act(final String action, final SharedActionSpace space) {
+  public void invokeAction(final String action, final SharedActionSpace space) {
     if ("lock".equals(action)) {
       locked.value(true);
     } else if ("unlock".equals(action)) {
@@ -33,7 +33,7 @@ public class EditingPart implements Part, HasActions {
   }
 
   @Override
-  public void list(final Set<String> actionsAvailable) {
+  public void listActions(final Set<String> actionsAvailable) {
     if (locked.value()) {
       actionsAvailable.add("unlock");
     } else {

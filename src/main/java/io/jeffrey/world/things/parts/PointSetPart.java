@@ -80,16 +80,6 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     updateInternalState();
   }
 
-  @Override
-  public void act(final String action, final SharedActionSpace space) {
-    if ("apply_scale_to_points_reset_scale".equals(action)) {
-      apply_scale_to_points_reset_scale();
-    }
-    if ("center_points_internally".equals(action)) {
-      center_points_internally();
-    }
-  }
-
   private void apply_scale_to_points_reset_scale() {
     updateInternalState();
     final double mx = scale.sx();
@@ -199,6 +189,16 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   @Override
+  public void invokeAction(final String action, final SharedActionSpace space) {
+    if ("apply_scale_to_points_reset_scale".equals(action)) {
+      apply_scale_to_points_reset_scale();
+    }
+    if ("center_points_internally".equals(action)) {
+      center_points_internally();
+    }
+  }
+
+  @Override
   public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     boolean all = true;
     boolean any = false;
@@ -226,7 +226,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   @Override
-  public void list(final Set<String> actionsAvailable) {
+  public void listActions(final Set<String> actionsAvailable) {
     actionsAvailable.add("apply_scale_to_points_reset_scale");
     actionsAvailable.add("center_points_internally");
   }

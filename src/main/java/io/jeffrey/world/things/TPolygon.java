@@ -43,6 +43,7 @@ public class TPolygon extends AbstractPointChain {
       TPolygon.this.polygon = new Polygon(c.inlineXYPairs);
       lazyPolygonPart.set(polygon);
     });
+
   }
 
   /**

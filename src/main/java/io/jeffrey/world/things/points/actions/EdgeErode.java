@@ -1,10 +1,10 @@
-package io.jeffrey.world.things.polygon.actions;
+package io.jeffrey.world.things.points.actions;
 
 import java.util.Arrays;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.SelectablePoint2List;
 import io.jeffrey.world.things.polygon.IndexRemoval;
-import io.jeffrey.world.things.polygon.PointChain;
 
 public class EdgeErode {
 
@@ -50,7 +50,7 @@ public class EdgeErode {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final PointChain chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
     final IndexRemoval remover = new IndexRemoval();
     for (final SelectablePoint2[] segments : chain.selectedSegments(asLoop)) {
       final boolean[] cut = collapsable(segments);

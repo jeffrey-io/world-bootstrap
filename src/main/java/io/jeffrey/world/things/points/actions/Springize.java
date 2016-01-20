@@ -1,7 +1,7 @@
-package io.jeffrey.world.things.polygon.actions;
+package io.jeffrey.world.things.points.actions;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.world.things.polygon.PointChain;
+import io.jeffrey.world.things.points.SelectablePoint2List;
 
 public class Springize {
 
@@ -11,7 +11,7 @@ public class Springize {
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  public static void perform(final PointChain chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
     final double step = 0.1 * 0.1 / 2.0;
     for (final SelectablePoint2[] segments : chain.selectedSegments(asLoop, true)) {
 

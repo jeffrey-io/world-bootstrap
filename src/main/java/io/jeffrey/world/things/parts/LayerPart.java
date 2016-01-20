@@ -8,13 +8,13 @@ import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.base.Snap;
 import io.jeffrey.world.things.behaviors.HasActions;
-import io.jeffrey.world.things.behaviors.HasInternalStateThatMayNeedManualUpdating;
+import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 import io.jeffrey.zer.edits.EditString;
 import io.jeffrey.zer.meta.LayerProperties;
 
-public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions, HasInternalStateThatMayNeedManualUpdating {
+public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions, HasUpdate {
   private LayerProperties  cachedLayerProperties;
   private final Document   document;
   public final EditBoolean ignoreSnap;
@@ -25,11 +25,11 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
   public LayerPart(final Document document, final LinkedDataMap data) {
     this.document = document;
     layer = data.getString("layer", "_");
-    layer.subscribe((t, u) -> updateInternalState());
+    layer.subscribe((t, u) -> update());
     order = data.getDouble("order", Double.MAX_VALUE);
     layerlock = data.getBoolean("layerlock", false);
     ignoreSnap = data.getBoolean("ignoresnap", false);
-    updateInternalState();
+    update();
   }
 
   @Override
@@ -90,7 +90,7 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
   }
 
   @Override
-  public void updateInternalState() {
+  public void update() {
     cachedLayerProperties = document.layers.get(layer.getAsText());
   }
 

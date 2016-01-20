@@ -6,11 +6,11 @@ import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.behaviors.HasActions;
-import io.jeffrey.world.things.behaviors.HasInternalStateThatMayNeedManualUpdating;
+import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 
-public class RotationPart implements Part, HasActions, HasInternalStateThatMayNeedManualUpdating {
+public class RotationPart implements Part, HasActions, HasUpdate {
   private static final double DEGREES_TO_RADIANS = 0.0174532925;
 
   public final EditDouble     angle;
@@ -20,9 +20,9 @@ public class RotationPart implements Part, HasActions, HasInternalStateThatMayNe
 
   public RotationPart(final LinkedDataMap data) {
     angle = data.getDouble("angle", 0.0);
-    angle.subscribe((t, u) -> updateInternalState());
+    angle.subscribe((t, u) -> update());
     lock = data.getBoolean("alock", false);
-    updateInternalState();
+    update();
   }
 
   /**
@@ -61,7 +61,7 @@ public class RotationPart implements Part, HasActions, HasInternalStateThatMayNe
   }
 
   @Override
-  public void updateInternalState() {
+  public void update() {
     cx = Math.cos(DEGREES_TO_RADIANS * angle.value());
     cy = Math.sin(DEGREES_TO_RADIANS * angle.value());
   }

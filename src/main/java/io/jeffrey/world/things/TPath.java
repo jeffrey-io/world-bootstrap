@@ -1,14 +1,10 @@
 package io.jeffrey.world.things;
 
-import java.util.HashMap;
-
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
-import io.jeffrey.zer.edits.Edit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 
 /**
  * a point chain that is a path
@@ -26,60 +22,6 @@ public class TPath extends AbstractPointChain {
    */
   public TPath(final Document document, final ThingData node) {
     super(document, node);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean allowEdgeSelect() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean areTheNumberOfPointsFixed() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesPolygonIntersect(final Polygon p) {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean hasStandardControls() {
-    return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean isPolygonLooped() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void onCacheUpdated() {
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void populatePolygonalEditLinks(final HashMap<String, Edit> links) {
   }
 
   /**

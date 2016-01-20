@@ -13,7 +13,7 @@ import java.util.function.Function;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.behaviors.HasActions;
-import io.jeffrey.world.things.behaviors.HasInternalStateThatMayNeedManualUpdating;
+import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.IdentityPart;
 import io.jeffrey.world.things.parts.LifetimePart;
@@ -208,8 +208,8 @@ public abstract class AbstractThing {
    * invoke update on all the parts
    */
   public void update() {
-    for (final HasInternalStateThatMayNeedManualUpdating updatable : collect(HasInternalStateThatMayNeedManualUpdating.class)) {
-      updatable.updateInternalState();
+    for (final HasUpdate updatable : collect(HasUpdate.class)) {
+      updatable.update();
     }
   }
 }

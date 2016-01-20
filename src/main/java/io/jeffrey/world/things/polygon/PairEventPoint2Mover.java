@@ -10,7 +10,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class EdgeMover implements ThingInteraction {
+public class PairEventPoint2Mover implements ThingInteraction {
   private final EventedPoint2Mover a;
   private final EventedPoint2Mover b;
 
@@ -22,7 +22,7 @@ public class EdgeMover implements ThingInteraction {
    * @param initial
    *          the initial event in thing space
    */
-  public EdgeMover(final EventedPoint2 v0, final EventedPoint2 v1, final AdjustedMouseEvent initial) {
+  public PairEventPoint2Mover(final EventedPoint2 v0, final EventedPoint2 v1, final AdjustedMouseEvent initial) {
     a = new EventedPoint2Mover(v0, initial);
     b = new EventedPoint2Mover(v1, initial);
   }

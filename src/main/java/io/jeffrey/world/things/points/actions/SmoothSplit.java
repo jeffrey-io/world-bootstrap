@@ -1,10 +1,10 @@
-package io.jeffrey.world.things.polygon.actions;
+package io.jeffrey.world.things.points.actions;
 
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.SelectablePoint2List;
 import io.jeffrey.world.things.polygon.PointAddition;
-import io.jeffrey.world.things.polygon.PointChain;
 
 /**
  * This will attempt to smooth the polygon
@@ -19,7 +19,7 @@ public class SmoothSplit {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final PointChain chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
     final VectorRegister8 temp = new VectorRegister8();
     final PointAddition adder = new PointAddition();
     for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {

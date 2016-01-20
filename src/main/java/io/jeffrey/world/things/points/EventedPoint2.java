@@ -1,6 +1,6 @@
 package io.jeffrey.world.things.points;
 
-import io.jeffrey.zer.Syncable;
+import io.jeffrey.world.things.behaviors.HasUpdate;
 
 /**
  * a bi-direction link to a point inside of a polygon
@@ -10,15 +10,15 @@ import io.jeffrey.zer.Syncable;
  */
 public class EventedPoint2 {
   private final SelectablePoint2 point;
-  private final Syncable         sync;
+  private final HasUpdate        update;
   public final double            x;
   public final double            y;
 
-  public EventedPoint2(final SelectablePoint2 point, final Syncable sync) {
+  public EventedPoint2(final SelectablePoint2 point, final HasUpdate update) {
     x = point.x;
     y = point.y;
     this.point = point;
-    this.sync = sync;
+    this.update = update;
   }
 
   public void reset() {
@@ -28,6 +28,6 @@ public class EventedPoint2 {
   public void setChange(final double dx, final double dy) {
     point.x = x + dx;
     point.y = y + dy;
-    sync.sync();
+    update.update();
   }
 }

@@ -15,8 +15,8 @@ import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasInternalSelection;
-import io.jeffrey.world.things.behaviors.HasInternalStateThatMayNeedManualUpdating;
 import io.jeffrey.world.things.behaviors.HasMover;
+import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
@@ -25,12 +25,11 @@ import io.jeffrey.world.things.points.EventedPoint2Mover;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
-import io.jeffrey.zer.Syncable;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
-public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMover, HasActions, HasInternalStateThatMayNeedManualUpdating {
+public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMover, HasActions, HasUpdate {
 
   public class SharedMutableCache {
     public double       boundingRadiusForControls;
@@ -44,6 +43,10 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       inlineXYPairs = new double[0];
       x = new double[0];
       y = new double[0];
+    }
+
+    public boolean valid() {
+      return inlineXYPairs.length > 0;
     }
   }
 
@@ -71,17 +74,17 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     this.transform = transform;
     cache = new SharedMutableCache();
 
-    lock.subscribe((t, u) -> PointSetPart.this.dirty());
+    lock.subscribe((t, u) -> PointSetPart.this.update());
     outOfDate = true;
     notification = new Subscribers<>();
     this.position = position;
 
     vertices = data.getString("points", "0,-1,1,1,-1,1");
-    updateInternalState();
+    update();
   }
 
   private void apply_scale_to_points_reset_scale() {
-    updateInternalState();
+    refresh();
     final double mx = scale.sx();
     final double my = scale.sy();
     scale.sx(1.0);
@@ -93,7 +96,6 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       p.x *= mx;
       p.y *= my;
     }
-    updateInternalState();
     dirty();
   }
 
@@ -108,7 +110,7 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
   }
 
   private void center_points_internally() {
-    updateInternalState();
+    refresh();
     if (cache.inlineXYPairs.length == 0) {
       return;
     }
@@ -183,9 +185,9 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
   public abstract Iterable<SelectablePoint2> getSelectablePoints();
 
-  public void invalidateNow() {
-    dirty();
-    updateInternalState();
+  public void invalidate() {
+    update();
+    refresh();
   }
 
   @Override
@@ -216,11 +218,9 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
       return;
     }
 
-    final Syncable sync = () -> dirty();
-
     for (final SelectablePoint2 point : getSelectablePoints()) {
       if (point.selected) {
-        interactions.add(new EventedPoint2Mover(new EventedPoint2(point, sync), event));
+        interactions.add(new EventedPoint2Mover(new EventedPoint2(point, this), event));
       }
     }
   }
@@ -231,48 +231,11 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
     actionsAvailable.add("center_points_internally");
   }
 
-  @Override
-  public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
-    boolean doUpdate = false;
-    boolean isSelected = false;
-    boolean anySelected = false;
-    final int n = getNumberOfPoints();
-    for (int k = 0; k < n; k++) {
-      final SelectablePoint2 point = at(k);
-      final boolean old = point.selected;
-      if (polygon.contains(point.x, point.y)) {
-        point.selected = true;
-        isSelected = true;
-      } else {
-        point.selected = false;
-      }
-      point.selected = mode.selected(point.alreadySelected, point.selected);
-      if (old != point.selected) {
-        doUpdate = true;
-      }
-      if (point.selected) {
-        anySelected = true;
-      }
-    }
-    if (doUpdate) {
-      invalidateNow();
-    }
-    if (mode == Mode.Subtract && anySelected) {
-      return false;
-    }
-    return isSelected;
-  }
-
-  public void subscribe(final Consumer<SharedMutableCache> subscriber) {
-    subscriber.accept(cache);
-    notification.subscribe(subscriber);
-  }
-
-  @Override
-  public void updateInternalState() {
+  public void refresh() {
     if (!outOfDate) {
       return;
     }
+    outOfDate = false;
     final int n = getNumberOfPoints();
     final boolean canScale = scale != null && !scale.lock.value();
     final boolean canRotate = rotation != null && !rotation.lock.value();
@@ -328,5 +291,53 @@ public abstract class PointSetPart implements Part, HasControlDoodadsInThingSpac
 
     cache.owner = this;
     notification.publish(cache);
+  }
+
+  @Override
+  public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
+    boolean doUpdate = false;
+    boolean isSelected = false;
+    boolean anySelected = false;
+    final int n = getNumberOfPoints();
+    for (int k = 0; k < n; k++) {
+      final SelectablePoint2 point = at(k);
+      final boolean old = point.selected;
+      if (polygon.contains(point.x, point.y)) {
+        point.selected = true;
+        isSelected = true;
+      } else {
+        point.selected = false;
+      }
+      point.selected = mode.selected(point.alreadySelected, point.selected);
+      if (old != point.selected) {
+        doUpdate = true;
+      }
+      if (point.selected) {
+        anySelected = true;
+      }
+    }
+    if (doUpdate) {
+      refresh();
+    }
+    if (mode == Mode.Subtract && anySelected) {
+      return false;
+    }
+    return isSelected;
+  }
+
+  public void subscribe(final Consumer<SharedMutableCache> subscriber) {
+    if (!cache.valid()) {
+      update();
+      refresh();
+    }
+    if (cache.valid()) {
+      subscriber.accept(cache);
+      notification.subscribe(subscriber);
+    }
+  }
+
+  @Override
+  public void update() {
+    outOfDate = true;
   }
 }

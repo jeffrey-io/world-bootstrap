@@ -30,7 +30,7 @@ import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.core.guides.Picker;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.MousePart;
-import io.jeffrey.world.things.polygon.PointChain;
+import io.jeffrey.world.things.points.SelectablePoint2List;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.Editable;
@@ -434,7 +434,7 @@ public class WorldData extends SurfaceData {
       values.add(50 * Math.sin(theta));
       theta += dangle;
     }
-    return PointChain.pack(values);
+    return SelectablePoint2List.pack(values);
   }
 
   @Override

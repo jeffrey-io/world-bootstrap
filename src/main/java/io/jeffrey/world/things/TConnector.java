@@ -1,7 +1,5 @@
 package io.jeffrey.world.things;
 
-import java.util.HashMap;
-
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
@@ -11,11 +9,9 @@ import io.jeffrey.world.things.base.LinkedDataMap;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
-import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 
 /**
  * A thing that connects to other things
@@ -40,10 +36,6 @@ public class TConnector extends AbstractPointChain {
       this.pnt = pnt;
       currentThing = null;
       this.name = name;
-    }
-
-    private void addEditLink(final HashMap<String, Edit> links) {
-      links.put(name, link);
     }
 
     private void update(final Document document) {
@@ -71,7 +63,7 @@ public class TConnector extends AbstractPointChain {
         currentThing.transform().writeToThingSpace(to);
         pnt.x = to.x_1;
         pnt.y = to.y_1;
-        points.invalidateNow();
+        points.dirty();
         dirty = false;
         link.value(currentThing.getID());
       }
@@ -90,67 +82,10 @@ public class TConnector extends AbstractPointChain {
    */
   public TConnector(final Document document, final ThingData node) {
     super(document, node);
-    from = new LockedVertex(chain.at(0), data, "from");
-    to = new LockedVertex(chain.at(1), data, "to");
-    points.invalidateNow();
+    from = new LockedVertex(list.at(0), data, "from");
+    to = new LockedVertex(list.at(1), data, "to");
+    points.dirty();
     dirty = true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean allowEdgeSelect() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean areTheNumberOfPointsFixed() {
-    return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesPolygonIntersect(final Polygon p) {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean hasStandardControls() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean isPolygonLooped() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void onCacheUpdated() {
-    dirty = true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void populatePolygonalEditLinks(final HashMap<String, Edit> links) {
-    from.addEditLink(links);
-    to.addEditLink(links);
   }
 
   /**

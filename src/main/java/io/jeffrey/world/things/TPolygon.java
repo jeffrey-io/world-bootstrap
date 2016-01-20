@@ -1,15 +1,13 @@
 package io.jeffrey.world.things;
 
-import java.util.HashMap;
-
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.LazyPolygonPart;
+import io.jeffrey.world.things.parts.RenderPolygonPart;
 import io.jeffrey.world.things.polygon.AbstractPointChain;
-import io.jeffrey.zer.edits.Edit;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -33,7 +31,7 @@ public class TPolygon extends AbstractPointChain {
    */
   public TPolygon(final Document document, final ThingData node) {
     super(document, node);
-    final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(this, position, rotation));
+    final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(list, position, rotation));
     register(enforcers);
 
     lazyPolygonPart = new LazyPolygonPart();
@@ -44,60 +42,14 @@ public class TPolygon extends AbstractPointChain {
       lazyPolygonPart.set(polygon);
     });
 
+    register(new RenderPolygonPart(transform, document, points, list));
   }
 
   /**
    * {@inheritDoc}
    */
-  @Override
-  protected boolean allowEdgeSelect() {
-    return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean areTheNumberOfPointsFixed() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean doesPolygonIntersect(final Polygon p) {
+  protected boolean doesPolygonIntersectX(final Polygon p) {
     return Shape.intersect(p, polygon).getBoundsInLocal().getWidth() > 0;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean hasStandardControls() {
-    return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected boolean isPolygonLooped() {
-    return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void onCacheUpdated() {
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void populatePolygonalEditLinks(final HashMap<String, Edit> links) {
   }
 
   /**

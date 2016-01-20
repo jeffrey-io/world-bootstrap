@@ -4,13 +4,13 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasColorsToEmit;
-import io.jeffrey.world.things.behaviors.HasInternalStateThatMayNeedManualUpdating;
 import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
+import io.jeffrey.world.things.behaviors.HasUpdate;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class ImageRenderPart extends HasThingSpaceRendering implements Part, HasColorsToEmit, HasInternalStateThatMayNeedManualUpdating {
+public class ImageRenderPart extends HasThingSpaceRendering implements Part, HasColorsToEmit, HasUpdate {
 
   private static int clamp(final int value, final int low, final int high) {
     return Math.min(high, Math.max(low, value));
@@ -27,12 +27,12 @@ public class ImageRenderPart extends HasThingSpaceRendering implements Part, Has
     this.uri = uri;
     this.editing = editing;
     this.rectangle = rectangle;
-    updateInternalState();
+    update();
   }
 
   @Override
   public void draw(final GraphicsContext gc) {
-    updateInternalState();
+    update();
     gc.drawImage(img, -img.getWidth() / 2.0, -img.getHeight() / 2.0);
     if (editing.selected.value()) {
       gc.save();
@@ -54,7 +54,7 @@ public class ImageRenderPart extends HasThingSpaceRendering implements Part, Has
   }
 
   @Override
-  public void updateInternalState() {
+  public void update() {
     img = document.imageCache.of(document.find(uri.uri.value()));
     if (img != null) {
       rectangle.set(-img.getWidth() / 2, -img.getHeight() / 2, img.getWidth(), img.getHeight());

@@ -1,10 +1,10 @@
-package io.jeffrey.world.things.polygon.actions;
+package io.jeffrey.world.things.points.actions;
 
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.SelectablePoint2List;
 import io.jeffrey.world.things.polygon.PointAddition;
-import io.jeffrey.world.things.polygon.PointChain;
 
 public class CleanEdges {
   /**
@@ -13,14 +13,14 @@ public class CleanEdges {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final PointChain chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
     final VectorRegister6 reg = new VectorRegister6();
 
     final PointAddition adder = new PointAddition();
     for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
       for (int j = 0; j + 1 < segment.length; j++) {
 
-        for (final SelectablePoint2[] line : chain.lines(asLoop)) {
+        for (final SelectablePoint2[] line : chain.getSelectableEdges()) {
 
           // self
           if (line[0].cachedIndex == segment[j].cachedIndex) {

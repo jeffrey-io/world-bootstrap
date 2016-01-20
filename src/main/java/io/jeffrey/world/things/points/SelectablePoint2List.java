@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.polygon;
+package io.jeffrey.world.things.points;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,21 +6,25 @@ import java.util.List;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.world.things.polygon.actions.CleanEdges;
-import io.jeffrey.world.things.polygon.actions.ColinearReduction;
-import io.jeffrey.world.things.polygon.actions.DeleteVertices;
-import io.jeffrey.world.things.polygon.actions.EdgeCollapseAll;
-import io.jeffrey.world.things.polygon.actions.EdgeCollapseKeepEnds;
-import io.jeffrey.world.things.polygon.actions.EdgeErode;
-import io.jeffrey.world.things.polygon.actions.EdgeSplit;
-import io.jeffrey.world.things.polygon.actions.FractureSplit;
-import io.jeffrey.world.things.polygon.actions.NormalGrowth;
-import io.jeffrey.world.things.polygon.actions.SmoothSplit;
-import io.jeffrey.world.things.polygon.actions.Springize;
-import io.jeffrey.world.things.polygon.actions.UniformEdgeSplit;
+import io.jeffrey.world.things.base.Part;
+import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
+import io.jeffrey.world.things.behaviors.HasSelectableEdges;
+import io.jeffrey.world.things.points.actions.CleanEdges;
+import io.jeffrey.world.things.points.actions.ColinearReduction;
+import io.jeffrey.world.things.points.actions.DeleteVertices;
+import io.jeffrey.world.things.points.actions.EdgeCollapseAll;
+import io.jeffrey.world.things.points.actions.EdgeCollapseKeepEnds;
+import io.jeffrey.world.things.points.actions.EdgeErode;
+import io.jeffrey.world.things.points.actions.EdgeSplit;
+import io.jeffrey.world.things.points.actions.FractureSplit;
+import io.jeffrey.world.things.points.actions.NormalGrowth;
+import io.jeffrey.world.things.points.actions.SmoothSplit;
+import io.jeffrey.world.things.points.actions.Springize;
+import io.jeffrey.world.things.points.actions.UniformEdgeSplit;
+import io.jeffrey.world.things.polygon.IndexRemoval;
+import io.jeffrey.world.things.polygon.PointAddition;
 
-public class PointChain implements Iterable<SelectablePoint2> {
+public class SelectablePoint2List implements Iterable<SelectablePoint2>, Part, HasSelectableEdges, HasEdgesInWorldSpace {
   /**
    * convert the list of doubles into a string
    *
@@ -41,14 +45,16 @@ public class PointChain implements Iterable<SelectablePoint2> {
     return pV.toString();
   }
 
+  public final boolean                      looped;
   private final ArrayList<SelectablePoint2> points;
 
   /**
    * @param raw
    *          the serialized form of the points
    */
-  public PointChain(final String raw) {
+  public SelectablePoint2List(final String raw, final boolean looped) {
     points = parse(raw);
+    this.looped = looped;
   }
 
   /**
@@ -56,82 +62,83 @@ public class PointChain implements Iterable<SelectablePoint2> {
    *
    * @param action
    *          the action to execute
-   * @param asLoop
+   * @param looped
    *          should the chain be treated as a loop
    * @param document
    *          the owning document
-   * @parm thing the things
+   * @param thing
+   *          the things
    * @return true if the cache needs to be updated becauses the points where updated
    */
-  public boolean act(final String action, final boolean asLoop, final Document document, final AbstractThing thing) {
+  public boolean act(final String action, final Document document, final AbstractThing thing) {
     if ("edge.colinear".equals(action)) {
-      ColinearReduction.perform(this, asLoop);
+      ColinearReduction.perform(this, looped);
       return true;
     }
     if ("color.seek".equals(action)) {
-      NormalGrowth.seekColor(thing, document, this, asLoop);
+      NormalGrowth.seekColor(thing, document, this, looped);
       return true;
     }
 
     if ("normal.contract".equals(action)) {
-      NormalGrowth.contract(this, asLoop);
+      NormalGrowth.contract(this, looped);
       return true;
     }
     if ("random.normal.contract".equals(action)) {
-      NormalGrowth.contractRandomly(this, asLoop);
+      NormalGrowth.contractRandomly(this, looped);
       return true;
     }
 
     if ("normal.growth".equals(action)) {
-      NormalGrowth.expand(this, asLoop);
+      NormalGrowth.expand(this, looped);
       return true;
     }
     if ("random.normal.growth".equals(action)) {
-      NormalGrowth.expandRandomly(this, asLoop);
+      NormalGrowth.expandRandomly(this, looped);
       return true;
     }
     if ("edge.uniform".equals(action)) {
-      UniformEdgeSplit.perform(this, asLoop);
+      UniformEdgeSplit.perform(this, looped);
       return true;
     }
     if ("edge.erode".equals(action)) {
-      EdgeErode.perform(this, asLoop);
+      EdgeErode.perform(this, looped);
       return true;
     }
     if ("edge.split".equals(action)) {
-      EdgeSplit.perform(this, asLoop, false);
+      EdgeSplit.perform(this, looped, false);
       return true;
     }
     if ("edge.fracture".equals(action)) {
-      FractureSplit.perform(this, asLoop);
+      FractureSplit.perform(this, looped);
       return true;
     }
     if ("edge.smooth".equals(action)) {
-      SmoothSplit.perform(this, asLoop);
+      SmoothSplit.perform(this, looped);
       return true;
     }
     if ("edge.split.random".equals(action)) {
-      EdgeSplit.perform(this, asLoop, true);
+      EdgeSplit.perform(this, looped, true);
       return true;
     }
     if ("edge.collapse.1".equals(action)) {
-      EdgeCollapseKeepEnds.perform(this, asLoop);
+      EdgeCollapseKeepEnds.perform(this, looped);
       return true;
     }
     if ("edge.collapse.2".equals(action)) {
-      EdgeCollapseAll.perform(this, asLoop);
+      EdgeCollapseAll.perform(this, looped);
       return true;
     }
     if ("clean.edges".equals(action)) {
-      CleanEdges.perform(this, asLoop);
+      CleanEdges.perform(this, looped);
       return true;
     }
     if ("delete.vertices".equals(action)) {
-      DeleteVertices.perform(this, asLoop);
+      DeleteVertices.perform(this, looped);
       return true;
     }
     if ("springize".equals(action)) {
-      Springize.perform(this, asLoop);
+      Springize.perform(this, looped);
       return true;
     }
     return false;
@@ -215,14 +222,39 @@ public class PointChain implements Iterable<SelectablePoint2> {
   }
 
   /**
+   * get an iterator over the points as line-point pairs
+   *
+   * @param asLoop
+   *          should we treat the chain as a loop
+   * @return an iterator over all the lines where a line is defined as a pair of points
+   */
+  @Override
+  public Iterable<SelectablePoint2[]> getSelectableEdges() {
+    index();
+    return () -> {
+      final ArrayList<SelectablePoint2[]> all = new ArrayList<SelectablePoint2[]>();
+      final int n = points.size();
+      final int sz = looped ? n : n - 1;
+      for (int k = 0; k < sz; k++) {
+        final SelectablePoint2 point = points.get(k % points.size());
+        point.cachedIndex = k;
+        final SelectablePoint2 next = points.get((k + 1) % points.size());
+        all.add(new SelectablePoint2[] { point, next });
+      }
+      return all.iterator();
+    };
+  }
+
+  /**
    * turn the chain into a list of lines that form the edges
    *
    * @param asLoop
    *          is the chain a polygon?
    * @return an array of all edges (x0,y0,x1,y1,x1,y1,x2,y2,...)
    */
-  public double[] edges(final boolean asLoop) {
-    final int n = points.size() + (asLoop ? 0 : -1);
+  @Override
+  public double[] getWorldSpaceEdges() {
+    final int n = points.size() + (looped ? 0 : -1);
     final double[] values = new double[n * 4];
     for (int k = 0; k < n; k++) {
       final SelectablePoint2 a = points.get(k);
@@ -252,29 +284,6 @@ public class PointChain implements Iterable<SelectablePoint2> {
   @Override
   public Iterator<SelectablePoint2> iterator() {
     return points.iterator();
-  }
-
-  /**
-   * get an iterator over the points as line-point pairs
-   *
-   * @param asLoop
-   *          should we treat the chain as a loop
-   * @return an iterator over all the lines where a line is defined as a pair of points
-   */
-  public Iterable<SelectablePoint2[]> lines(final boolean asLoop) {
-    index();
-    return () -> {
-      final ArrayList<SelectablePoint2[]> all = new ArrayList<SelectablePoint2[]>();
-      final int n = points.size();
-      final int sz = asLoop ? n : n - 1;
-      for (int k = 0; k < sz; k++) {
-        final SelectablePoint2 point = points.get(k % points.size());
-        point.cachedIndex = k;
-        final SelectablePoint2 next = points.get((k + 1) % points.size());
-        all.add(new SelectablePoint2[] { point, next });
-      }
-      return all.iterator();
-    };
   }
 
   /**

@@ -1,8 +1,8 @@
-package io.jeffrey.world.things.polygon.actions;
+package io.jeffrey.world.things.points.actions;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.SelectablePoint2List;
 import io.jeffrey.world.things.polygon.PointAddition;
-import io.jeffrey.world.things.polygon.PointChain;
 
 public class UniformEdgeSplit {
   /**
@@ -11,7 +11,7 @@ public class UniformEdgeSplit {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final PointChain chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
     double distance = 0;
     int c = 0;
     for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {

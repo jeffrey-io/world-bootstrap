@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.polygon.actions;
+package io.jeffrey.world.things.points.actions;
 
 import java.util.Random;
 
@@ -7,7 +7,7 @@ import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.world.things.polygon.PointChain;
+import io.jeffrey.world.things.points.SelectablePoint2List;
 
 public class NormalGrowth {
 
@@ -60,7 +60,7 @@ public class NormalGrowth {
 
   }
 
-  private static void augment(final PointChain chain, final boolean asLoop, final Augmenter seeker) {
+  private static void augment(final SelectablePoint2List chain, final boolean asLoop, final Augmenter seeker) {
     final VectorRegister6 reg = new VectorRegister6();
     reg.set_2(0, -1);
     for (final SelectablePoint2[] segments : chain.selectedSegments(asLoop, true)) {
@@ -94,7 +94,7 @@ public class NormalGrowth {
 
   }
 
-  public static void contract(final PointChain chain, final boolean asLoop) {
+  public static void contract(final SelectablePoint2List chain, final boolean asLoop) {
     augment(chain, asLoop, (buffer, j, reg) -> {
       reg.copy_from_3_to_1();
       reg.mult_1_by(-0.1);
@@ -104,7 +104,7 @@ public class NormalGrowth {
     });
   }
 
-  public static void contractRandomly(final PointChain chain, final boolean asLoop) {
+  public static void contractRandomly(final SelectablePoint2List chain, final boolean asLoop) {
     final Random rng = new Random();
 
     augment(chain, asLoop, (buffer, j, reg) -> {
@@ -116,7 +116,7 @@ public class NormalGrowth {
     });
   }
 
-  public static void expand(final PointChain chain, final boolean asLoop) {
+  public static void expand(final SelectablePoint2List chain, final boolean asLoop) {
     augment(chain, asLoop, (buffer, j, reg) -> {
       reg.copy_from_3_to_1();
       reg.mult_1_by(0.1);
@@ -126,7 +126,7 @@ public class NormalGrowth {
     });
   }
 
-  public static void expandRandomly(final PointChain chain, final boolean asLoop) {
+  public static void expandRandomly(final SelectablePoint2List chain, final boolean asLoop) {
     final Random rng = new Random();
 
     augment(chain, asLoop, (buffer, j, reg) -> {
@@ -144,7 +144,7 @@ public class NormalGrowth {
    * @param asLoop
    *          is it a loop
    */
-  public static void seekColor(final AbstractThing thing, final Document document, final PointChain chain, final boolean asLoop) {
+  public static void seekColor(final AbstractThing thing, final Document document, final SelectablePoint2List chain, final boolean asLoop) {
     augment(chain, asLoop, new ColorSeeker(thing, document));
   }
 }

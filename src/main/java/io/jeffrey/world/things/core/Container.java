@@ -1,55 +1,118 @@
 package io.jeffrey.world.things.core;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.history.History;
+import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.meta.GuideLine;
 import io.jeffrey.zer.meta.LayerProperties;
-import javafx.scene.image.Image;
+import io.jeffrey.zer.meta.WorldFileSystem;
 
-public class Container {
+public class Container implements Iterable<AbstractThing> {
   public final Camera                       camera;
-  public final int                          controlPointSize;
+  public final int                          controlPointSize = 8;
+  public final int                          edgeWidthSize    = 4;
 
-  private final Document                    document;
-  public final int                          edgeWidthSize;
+  public final WorldFileSystem              fs;
   public final History                      history;
-  public final ImageCache                   imageCache;
+  public final ImageCache                   imageCache       = new ImageCache();
+
   public final Map<String, LayerProperties> layers;
-  public final Image                        ROTATE_ICON;
-  public final Image                        SCALE_ICON;
-  public final Image                        VERTEX_ICON;
+  private final ArrayList<AbstractThing>    things;
 
-  public final Image                        VERTEX_ICON_SELECTED;
+  public Container(final Camera camera, final WorldFileSystem fs) {
+    this.camera = camera;
+    this.fs = fs;
+    /*
+     * camera = document.camera; history = document.history; imageCache = document.imageCache; ROTATE_ICON = document.ROTATE_ICON; SCALE_ICON = document.SCALE_ICON; VERTEX_ICON = document.VERTEX_ICON; VERTEX_ICON_SELECTED = document.VERTEX_ICON_SELECTED; controlPointSize = document.controlPointSize; edgeWidthSize = document.edgeWidthSize;
+     */
 
-  public Container(final Document document) {
-    this.document = document;
-    camera = document.camera;
-    history = document.history;
-    imageCache = document.imageCache;
-    ROTATE_ICON = document.ROTATE_ICON;
-    SCALE_ICON = document.SCALE_ICON;
-    VERTEX_ICON = document.VERTEX_ICON;
-    VERTEX_ICON_SELECTED = document.VERTEX_ICON_SELECTED;
-    controlPointSize = document.controlPointSize;
-    edgeWidthSize = document.edgeWidthSize;
-    layers = document.layers;
+    things = new ArrayList<>();
+
+    // history of all changes in the container
+    history = new History();
+
+    // layer data source
+    layers = new TreeMap<>();
+    layers.put("_", new LayerProperties("_", "Foreground"));
   }
 
-  public File find(final String path) {
-    return document.find(path);
+  public void add(final AbstractThing thing) {
+    history.capture();
+    things.add(thing);
+    thing.invokeAction("delete", false);
+    history.register(thing);
+    thing.invokeAction("undelete", false);
+    thing.invokeAction("select", false);
+    history.capture();
+  }
+
+  private int compare(final AbstractThing a, final AbstractThing b) {
+    final LayerPart layerA = a.first(LayerPart.class);
+    final LayerPart layerB = b.first(LayerPart.class);
+    if (layerA == null) {
+      if (layerB == null) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } else {
+      if (layerB == null) {
+        return -1;
+      } else {
+        return layerA.compareTo(layerB);
+      }
+    }
+  }
+
+  @Deprecated // we need a reverse traversal
+  public AbstractThing get(final int k) {
+    return things.get(k);
   }
 
   public Collection<GuideLine> getGuideLines(final String layerId) {
-    return document.getGuideLines(layerId);
+    final LayerProperties lp = layers.get(layerId);
+    if (lp != null) {
+      return lp.guides;
+    }
+    return new HashSet<>();
+  }
+
+  @Override
+  public Iterator<AbstractThing> iterator() {
+    return things.iterator();
   }
 
   public int size() {
-    return document.getThings().size();
+    return things.size();
   }
+
+  public void sort() {
+    if (things.size() == 0) {
+      return;
+    }
+
+    things.sort((o1, o2) -> compare(o1, o2));
+    int layerAt = -1;
+    int newOrder = 0;
+    for (final AbstractThing thing : things) {
+      final LayerPart layer = thing.first(LayerPart.class);
+      if (layer != null) {
+        if (layer.z() != layerAt) {
+          layerAt = layer.z();
+          newOrder = 0;
+        }
+        newOrder++;
+        layer.order(newOrder);
+      }
+    }
+  }
+
 }

@@ -142,7 +142,7 @@ public class WorldData extends SurfaceData {
         if (!file.exists()) {
           return;
         }
-        data.fields.put("uri", document.normalize(file));
+        data.fields.put("uri", document.container.fs.normalize(file));
       } else {
         return;
       }
@@ -175,17 +175,17 @@ public class WorldData extends SurfaceData {
       return file != null;
     }
     if (action == SurfaceAction.Undo) {
-      return document.history.canUndo();
+      return document.container.history.canUndo();
     }
     if (action == SurfaceAction.Redo) {
-      return document.history.canRedo();
+      return document.container.history.canRedo();
     }
     return true;
   }
 
   @Override
   public void capture() {
-    document.history.capture();
+    document.container.history.capture();
   }
 
   private void copy() throws Exception {
@@ -210,12 +210,12 @@ public class WorldData extends SurfaceData {
     final double at_x = context.cursor_x;
     final double at_y = context.cursor_y;
     if (action == SurfaceAction.SelectAll) {
-      for (final AbstractThing thing : document.getThings()) {
+      for (final AbstractThing thing : document.container) {
         thing.invokeAction("select", false);
       }
     }
     if (action == SurfaceAction.InverseSelection) {
-      for (final AbstractThing thing : document.getThings()) {
+      for (final AbstractThing thing : document.container) {
         thing.invokeAction("inverse-selection", false);
       }
     }
@@ -240,10 +240,10 @@ public class WorldData extends SurfaceData {
       paste(at_x, at_y);
     }
     if (action == SurfaceAction.Undo) {
-      document.history.undo();
+      document.container.history.undo();
     }
     if (action == SurfaceAction.Redo) {
-      document.history.redo();
+      document.container.history.redo();
     }
     if (action == SurfaceAction.Save) {
       try {
@@ -261,7 +261,7 @@ public class WorldData extends SurfaceData {
 
   @Override
   public LayerProperties getActiveLayer() {
-    for (final AbstractThing thing : document.getThings()) {
+    for (final AbstractThing thing : document.container) {
       if (thing.editing.selected.value()) {
         final LayerPart layer = thing.first(LayerPart.class);
         if (layer != null) {
@@ -297,9 +297,9 @@ public class WorldData extends SurfaceData {
   @Override
   public Set<Editable> getEditables() {
     final HashSet<Editable> edits = new HashSet<Editable>();
-    for (final AbstractThing thing : document.getThings()) {
+    for (final AbstractThing thing : document.container) {
       if (thing.editing.selected.value()) {
-        document.history.register(thing);
+        document.container.history.register(thing);
         edits.add(new EditableThing(document, thing));
       }
     }
@@ -313,7 +313,7 @@ public class WorldData extends SurfaceData {
 
   @Override
   public Map<String, LayerProperties> getLayers() {
-    return document.layers;
+    return document.container.layers;
   }
 
   @Override
@@ -339,9 +339,9 @@ public class WorldData extends SurfaceData {
 
   @Override
   public MouseInteraction getSelectionMovers(final AdjustedMouseEvent event) {
-    document.history.capture();
+    document.container.history.capture();
     final HashSet<MouseInteraction> set = new HashSet<MouseInteraction>();
-    for (final AbstractThing thing : document.getThings()) {
+    for (final AbstractThing thing : document.container) {
       final MousePart mouse = thing.first(MousePart.class);
       if (mouse != null) {
         mouse.beginMoving(set, event);
@@ -352,7 +352,7 @@ public class WorldData extends SurfaceData {
     }
 
     final MouseInteraction setmover = new SetMover(set);
-    return new HistoryMouseInteractionTrapper(document.history, setmover);
+    return new HistoryMouseInteractionTrapper(document.container.history, setmover);
   }
 
   @Override
@@ -365,7 +365,7 @@ public class WorldData extends SurfaceData {
 
   @Override
   public void initiateSelectionWindow() {
-    for (final AbstractThing thing : document.getThings()) {
+    for (final AbstractThing thing : document.container) {
 
       thing.collect(HasSelectionByWindow.class, t -> {
         t.beginSelectionWindow();
@@ -381,7 +381,7 @@ public class WorldData extends SurfaceData {
 
   @Override
   public boolean isInSelectionSet(final AdjustedMouseEvent event) {
-    for (final AbstractThing thing : document.getThings()) {
+    for (final AbstractThing thing : document.container) {
       if (AbstractThingHelpers.isInCurrertSelection(thing, event)) {
         return true;
       }
@@ -439,9 +439,9 @@ public class WorldData extends SurfaceData {
 
   @Override
   public void ready() {
-    document.history.capture();
-    for (final AbstractThing thing : document.getThings()) {
-      document.history.register(thing);
+    document.container.history.capture();
+    for (final AbstractThing thing : document.container) {
+      document.container.history.register(thing);
     }
   }
 
@@ -453,30 +453,30 @@ public class WorldData extends SurfaceData {
 
   @Override
   public MouseInteraction startSurfaceInteraction(final AdjustedMouseEvent event, final SurfaceContext context) {
-    document.history.capture();
-    for (int k = document.getThings().size() - 1; k >= 0; k--) {
-      final AbstractThing thing = document.getThings().get(k);
+    document.container.history.capture();
+    for (int k = document.container.size() - 1; k >= 0; k--) {
+      final AbstractThing thing = document.container.get(k);
       if (!event.altdown) {
         thing.invokeAction("unselect", false);
       }
     }
-    for (int k = document.getThings().size() - 1; k >= 0; k--) {
-      final AbstractThing thing = document.getThings().get(k);
+    for (int k = document.container.size() - 1; k >= 0; k--) {
+      final AbstractThing thing = document.container.get(k);
       final MouseInteraction it = AbstractThingHelpers.startInteraction(thing, event);
       if (it != null) {
-        return new HistoryMouseInteractionTrapper(document.history, it);
+        return new HistoryMouseInteractionTrapper(document.container.history, it);
       }
     }
-    final double left = camera.projX(document.controlPointSize);
-    final double top = camera.projY(document.controlPointSize);
-    final double right = camera.projX(context.width - document.controlPointSize);
-    final double bottom = camera.projY(context.height - document.controlPointSize);
+    final double left = camera.projX(document.container.controlPointSize);
+    final double top = camera.projY(document.container.controlPointSize);
+    final double right = camera.projX(context.width - document.container.controlPointSize);
+    final double bottom = camera.projY(context.height - document.container.controlPointSize);
     String layerId = "";
     final LayerProperties lp = getActiveLayer();
     if (lp != null) {
       layerId = lp.id();
     }
-    final Collection<GuideLine> lines = document.getGuideLines(layerId);
+    final Collection<GuideLine> lines = document.container.getGuideLines(layerId);
     final Picker picker = new Picker(left, right, top, bottom);
 
     MouseInteraction lineIt = null;
@@ -484,14 +484,14 @@ public class WorldData extends SurfaceData {
       if (lineIt != null) {
         break;
       }
-      lineIt = picker.select(line, camera, event.position.x_0, event.position.y_0, document.controlPointSize);
+      lineIt = picker.select(line, camera, event.position.x_0, event.position.y_0, document.container.controlPointSize);
     }
     return lineIt;
   }
 
   @Override
   public void updateSelectionWindow(final SelectionWindow window) {
-    for (final AbstractThing thing : document.getThings()) {
+    for (final AbstractThing thing : document.container) {
       final MousePart mouse = thing.first(MousePart.class);
       if (mouse != null) {
         mouse.updateSelectionWindow(window);

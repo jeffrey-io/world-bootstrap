@@ -11,17 +11,25 @@ import javafx.scene.image.Image;
  * @author jeffrey
  */
 public class ImageCache {
-
   /**
    * The actual cache
    */
   private final HashMap<String, Image> images;
+  public final Image                   ROTATE_ICON;
+  public final Image                   SCALE_ICON;
+  public final Image                   VERTEX_ICON;
+
+  public final Image                   VERTEX_ICON_SELECTED;
 
   /**
    * construct the image cache
    */
   public ImageCache() {
     images = new HashMap<>();
+    SCALE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_scale.png"));
+    ROTATE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_rotate.png"));
+    VERTEX_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex.png"));
+    VERTEX_ICON_SELECTED = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex_selected.png"));
   }
 
   /**

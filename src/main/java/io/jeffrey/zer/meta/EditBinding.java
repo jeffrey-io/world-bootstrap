@@ -148,7 +148,7 @@ public class EditBinding {
    * @param normalize
    *          the method to normalize the file to a string
    */
-  public void bindFile(final String title, final Button button, final TextField ref, final Edit value, final DocumentFileSystem normalize) {
+  public void bindFile(final String title, final Button button, final TextField ref, final Edit value, final WorldFileSystem normalize) {
     try {
       building = true;
       button.setOnAction(arg0 -> {

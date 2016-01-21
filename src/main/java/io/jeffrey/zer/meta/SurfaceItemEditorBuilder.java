@@ -143,7 +143,7 @@ public interface SurfaceItemEditorBuilder {
    *          the data source
    * @return the current file
    */
-  public abstract String addFile(String title, String label, Edit link, DocumentFileSystem normalize);
+  public abstract String addFile(String title, String label, Edit link, WorldFileSystem normalize);
 
   /**
    * no longer use the border

@@ -80,7 +80,7 @@ public class ThingEditor {
     if (isNotLocked(fields, "urilock")) {
       if (containAll(fields, "uri")) {
         builder.startBorder("Image Properties");
-        builder.addFile("Choose Image", "URI", fields.get("uri"), document);
+        builder.addFile("Choose Image", "URI", fields.get("uri"), document.container.fs);
         builder.endBorder();
       }
     }

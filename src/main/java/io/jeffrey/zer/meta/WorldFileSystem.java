@@ -7,7 +7,7 @@ import java.io.File;
  *
  * @author jeffrey
  */
-public interface DocumentFileSystem {
+public interface WorldFileSystem {
 
   /**
    * Convert the nice uri into a file on the disk

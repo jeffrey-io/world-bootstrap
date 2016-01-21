@@ -48,13 +48,13 @@ public class DoodadRenderPart implements Part, HasWorldSpaceRendering {
       for (final HasControlDoodadsInWorldSpace parent : doodadCaches.get()) {
         for (final ControlDoodad doodad : parent.getDoodadsInWorldSpace()) {
           if (doodad.type == Type.Scale) {
-            gc.drawImage(conainer.SCALE_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
+            gc.drawImage(conainer.imageCache.SCALE_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
           } else if (doodad.type == Type.Rotate) {
-            gc.drawImage(conainer.ROTATE_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
+            gc.drawImage(conainer.imageCache.ROTATE_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
           } else if (doodad.type == Type.PointSelected) {
-            gc.drawImage(conainer.VERTEX_ICON_SELECTED, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
+            gc.drawImage(conainer.imageCache.VERTEX_ICON_SELECTED, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
           } else if (doodad.type == Type.PointUnselected) {
-            gc.drawImage(conainer.VERTEX_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
+            gc.drawImage(conainer.imageCache.VERTEX_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
           }
         }
       }

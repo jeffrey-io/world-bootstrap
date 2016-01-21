@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -21,77 +20,31 @@ import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.AdaptThingSpaceDoodadsIntoWorldSpace;
-import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.parts.EditingPart;
-import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.LifetimePart;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.zer.Camera;
-import io.jeffrey.zer.ImageCache;
 import io.jeffrey.zer.edits.ObjectDataMap;
-import io.jeffrey.zer.meta.DocumentFileSystem;
 import io.jeffrey.zer.meta.GuideLine;
 import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.MetaClass;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class Document extends ModeledDocument implements DocumentFileSystem {
-  public final Camera     camera;
-  public final Container  container;
-  public final int        controlPointSize = 8;
-  public final int        edgeWidthSize    = 4;
-  private boolean         hasSomeSelection = false;
-  private int             id;
-
-  public final ImageCache imageCache;
-  private final WorldData owner;
-  public final Image      ROTATE_ICON;
-  public final Image      SCALE_ICON;
-  public final Image      VERTEX_ICON;
-
-  public final Image      VERTEX_ICON_SELECTED;
+public class Document extends ModeledDocument {
+  public final Camera camera;
+  private boolean     hasSomeSelection = false;
+  private int         id;
 
   public Document(final Camera camera, final WorldData owner) {
+    super(camera, owner);
     this.camera = camera;
-    this.owner = owner;
-    imageCache = new ImageCache();
     id = 0;
-    SCALE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_scale.png"));
-    ROTATE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_rotate.png"));
-    VERTEX_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex.png"));
-    VERTEX_ICON_SELECTED = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex_selected.png"));
-    container = new Container(this);
   }
 
   public void addThing(final AbstractThing thing) {
-    history.capture();
-    things.add(thing);
-    thing.invokeAction("delete", false);
-    history.register(thing);
-    thing.invokeAction("undelete", false);
-    thing.invokeAction("select", false);
-    history.capture();
-  }
-
-  private int compare(final AbstractThing a, final AbstractThing b) {
-    final LayerPart layerA = a.first(LayerPart.class);
-    final LayerPart layerB = b.first(LayerPart.class);
-    if (layerA == null) {
-      if (layerB == null) {
-        return 0;
-      } else {
-        return 1;
-      }
-    } else {
-      if (layerB == null) {
-        return -1;
-      } else {
-        return layerA.compareTo(layerB);
-      }
-    }
+    container.add(thing);
   }
 
   private HashMap<String, String> convert2(final JsonNode node) {
@@ -109,18 +62,18 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
   }
 
   public void deleteSelection() {
-    history.capture();
-    for (final AbstractThing thing : things) {
+    container.history.capture();
+    for (final AbstractThing thing : container) {
       if (thing.editing.selected.value()) {
         thing.invokeAction("delete", false);
       }
     }
-    history.capture();
+    container.history.capture();
   }
 
   public void draw(final GraphicsContext gc, final Camera camera, final double width, final double height, final String activeLayer) {
     update();
-    sort();
+    container.sort();
     gc.save();
     gc.setLineWidth(2);
     gc.setStroke(Color.RED);
@@ -128,13 +81,13 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     gc.translate(camera.tX, camera.tY);
     gc.scale(camera.scale, camera.scale);
     final VectorRegister6 seg = new VectorRegister6();
-    final Collection<GuideLine> lines = getGuideLines(activeLayer);
+    final Collection<GuideLine> lines = container.getGuideLines(activeLayer);
     for (final GuideLine line : lines) {
       line.writeSegment(camera, seg);
       gc.strokeLine(seg.x_0, seg.y_0, seg.x_1, seg.y_1);
     }
     gc.restore();
-    for (final AbstractThing thing : getThings()) {
+    for (final AbstractThing thing : container) {
       final LifetimePart lifetime = thing.first(LifetimePart.class);
       if (lifetime != null && !lifetime.isDeleted()) {
         for (final HasWorldSpaceRendering renderer : thing.collect(HasWorldSpaceRendering.class)) {
@@ -142,10 +95,10 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
         }
       }
     }
-    final double left = camera.projX(controlPointSize);
-    final double top = camera.projY(controlPointSize);
-    final double right = camera.projX(width - controlPointSize);
-    final double bottom = camera.projY(height - controlPointSize);
+    final double left = camera.projX(container.controlPointSize);
+    final double top = camera.projY(container.controlPointSize);
+    final double right = camera.projX(width - container.controlPointSize);
+    final double bottom = camera.projY(height - container.controlPointSize);
     final double[] guideControls = new double[] { left, top, right, top, right, bottom, left, bottom, left, top };
 
     gc.save();
@@ -155,33 +108,16 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
         seg.set_2(guideControls[c], guideControls[c + 1]);
         seg.set_3(guideControls[c + 2], guideControls[c + 3]);
         if (Lines.doLinesIntersect_Destructively(seg, true, true)) {
-          gc.drawImage(VERTEX_ICON, -controlPointSize + camera.x(seg.x_0), -controlPointSize + camera.y(seg.y_0), 2 * controlPointSize, 2 * controlPointSize);
+          gc.drawImage(container.imageCache.VERTEX_ICON, -container.controlPointSize + camera.x(seg.x_0), -container.controlPointSize + camera.y(seg.y_0), 2 * container.controlPointSize, 2 * container.controlPointSize);
         }
       }
     }
     gc.restore();
   }
 
-  @Override
-  public File find(final String path) {
-    final File direct = new File(path);
-    if (direct.exists()) {
-      return direct;
-    }
-    return new File(owner.path().resolve(path));
-  }
-
-  public Collection<GuideLine> getGuideLines(final String layerId) {
-    final LayerProperties lp = layers.get(layerId);
-    if (lp != null) {
-      return lp.guides;
-    }
-    return new HashSet<>();
-  }
-
-  public ArrayList<AbstractThing> getThings() {
-    return things;
-  }
+  /*
+  
+  */
 
   public boolean hasSelection() {
     return hasSomeSelection;
@@ -217,10 +153,10 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
         }
       }
       final AbstractThing thingToAdd = new ThingData(tdata).make(container);
-      things.add(thingToAdd);
+      container.add(thingToAdd);
       lookup.put(thingToAdd.getID(), thingToAdd);
     }
-    history.load(tree.get("history"), lookup);
+    container.history.load(tree.get("history"), lookup);
   }
 
   private void loadLP(final JsonNode node) {
@@ -229,7 +165,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
       final Entry<String, JsonNode> field = fields.next();
       final LayerProperties lp = new LayerProperties(field.getKey(), field.getValue().get("name").getTextValue());
       lp.unpack(new ObjectDataMap(convert2(field.getValue())));
-      layers.put(lp.id(), lp);
+      container.layers.put(lp.id(), lp);
     }
   }
 
@@ -250,15 +186,9 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     return data;
   }
 
-  @Override
-  public String normalize(final File input) {
-    final String result = owner.path().relativize(input.toURI()).getPath();
-    return result;
-  }
-
   public int populateBounds(final VectorRegister2 reg, final boolean onlySelected) {
     int n = 0;
-    for (final AbstractThing thing : things) {
+    for (final AbstractThing thing : container) {
       final EditingPart editing = thing.first(EditingPart.class);
       final LifetimePart lifetime = thing.first(LifetimePart.class);
 
@@ -292,7 +222,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
   }
 
   public Color query(final double x, final double y, final AbstractThing skip) {
-    for (final AbstractThing thing : things) {
+    for (final AbstractThing thing : container) {
       if (thing == skip) {
         continue;
       }
@@ -307,13 +237,13 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
   public void save(final File file) throws Exception {
     final HashMap<String, Object> tree = new HashMap<String, Object>();
     tree.put("view", camera.pack());
-    tree.put("history", history.pack());
+    tree.put("history", container.history.pack());
     final HashMap<String, Object> layersPacked = new HashMap<>();
     final HashMap<String, Object> metaClassesPacked = new HashMap<>();
     for (final Entry<String, MetaClass> mc : classes.entrySet()) {
       metaClassesPacked.put(mc.getKey(), mc.getValue().pack());
     }
-    for (final Entry<String, LayerProperties> mc : layers.entrySet()) {
+    for (final Entry<String, LayerProperties> mc : container.layers.entrySet()) {
       layersPacked.put(mc.getKey(), mc.getValue().pack());
     }
 
@@ -321,7 +251,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     tree.put("metaclasses", metaClassesPacked);
 
     final ArrayList<Object> store = new ArrayList<Object>();
-    for (final AbstractThing t : things) {
+    for (final AbstractThing t : container) {
       final HashMap<String, String> tdata = new HashMap<String, String>();
       t.saveTo(tdata);
       store.add(tdata);
@@ -331,7 +261,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
   }
 
   public AbstractThing selectFirstVisible(final double x, final double y) {
-    for (final AbstractThing thing : things) {
+    for (final AbstractThing thing : container) {
       if (AbstractThingHelpers.contains(thing, x, y)) {
         return thing;
       }
@@ -344,7 +274,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     double x = 0;
     double y = 0;
     int c = 0;
-    for (final AbstractThing t : things) {
+    for (final AbstractThing t : container) {
       final PositionPart position = t.first(PositionPart.class);
       if (t.editing.selected.value() && position != null) {
         x += position.x();
@@ -357,7 +287,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     }
     x /= c;
     y /= c;
-    for (final AbstractThing t : things) {
+    for (final AbstractThing t : container) {
       final PositionPart position = t.first(PositionPart.class);
       if (t.editing.selected.value() && position != null) {
         final HashMap<String, String> tdata = new HashMap<String, String>();
@@ -371,30 +301,9 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     return snapshot;
   }
 
-  public void sort() {
-    if (things.size() == 0) {
-      return;
-    }
-
-    things.sort((o1, o2) -> compare(o1, o2));
-    int layerAt = -1;
-    int newOrder = 0;
-    for (final AbstractThing thing : things) {
-      final LayerPart layer = thing.first(LayerPart.class);
-      if (layer != null) {
-        if (layer.z() != layerAt) {
-          layerAt = layer.z();
-          newOrder = 0;
-        }
-        newOrder++;
-        layer.order(newOrder);
-      }
-    }
-  }
-
   public void update() {
     hasSomeSelection = false;
-    for (final AbstractThing thing : things) {
+    for (final AbstractThing thing : container) {
       if (thing.editing.selected.value()) {
         hasSomeSelection = true;
       }

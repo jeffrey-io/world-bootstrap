@@ -55,7 +55,7 @@ public class ImageRenderPart extends HasThingSpaceRendering implements Part, Has
 
   @Override
   public void update() {
-    img = container.imageCache.of(container.find(uri.uri.value()));
+    img = container.imageCache.of(container.fs.find(uri.uri.value()));
     if (img != null) {
       rectangle.set(-img.getWidth() / 2, -img.getHeight() / 2, img.getWidth(), img.getHeight());
     }

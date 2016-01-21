@@ -1,5 +1,6 @@
 package io.jeffrey.world.document;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,12 +11,14 @@ import java.util.TreeMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import io.jeffrey.world.document.history.History;
+import io.jeffrey.world.WorldData;
 import io.jeffrey.world.things.core.AbstractThing;
+import io.jeffrey.world.things.core.Container;
+import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.meta.LayerProperties;
 import io.jeffrey.zer.meta.MetaClass;
+import io.jeffrey.zer.meta.WorldFileSystem;
 import io.jeffrey.zer.plugin.Model;
 
 /**
@@ -27,25 +30,38 @@ import io.jeffrey.zer.plugin.Model;
 public class ModeledDocument implements Model {
   private final Map<String, Map<String, Edit>>  cachedModel;
   public final Map<String, MetaClass>           classes;
-  public final History                          history;
-  public final Map<String, LayerProperties>     layers;
-  protected final ObjectMapper                  mapper = new ObjectMapper();
+  public final Container                        container;
 
+  protected final ObjectMapper                  mapper = new ObjectMapper();
   public final Notifications                    notifications;
   public final Map<String, Map<String, String>> templates;
 
-  protected final ArrayList<AbstractThing>      things;
-
-  public ModeledDocument() {
-    history = new History();
+  public ModeledDocument(final Camera camera, final WorldData owner) {
     classes = new TreeMap<>();
-    things = new ArrayList<>();
-    layers = new TreeMap<>();
-    layers.put("_", new LayerProperties("_", "Foreground"));
+
     classes.put("_", new MetaClass("_", "Default"));
     cachedModel = new HashMap<String, Map<String, Edit>>();
     notifications = new Notifications();
     templates = new HashMap<String, Map<String, String>>();
+
+    final WorldFileSystem fs = new WorldFileSystem() {
+      @Override
+      public File find(final String path) {
+        final File direct = new File(path);
+        if (direct.exists()) {
+          return direct;
+        }
+        return new File(owner.path().resolve(path));
+      }
+
+      @Override
+      public String normalize(final File input) {
+        final String result = owner.path().relativize(input.toURI()).getPath();
+        return result;
+      }
+    };
+
+    container = new Container(camera, fs);
   }
 
   /**
@@ -54,8 +70,8 @@ public class ModeledDocument implements Model {
   @Override
   public void begin() {
     cachedModel.clear();
-    for (final AbstractThing thing : things) {
-      history.register(thing);
+    for (final AbstractThing thing : container) {
+      container.history.register(thing);
       cachedModel.put(thing.getID(), thing.getLinks(false));
     }
   }
@@ -66,7 +82,7 @@ public class ModeledDocument implements Model {
   @Override
   public void end() {
     cachedModel.clear();
-    history.capture();
+    container.history.capture();
   }
 
   /**
@@ -95,7 +111,9 @@ public class ModeledDocument implements Model {
   public String invokeAndReturnJson(final String query, final String method) {
     try {
       Collection<AbstractThing> result = new ArrayList<>();
-      result.addAll(things);
+      for (final AbstractThing thing : container) {
+        result.add(thing);
+      }
       final List<Query> parsed = Query.parse(query);
       for (final Query part : parsed) {
         result = part.applyAsFilter(result);

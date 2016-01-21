@@ -30,10 +30,10 @@ public class TPolygon extends PointListThing {
    */
   public TPolygon(final Document document, final ThingData node) {
     super(document, node, Property.Looped);
-    
+
     final PointListEdgesPart edges = new PointListEdgesPart(list, transform);
     register(edges);
-    
+
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(edges, position, rotation));
     register(enforcers);
 

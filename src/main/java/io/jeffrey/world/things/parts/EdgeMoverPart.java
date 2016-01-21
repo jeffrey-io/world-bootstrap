@@ -35,7 +35,15 @@ public class EdgeMoverPart implements Part, HasMouseInteractions, HasMover {
   }
 
   @Override
-  public ThingInteraction startInteraction(AdjustedMouseEvent event) {
+  public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
+    final ThingInteraction interaction = startInteraction(event);
+    if (interaction != null) {
+      interactions.add(interaction);
+    }
+  }
+
+  @Override
+  public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
     if (!lock.value()) {
       final VectorRegister3 reg = new VectorRegister3();
@@ -69,13 +77,5 @@ public class EdgeMoverPart implements Part, HasMouseInteractions, HasMover {
       }
     }
     return null;
-  }
-
-  @Override
-  public void iterateMovers(Set<ThingInteraction> interactions, AdjustedMouseEvent event) {
-    ThingInteraction interaction = startInteraction(event);
-    if (interaction != null) {
-      interactions.add(interaction);
-    }
   }
 }

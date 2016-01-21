@@ -4,7 +4,6 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.points.PointListThing;
-import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
 
 /**
  * a point chain that is a path

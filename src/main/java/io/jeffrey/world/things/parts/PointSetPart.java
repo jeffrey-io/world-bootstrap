@@ -183,40 +183,13 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     }
   }
 
-
-  @Override
-  public ThingInteraction startInteraction(AdjustedMouseEvent event) {
-    return startInteractionWithClear(event, true);
-  }
-  
-
-  public ThingInteraction startInteractionWithClear(AdjustedMouseEvent event, boolean withClear) {
-    final VectorRegister3 W = new VectorRegister3();
-    if (document != null) {
-      for (final SelectablePoint2 point : points) {
-        W.set_0(point.x, point.y);
-        transform.writeToWorldSpace(W);
-        if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
-          if (withClear) {
-            for (final SelectablePoint2 other : points) {
-              other.selected = false;
-            }
-          }
-          point.selected = true;
-          return new EventedPoint2Mover(new EventedPoint2(point, this), event);
-        }
-      }
-    }
-    return null;
-  }
-
   @Override
   public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     requireUpToDate();
     boolean all = true;
     boolean any = false;
-    
-    ThingInteraction singleVertex = startInteractionWithClear(event, false);
+
+    final ThingInteraction singleVertex = startInteractionWithClear(event, false);
     if (singleVertex != null) {
       interactions.add(singleVertex);
       any = true;
@@ -340,6 +313,31 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       return false;
     }
     return isSelected;
+  }
+
+  @Override
+  public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
+    return startInteractionWithClear(event, true);
+  }
+
+  public ThingInteraction startInteractionWithClear(final AdjustedMouseEvent event, final boolean withClear) {
+    final VectorRegister3 W = new VectorRegister3();
+    if (document != null) {
+      for (final SelectablePoint2 point : points) {
+        W.set_0(point.x, point.y);
+        transform.writeToWorldSpace(W);
+        if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
+          if (withClear) {
+            for (final SelectablePoint2 other : points) {
+              other.selected = false;
+            }
+          }
+          point.selected = true;
+          return new EventedPoint2Mover(new EventedPoint2(point, this), event);
+        }
+      }
+    }
+    return null;
   }
 
   public void subscribe(final Consumer<SharedMutableCache> subscriber) {

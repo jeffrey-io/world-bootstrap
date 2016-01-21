@@ -11,7 +11,7 @@ public class PointListEdgesPart implements Part, HasEdgesInWorldSpace {
   private final SelectablePoint2List list;
   private final Transform            transform;
 
-  public PointListEdgesPart(SelectablePoint2List list, Transform transform) {
+  public PointListEdgesPart(final SelectablePoint2List list, final Transform transform) {
     this.list = list;
     this.transform = transform;
   }

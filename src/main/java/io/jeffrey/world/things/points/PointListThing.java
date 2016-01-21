@@ -1,8 +1,8 @@
 package io.jeffrey.world.things.points;
 
-import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.BasicThing;
 import io.jeffrey.world.things.core.Container;
+import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.parts.EdgeMoverPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.PointSetPart;
@@ -32,9 +32,9 @@ public class PointListThing extends BasicThing {
    * @param node
    *          where the thing's data iss
    */
-  protected PointListThing(final Container container, final ThingData node, final Property... properties) {
-    super(container, node);
-    list = new SelectablePoint2List(node.getString("points", "0,-1,1,1,-1,1").value(), properties);
+  protected PointListThing(final Container container, final LinkedDataMap data, final Property... properties) {
+    super(container, data);
+    list = new SelectablePoint2List(data.getString("points", "0,-1,1,1,-1,1").value(), properties);
     points = new PointSetPart(data, container, transform, position, scale, rotation, list);
     register(points);
     register(list);

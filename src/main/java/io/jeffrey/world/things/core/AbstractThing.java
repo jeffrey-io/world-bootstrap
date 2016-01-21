@@ -17,7 +17,6 @@ import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.IdentityPart;
 import io.jeffrey.world.things.parts.LifetimePart;
 import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.edits.ObjectDataMap;
 
 public abstract class AbstractThing {
   private final HashMap<Class<?>, HashSet<Object>> cache;
@@ -35,10 +34,10 @@ public abstract class AbstractThing {
    * @param node
    *          where the data lives
    */
-  public AbstractThing(final Container container, final ObjectDataMap node) {
+  public AbstractThing(final Container container, final LinkedDataMap data) {
     this.container = container;
+    this.data = data;
     cache = new HashMap<>();
-    data = new LinkedDataMap(node);
     parts = new ArrayList<>();
     identity = new IdentityPart(data);
     register(identity);

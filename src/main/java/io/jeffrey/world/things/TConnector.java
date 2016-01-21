@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
-import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
@@ -74,8 +73,8 @@ public class TConnector extends PointListThing {
    * @param node
    *          where the data for the thing iss
    */
-  public TConnector(final Container container, final ThingData node) {
-    super(container, node, Property.Finite);
+  public TConnector(final Container container, final LinkedDataMap data) {
+    super(container, data, Property.Finite);
     final Iterator<SelectablePoint2> it = list.iterator();
     from = new LockedVertex(it.next(), data, "from");
     to = new LockedVertex(it.next(), data, "to");

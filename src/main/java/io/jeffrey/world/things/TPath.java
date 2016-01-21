@@ -1,7 +1,7 @@
 package io.jeffrey.world.things;
 
-import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.Container;
+import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.points.PointListThing;
 
@@ -19,8 +19,8 @@ public class TPath extends PointListThing {
    * @param node
    *          where the data for the thing iss
    */
-  public TPath(final Container container, final ThingData node) {
-    super(container, node);
+  public TPath(final Container container, final LinkedDataMap data) {
+    super(container, data);
     register(new RenderPathPart(transform, container, points, list));
   }
 

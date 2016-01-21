@@ -9,15 +9,15 @@ import io.jeffrey.world.things.behaviors.HasUpdate;
  *
  */
 public class EventedPoint2 {
-  private final SelectablePoint2 point;
-  private final HasUpdate        update;
-  public final double            x;
-  public final double            y;
+  public final SelectablePoint2 data;
+  public final double           initialX;
+  public final double           initialY;
+  private final HasUpdate       update;
 
-  public EventedPoint2(final SelectablePoint2 point, final HasUpdate update) {
-    x = point.x;
-    y = point.y;
-    this.point = point;
+  public EventedPoint2(final SelectablePoint2 data, final HasUpdate update) {
+    initialX = data.x;
+    initialY = data.y;
+    this.data = data;
     this.update = update;
   }
 
@@ -26,9 +26,9 @@ public class EventedPoint2 {
   }
 
   public void setChange(final double dx, final double dy) {
-    point.selected = true;
-    point.x = x + dx;
-    point.y = y + dy;
+    data.selected = true;
+    data.x = initialX + dx;
+    data.y = initialY + dy;
     update.update();
   }
 }

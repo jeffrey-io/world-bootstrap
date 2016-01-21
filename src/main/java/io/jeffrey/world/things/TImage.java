@@ -1,8 +1,8 @@
 package io.jeffrey.world.things;
 
-import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.BasicThing;
 import io.jeffrey.world.things.core.Container;
+import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
@@ -29,8 +29,8 @@ public class TImage extends BasicThing {
    * @param node
    *          where the data for the thing is
    */
-  public TImage(final Container container, final ThingData node) {
-    super(container, node);
+  public TImage(final Container container, final LinkedDataMap data) {
+    super(container, data);
     rectangle = new RectanglePart(transform);
     register(rectangle);
     uri = new UriPart("", data);

@@ -4,10 +4,9 @@ import org.junit.Test;
 
 import io.jeffrey.world.WorldTestFramework;
 
-public class TestTCircle extends WorldTestFramework {
-
+public class TestTPath extends WorldTestFramework {
   @Test
   public void construct() {
-    TCircle thing = new TCircle(makeSimpleContainer(), emptyData()); 
+    TPath thing = new TPath(makeSimpleContainer(), emptyData()); 
   }
 }

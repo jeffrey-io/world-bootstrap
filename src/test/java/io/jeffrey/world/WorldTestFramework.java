@@ -1,6 +1,8 @@
 package io.jeffrey.world;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,7 +10,11 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import io.jeffrey.world.things.behaviors.HasUpdate;
+import io.jeffrey.world.things.core.Container;
+import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.zer.Camera;
+import io.jeffrey.zer.edits.ObjectDataMap;
+import io.jeffrey.zer.meta.WorldFileSystem;
 
 public class WorldTestFramework {
   
@@ -68,5 +74,24 @@ public class WorldTestFramework {
       list.add(t);
     }
     return list;
+  }
+  
+  public Container makeSimpleContainer() {
+    return new Container(new Camera(), new WorldFileSystem() {
+      
+      @Override
+      public String normalize(File input) {
+        return input.toString();
+      }
+      
+      @Override
+      public File find(String path) {
+        return new File(path);
+      }
+    });
+  }
+  
+  public LinkedDataMap emptyData() {
+    return new LinkedDataMap(new ObjectDataMap(new HashMap<>()));
   }
 }

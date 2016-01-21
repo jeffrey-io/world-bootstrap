@@ -10,22 +10,22 @@ import io.jeffrey.zer.edits.Edit;
 public class EditEventedPoint2 implements Edit {
   private final boolean       isEditingX;
   private final String        name;
+  private final EventedPoint2 point;
   private final double        value;
-  private final EventedPoint2 vertex;
 
   /**
    * @param index
    *          the index of the point
-   * @param vertex
+   * @param point
    *          the vertex we are editing
    * @param isEditingX
    *          are we editing the x coordinate as opposed to the y coordinate
    */
-  public EditEventedPoint2(final int index, final EventedPoint2 vertex, final boolean isEditingX) {
+  public EditEventedPoint2(final int index, final EventedPoint2 point, final boolean isEditingX) {
     name = Integer.toString(index);
-    this.vertex = vertex;
+    this.point = point;
     this.isEditingX = isEditingX;
-    value = isEditingX ? vertex.x : vertex.y;
+    value = isEditingX ? point.initialX : point.initialY;
   }
 
   /**
@@ -33,7 +33,11 @@ public class EditEventedPoint2 implements Edit {
    */
   @Override
   public String getAsText() {
-    return Double.toString(value);
+    if (isEditingX) {
+      return Double.toString(point.data.x);
+    } else {
+      return Double.toString(point.data.y);
+    }
   }
 
   /**
@@ -52,9 +56,9 @@ public class EditEventedPoint2 implements Edit {
     try {
       final double nv = Double.parseDouble(z);
       if (isEditingX) {
-        vertex.setChange(nv - value, 0);
+        point.setChange(nv - value, 0);
       } else {
-        vertex.setChange(0, nv - value);
+        point.setChange(0, nv - value);
       }
       return true;
     } catch (final NumberFormatException nfe) {

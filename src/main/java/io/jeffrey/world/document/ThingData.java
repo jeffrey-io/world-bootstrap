@@ -11,6 +11,7 @@ import io.jeffrey.world.things.TPolygon;
 import io.jeffrey.world.things.TTurtle;
 import io.jeffrey.world.things.core.BasicThing;
 import io.jeffrey.world.things.core.Container;
+import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class ThingData extends ObjectDataMap {
@@ -26,22 +27,22 @@ public class ThingData extends ObjectDataMap {
 
   public BasicThing make(final Container container) {
     if (fields.get("_type").equals("circle")) {
-      return new TCircle(container, this);
+      return new TCircle(container, new LinkedDataMap(this));
     }
     if (fields.get("_type").equals("polygon")) {
-      return new TPolygon(container, this);
+      return new TPolygon(container, new LinkedDataMap(this));
     }
     if (fields.get("_type").equals("turtle")) {
-      return new TTurtle(container, this);
+      return new TTurtle(container, new LinkedDataMap(this));
     }
     if (fields.get("_type").equals("path")) {
-      return new TPath(container, this);
+      return new TPath(container, new LinkedDataMap(this));
     }
     if (fields.get("_type").equals("image")) {
-      return new TImage(container, this);
+      return new TImage(container, new LinkedDataMap(this));
     }
     if (fields.get("_type").equals("connector")) {
-      return new TConnector(container, this);
+      return new TConnector(container, new LinkedDataMap(this));
     }
     return null;
   }

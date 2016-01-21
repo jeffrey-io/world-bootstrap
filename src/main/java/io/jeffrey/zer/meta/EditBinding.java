@@ -62,7 +62,7 @@ public class EditBinding {
       checkbox.setIndeterminate(false);
       checkbox.setSelected(value.getAsText().equals("yes"));
       checkbox.selectedProperty().addListener((ChangeListener<Boolean>) (observed, before, after) -> {
-        value.set(after ? "yes" : "no");
+        value.setByText(after ? "yes" : "no");
         syncable.sync();
       });
       bindFocus(value.name(), checkbox);
@@ -91,7 +91,7 @@ public class EditBinding {
 
       colorPicker.setValue(color);
       colorPicker.valueProperty().addListener((ChangeListener<Color>) (val, before, after) -> {
-        value.set(after.toString());
+        value.setByText(after.toString());
         syncable.sync();
       });
       bindFocus(value.name(), colorPicker);
@@ -122,7 +122,7 @@ public class EditBinding {
         selector.setValue(cr);
       }
       selector.valueProperty().addListener((ChangeListener<T>) (val, before, after) -> {
-        if (value.set(after.id())) {
+        if (value.setByText(after.id())) {
           syncable.sync();
           parent.sync();
         }
@@ -157,7 +157,7 @@ public class EditBinding {
         final File file = fileChooser.showOpenDialog(null);
         final String newUri = normalize.normalize(file);
         ref.setText(newUri);
-        value.set(newUri);
+        value.setByText(newUri);
         syncable.sync();
       });
       bindFocus(value.name(), button);
@@ -201,7 +201,7 @@ public class EditBinding {
       building = true;
       field.setText(value.getAsText());
       final EventHandler<ActionEvent> upload = dc -> {
-        if (!value.set(field.getText())) {
+        if (!value.setByText(field.getText())) {
         } else {
           syncable.sync();
         }

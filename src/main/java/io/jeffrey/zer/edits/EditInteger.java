@@ -29,7 +29,7 @@ public class EditInteger extends EditPrimitive<Integer> {
    * {@inheritDoc}
    */
   @Override
-  public boolean setByText(final String txt) {
+  public boolean setByTextWithPublishing(final String txt) {
     try {
       this.value(Integer.parseInt(txt));
       return true;

@@ -29,7 +29,7 @@ public class EditString extends EditPrimitive<String> {
    * {@inheritDoc}
    */
   @Override
-  public boolean setByText(final String txt) {
+  public boolean setByTextWithPublishing(final String txt) {
     value(txt);
     return true;
   }

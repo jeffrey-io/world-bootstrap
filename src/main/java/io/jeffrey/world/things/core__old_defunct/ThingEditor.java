@@ -103,9 +103,9 @@ public class ThingEditor {
             }
 
             @Override
-            protected boolean setByText(final String txt) {
+            public boolean setByText(final String txt) {
               final String old = boolEdit.getAsText();
-              final boolean result = boolEdit.set(txt);
+              final boolean result = boolEdit.setByText(txt);
               if (!old.equals(txt)) {
                 parent.sync();
               }

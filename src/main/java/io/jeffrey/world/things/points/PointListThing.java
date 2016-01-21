@@ -43,8 +43,7 @@ public class PointListThing extends BasicThing {
       if (t.equals(u)) {
         return;
       }
-      final boolean dest = Boolean.parseBoolean(u);
-      if (!dest) {
+      if (!u) {
         for (final SelectablePoint2 point : list) {
           point.selected = false;
         }

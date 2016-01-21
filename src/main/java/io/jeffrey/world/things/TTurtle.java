@@ -13,6 +13,6 @@ public class TTurtle extends TPolygon {
     super(container, node);
 
     script = data.getString("script", "forward 50;left 90; forward 50; left 90; forward 50; left 45; forward 100");
-    script.subscribe((t, value) -> points.vertices.set(TurtleCompiler.compile(value)));
+    script.subscribe((t, value) -> points.vertices.setByText(TurtleCompiler.compile(value)));
   }
 }

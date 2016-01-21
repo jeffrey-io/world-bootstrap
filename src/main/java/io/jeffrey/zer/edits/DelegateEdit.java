@@ -1,6 +1,6 @@
 package io.jeffrey.zer.edits;
 
-public abstract class DelegateEdit extends Edit {
+public abstract class DelegateEdit implements Edit {
 
   private final Edit delegate;
 
@@ -21,7 +21,7 @@ public abstract class DelegateEdit extends Edit {
   }
 
   @Override
-  protected boolean setByText(final String txt) {
+  public boolean setByText(final String txt) {
     if (acceptSetByText(txt)) {
       return delegate.setByText(txt);
     }

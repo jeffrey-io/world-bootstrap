@@ -6,7 +6,7 @@ package io.jeffrey.zer.edits;
  * @author jeffrey
  *
  */
-public class BatchEdit extends Edit {
+public class BatchEdit implements Edit {
 
   private final Edit[] edits;
 
@@ -50,7 +50,7 @@ public class BatchEdit extends Edit {
    * {@inheritDoc}
    */
   @Override
-  protected boolean setByText(final String txt) {
+  public boolean setByText(final String txt) {
     final String[] backup = new String[edits.length];
     for (int k = 0; k < edits.length; k++) {
       backup[k] = edits[k].getAsText();

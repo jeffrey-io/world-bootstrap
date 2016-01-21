@@ -73,14 +73,14 @@ public class Transition {
   public void doRedo() {
     final Map<String, Edit> links = thing.getLinks(false);
     for (final Entry<String, String> task : redo.entrySet()) {
-      links.get(task.getKey()).set(task.getValue());
+      links.get(task.getKey()).setByText(task.getValue());
     }
   }
 
   public void doUndo() {
     final Map<String, Edit> links = thing.getLinks(false);
     for (final Entry<String, String> task : undo.entrySet()) {
-      links.get(task.getKey()).set(task.getValue());
+      links.get(task.getKey()).setByText(task.getValue());
     }
   }
 

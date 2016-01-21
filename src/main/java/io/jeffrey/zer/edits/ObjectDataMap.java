@@ -30,9 +30,12 @@ public class ObjectDataMap {
   public EditBoolean getBoolean(final String name, final boolean def) {
     return new EditBoolean(name, lookup(name, def)) {
       @Override
-      public boolean setByText(final String txt) {
-        fields.put(name, txt);
-        return super.setByText(txt);
+      public boolean setByTextWithPublishing(final String txt) {
+        if (super.setByText(txt)) {
+          fields.put(name, txt);
+          return true;
+        }
+        return false;
       }
     };
   }
@@ -49,9 +52,13 @@ public class ObjectDataMap {
   public EditDouble getDouble(final String name, final double def) {
     return new EditDouble(name, lookup(name, def)) {
       @Override
-      public boolean setByText(final String txt) {
-        fields.put(name, txt);
-        return super.setByText(txt);
+      public boolean setByTextWithPublishing(final String txt) {
+        if (super.setByText(txt)) {
+          fields.put(name, txt);
+          return true;
+        }
+        return false;
+
       }
     };
   }
@@ -68,9 +75,13 @@ public class ObjectDataMap {
   public EditInteger getInteger(final String name, final int def) {
     return new EditInteger(name, lookup(name, def)) {
       @Override
-      public boolean setByText(final String txt) {
-        fields.put(name, txt);
-        return super.setByText(txt);
+      public boolean setByTextWithPublishing(final String txt) {
+        if (super.setByText(txt)) {
+          fields.put(name, txt);
+          return true;
+        }
+        return false;
+
       }
     };
   }
@@ -87,9 +98,13 @@ public class ObjectDataMap {
   public EditString getString(final String name, final String def) {
     return new EditString(name, lookup(name, def)) {
       @Override
-      public boolean setByText(final String txt) {
-        fields.put(name, txt);
-        return super.setByText(txt);
+      public boolean setByTextWithPublishing(final String txt) {
+        if (super.setByText(txt)) {
+          fields.put(name, txt);
+          return true;
+        }
+        return false;
+
       }
     };
   }

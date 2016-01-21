@@ -23,10 +23,10 @@ public class GuideLine {
       return null;
     }
     final GuideLine gl = new GuideLine();
-    gl.a.set(parts[0]);
-    gl.b.set(parts[1]);
-    gl.c.set(parts[2]);
-    gl.distance.set(parts[3]);
+    gl.a.setByText(parts[0]);
+    gl.b.setByText(parts[1]);
+    gl.c.setByText(parts[2]);
+    gl.distance.setByText(parts[3]);
     return gl;
   }
 

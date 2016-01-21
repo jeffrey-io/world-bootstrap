@@ -170,7 +170,7 @@ public class ModeledDocument implements Model {
     }
     for (final Map<String, Edit> items : result.values()) {
       for (final Edit ed : items.values()) {
-        ed.set(value);
+        ed.setByText(value);
       }
     }
   }

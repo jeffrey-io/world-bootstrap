@@ -30,7 +30,7 @@ public class EditDouble extends EditPrimitive<Double> {
    * {@inheritDoc}
    */
   @Override
-  public boolean setByText(final String txt) {
+  public boolean setByTextWithPublishing(final String txt) {
     try {
       this.value(Double.parseDouble(txt));
       return true;

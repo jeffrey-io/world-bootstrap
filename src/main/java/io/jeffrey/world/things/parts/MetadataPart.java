@@ -28,7 +28,7 @@ public class MetadataPart implements Part {
     if (ed == null) {
       return new EditString(prefix + key, defaultValue) {
         @Override
-        public boolean setByText(final String txt) {
+        public boolean setByTextWithPublishing(final String txt) {
           metadata.put(key, data.getString(prefix + key, txt));
           return super.setByText(txt);
         };

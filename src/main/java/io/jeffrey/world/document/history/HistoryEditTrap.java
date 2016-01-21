@@ -8,7 +8,7 @@ import io.jeffrey.zer.edits.Edit;
  *
  * @author jeffrey
  */
-public class HistoryEditTrap extends Edit {
+public class HistoryEditTrap implements Edit {
 
   private final Edit          delegate;
   private final History       history;
@@ -48,9 +48,9 @@ public class HistoryEditTrap extends Edit {
    * {@inheritDoc}
    */
   @Override
-  protected boolean setByText(final String txt) {
+  public boolean setByText(final String txt) {
     history.focus(name(), target);
-    return delegate.set(txt);
+    return delegate.setByText(txt);
   }
 
 }

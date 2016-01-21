@@ -33,7 +33,7 @@ public class EditBoolean extends EditPrimitive<Boolean> {
    * {@inheritDoc}
    */
   @Override
-  public boolean setByText(final String txt) {
+  public boolean setByTextWithPublishing(final String txt) {
     boolean parsed = false;
     final String x = txt.trim().replaceAll("\\s", "");
     if (x.equalsIgnoreCase("true")) {

@@ -7,7 +7,7 @@ import io.jeffrey.zer.edits.Edit;
  *
  * @author jeffrey
  */
-public class EditEventedPoint2 extends Edit {
+public class EditEventedPoint2 implements Edit {
   private final boolean       isEditingX;
   private final String        name;
   private final double        value;

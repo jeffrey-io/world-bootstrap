@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author jeffrey
  *
  */
-public abstract class AbstractEditList extends Edit {
+public abstract class AbstractEditList implements Edit {
 
   /**
    * all the edits available

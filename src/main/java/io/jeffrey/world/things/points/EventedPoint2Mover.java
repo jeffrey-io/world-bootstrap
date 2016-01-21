@@ -12,16 +12,16 @@ public class EventedPoint2Mover extends ThingInteraction {
 
   private final double        ix;
   private final double        iy;
-  private final EventedPoint2 vertex;
+  private final EventedPoint2 point;
 
   /**
-   * @param vertex
+   * @param point
    *          the vertex to move
    * @param initial
    *          the initial event in thing space
    */
-  public EventedPoint2Mover(final EventedPoint2 vertex, final AdjustedMouseEvent initial) {
-    this.vertex = vertex;
+  public EventedPoint2Mover(final EventedPoint2 point, final AdjustedMouseEvent initial) {
+    this.point = point;
     ix = initial.position.x_1;
     iy = initial.position.y_1;
   }
@@ -31,7 +31,7 @@ public class EventedPoint2Mover extends ThingInteraction {
    */
   @Override
   public void cancel() {
-    vertex.reset();
+    point.reset();
   }
 
   /**
@@ -39,7 +39,7 @@ public class EventedPoint2Mover extends ThingInteraction {
    */
   @Override
   public void moved(final AdjustedMouseEvent event) {
-    vertex.setChange(event.position.x_1 - ix, event.position.y_1 - iy);
+    point.setChange(event.position.x_1 - ix, event.position.y_1 - iy);
   }
 
   @Override

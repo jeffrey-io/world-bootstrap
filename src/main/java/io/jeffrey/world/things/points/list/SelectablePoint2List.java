@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.omg.CORBA.OMGVMCID;
+
 import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.behaviors.HasActions;
@@ -74,6 +76,7 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasAction
     }
     this.looped = _looped;
     this.finite = _finite;
+    index();
   }
 
   /**

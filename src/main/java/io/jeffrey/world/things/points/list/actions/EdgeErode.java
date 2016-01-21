@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.IndexRemoval;
+import io.jeffrey.world.things.points.list.SegmentSelectMode;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 public class EdgeErode {
@@ -50,9 +51,9 @@ public class EdgeErode {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain) {
     final IndexRemoval remover = new IndexRemoval();
-    for (final SelectablePoint2[] segments : chain.selectedSegments(asLoop)) {
+    for (final SelectablePoint2[] segments : chain.getSelectedSegments(SegmentSelectMode.SelectedOnly)) {
       final boolean[] cut = collapsable(segments);
       int collectAt = 0;
       int w = 1;

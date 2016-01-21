@@ -10,9 +10,9 @@ import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.AbstractThingSingleItemCache;
 import io.jeffrey.world.things.core.AdaptThingSpaceDoodadsIntoWorldSpace;
 import io.jeffrey.world.things.core.ControlDoodad;
+import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
-import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.zer.Camera;
 import javafx.scene.canvas.GraphicsContext;
 

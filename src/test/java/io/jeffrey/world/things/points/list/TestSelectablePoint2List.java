@@ -1,12 +1,12 @@
 package io.jeffrey.world.things.points.list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
 import io.jeffrey.world.WorldTestFramework;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
 
 public class TestSelectablePoint2List extends WorldTestFramework {
 
@@ -27,7 +27,24 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     assertEquals(2, list.size());
     assertEquals("1.0,2.0,3.0,4.0", list.toString());
   }
-  
+
+  @Test
+  public void verifyFinite() {
+    SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6", Property.Looped, Property.Finite);
+    try {
+      list.apply(new IndexRemoval());
+      fail();
+    } catch (IllegalArgumentException iae) {
+
+    }
+    try {
+      list.apply(new PointAddition());
+      fail();
+    } catch (IllegalArgumentException iae) {
+
+    }
+  }
+
   @Test
   public void verifyEdgesLooped() {
     SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6", Property.Looped);
@@ -60,7 +77,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     assertEquals(1, edges2[10]);
     assertEquals(2, edges2[11]);
   }
-  
+
   @Test
   public void verifyEdgesPath() {
     SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6");
@@ -104,7 +121,6 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     assertEquals("-10.0,-9.0,1.0,2.0,3.0,4.0,3.5,3.5,5.0,6.0,9.0,10.0", list.toString());
   }
 
-
   @Test
   public void testRemoval() {
     SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6");
@@ -112,12 +128,13 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     rem.denote(1);
     try {
       rem.denote(1);
+      fail();
     } catch (IllegalArgumentException iae) {
     }
     list.apply(rem);
     assertEquals("1.0,2.0,5.0,6.0", list.toString());
   }
-  
+
   @Test
   public void testMultipleRemoves() {
     SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6,7,8,9,10");
@@ -127,6 +144,106 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     rem.denote(3);
     list.apply(rem);
     assertEquals("1.0,2.0,9.0,10.0", list.toString());
+  }
+  
+  private class SegmentAssertionModel {
+    private final SelectablePoint2List list;
+    private final List<SelectablePoint2> points;
+    private SegmentAssertionModel(Property... properties) {
+      this.list = new SelectablePoint2List("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18", properties);
+      this.points = listOf(list);
+    }
+    
+    public SegmentAssertionModel select(int... indicies) {
+      for(int index : indicies) {
+        points.get(index).selected = true;
+      }
+      return this;
+    }
+    
+    public void expect(SegmentSelectMode mode, String expected) {
+      StringBuilder sb = new StringBuilder();
+      for(SelectablePoint2[] segment : list.getSelectedSegments(mode)) {
+        sb.append(segment.length);
+        char prefix = '=';
+        for (SelectablePoint2 p : segment) {
+          sb.append(prefix).append(p.cachedIndex);
+          prefix = ',';
+        }
+        sb.append(';');
+      }
+      String actual = sb.toString();
+      assertEquals(expected, actual);
+    }
+  }
+  
+  private SegmentAssertionModel beginSAM(Property... properties){
+    return new SegmentAssertionModel(properties);
+  }
+  
+  @Test
+  public void getSelectedSegmentsHead() {
+    beginSAM().select(0,1).expect(SegmentSelectMode.SelectedOnly, "2=0,1;");
+    beginSAM().select(0,1).expect(SegmentSelectMode.SelectedAndBoundary, "3=0,1,2;");
+    beginSAM(Property.Looped).select(0,1).expect(SegmentSelectMode.SelectedOnly, "2=0,1;");
+    beginSAM(Property.Looped).select(0,1).expect(SegmentSelectMode.SelectedAndBoundary, "4=8,0,1,2;");
+    beginSAM().select(0,1,2).expect(SegmentSelectMode.SelectedOnly, "3=0,1,2;");
+    beginSAM().select(0,1,2).expect(SegmentSelectMode.SelectedAndBoundary, "4=0,1,2,3;");
+    beginSAM(Property.Looped).select(0,1,2).expect(SegmentSelectMode.SelectedOnly, "3=0,1,2;");
+    beginSAM(Property.Looped).select(0,1,2).expect(SegmentSelectMode.SelectedAndBoundary, "5=8,0,1,2,3;");
+  }
+
+  @Test
+  public void getSelectedSegmentsTail() {
+    beginSAM().select(7,8).expect(SegmentSelectMode.SelectedOnly, "2=7,8;");
+    beginSAM().select(7,8).expect(SegmentSelectMode.SelectedAndBoundary, "3=6,7,8;");
+    beginSAM(Property.Looped).select(7,8).expect(SegmentSelectMode.SelectedOnly, "2=7,8;");
+    beginSAM(Property.Looped).select(7,8).expect(SegmentSelectMode.SelectedAndBoundary, "4=6,7,8,0;");
+    beginSAM().select(6,7,8).expect(SegmentSelectMode.SelectedOnly, "3=6,7,8;");
+    beginSAM().select(6,7,8).expect(SegmentSelectMode.SelectedAndBoundary, "4=5,6,7,8;");
+    beginSAM(Property.Looped).select(6,7,8).expect(SegmentSelectMode.SelectedOnly, "3=6,7,8;");
+    beginSAM(Property.Looped).select(6,7,8).expect(SegmentSelectMode.SelectedAndBoundary, "5=5,6,7,8,0;");
+  }
+  
+
+  @Test
+  public void getSelectedSegmentsMiddle() {
+    beginSAM().select(1,2,3,5,6).expect(SegmentSelectMode.SelectedOnly, "3=1,2,3;2=5,6;");
+    beginSAM().select(1,2,3,5,6).expect(SegmentSelectMode.SelectedAndBoundary, "5=0,1,2,3,4;4=4,5,6,7;");
+    beginSAM(Property.Looped).select(1,2,3,5,6).expect(SegmentSelectMode.SelectedOnly, "3=1,2,3;2=5,6;");
+    beginSAM(Property.Looped).select(1,2,3,5,6).expect(SegmentSelectMode.SelectedAndBoundary, "5=0,1,2,3,4;4=4,5,6,7;");
+  }
+  
+  @Test
+  public void getSelectedSegmentsHeadAndTail() {
+    beginSAM(Property.Looped).select(0,1,6,7,8).expect(SegmentSelectMode.SelectedOnly, "5=6,7,8,0,1;");
+    beginSAM().select(0,1,6,7,8).expect(SegmentSelectMode.SelectedOnly, "2=0,1;3=6,7,8;");
+    beginSAM(Property.Looped).select(0,1,6,7,8).expect(SegmentSelectMode.SelectedAndBoundary, "7=5,6,7,8,0,1,2;");
+    beginSAM().select(0,1,6,7,8).expect(SegmentSelectMode.SelectedAndBoundary, "3=0,1,2;4=5,6,7,8;");
+  }
+  
+  @Test
+  public void getSelectedSegmentsNothingSelected() {
+    beginSAM(Property.Looped).select().expect(SegmentSelectMode.SelectedOnly, "");
+    beginSAM().select().expect(SegmentSelectMode.SelectedOnly, "");
+    beginSAM(Property.Looped).select().expect(SegmentSelectMode.SelectedAndBoundary, "");
+    beginSAM().select().expect(SegmentSelectMode.SelectedAndBoundary, "");
+  }
+  
+  @Test
+  public void getSelectedSegmentsWithNoSegments() {
+    beginSAM(Property.Looped).select(0, 2, 4, 6).expect(SegmentSelectMode.SelectedOnly, "");
+    beginSAM().select(1, 3, 5, 7).expect(SegmentSelectMode.SelectedOnly, "");
+    beginSAM(Property.Looped).select(1, 5).expect(SegmentSelectMode.SelectedAndBoundary, "");
+    beginSAM().select(1, 7).expect(SegmentSelectMode.SelectedAndBoundary, "");
+  }
+
+  @Test
+  public void getSelectedSegmentsWithEverythingSelected() {
+    beginSAM(Property.Looped).select(0, 1, 2, 3, 4, 5, 6, 7, 8).expect(SegmentSelectMode.SelectedOnly, "11=8,0,1,2,3,4,5,6,7,8,0;");
+    beginSAM().select(0, 1, 2, 3, 4, 5, 6, 7, 8).expect(SegmentSelectMode.SelectedOnly, "9=0,1,2,3,4,5,6,7,8;");
+    beginSAM(Property.Looped).select(0, 1, 2, 3, 4, 5, 6, 7, 8).expect(SegmentSelectMode.SelectedAndBoundary, "11=8,0,1,2,3,4,5,6,7,8,0;");
+    beginSAM().select(0, 1, 2, 3, 4, 5, 6, 7, 8).expect(SegmentSelectMode.SelectedAndBoundary, "9=0,1,2,3,4,5,6,7,8;");
   }
 
 }

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.PointAddition;
+import io.jeffrey.world.things.points.list.SegmentSelectMode;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 /**
@@ -19,10 +20,10 @@ public class EdgeSplit {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final SelectablePoint2List chain, final boolean asLoop, final boolean randomly) {
+  public static void perform(final SelectablePoint2List chain, final boolean randomly) {
     final Random rng = new Random();
     final PointAddition adder = new PointAddition();
-    for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
+    for (final SelectablePoint2[] segment : chain.getSelectedSegments(SegmentSelectMode.SelectedOnly)) {
       for (int j = 0; j < segment.length - 1; j++) {
         double factorB = 0.5;
         if (randomly) {

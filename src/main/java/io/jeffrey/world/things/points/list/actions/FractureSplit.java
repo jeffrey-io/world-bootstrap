@@ -5,6 +5,7 @@ import java.util.Random;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.PointAddition;
+import io.jeffrey.world.things.points.list.SegmentSelectMode;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 /**
@@ -19,13 +20,13 @@ public class FractureSplit {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain) {
     final Random rng = new Random();
     final VectorRegister8 reg = new VectorRegister8();
     reg.set_5(0, -1);
 
     final PointAddition adder = new PointAddition();
-    for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
+    for (final SelectablePoint2[] segment : chain.getSelectedSegments(SegmentSelectMode.SelectedOnly)) {
       for (int j = 0; j < segment.length - 1; j++) {
         final SelectablePoint2 p1 = segment[j];
         final SelectablePoint2 p2 = segment[j + 1];

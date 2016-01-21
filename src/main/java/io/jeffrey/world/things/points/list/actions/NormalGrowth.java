@@ -7,6 +7,7 @@ import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.list.SegmentSelectMode;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 public class NormalGrowth {
@@ -60,10 +61,10 @@ public class NormalGrowth {
 
   }
 
-  private static void augment(final SelectablePoint2List chain, final boolean asLoop, final Augmenter seeker) {
+  private static void augment(final SelectablePoint2List chain, final Augmenter seeker) {
     final VectorRegister6 reg = new VectorRegister6();
     reg.set_2(0, -1);
-    for (final SelectablePoint2[] segments : chain.selectedSegments(asLoop, true)) {
+    for (final SelectablePoint2[] segments : chain.getSelectedSegments(SegmentSelectMode.SelectedOnly)) {
       final double[] buffer = new double[segments.length * 2];
       for (int j = 1; j < segments.length - 1; j++) {
         reg.set_0(segments[j].x, segments[j].y);
@@ -94,8 +95,8 @@ public class NormalGrowth {
 
   }
 
-  public static void contract(final SelectablePoint2List chain, final boolean asLoop) {
-    augment(chain, asLoop, (buffer, j, reg) -> {
+  public static void contract(final SelectablePoint2List chain) {
+    augment(chain, (buffer, j, reg) -> {
       reg.copy_from_3_to_1();
       reg.mult_1_by(-0.1);
       reg.add_0_to_1();
@@ -104,10 +105,10 @@ public class NormalGrowth {
     });
   }
 
-  public static void contractRandomly(final SelectablePoint2List chain, final boolean asLoop) {
+  public static void contractRandomly(final SelectablePoint2List chain) {
     final Random rng = new Random();
 
-    augment(chain, asLoop, (buffer, j, reg) -> {
+    augment(chain, (buffer, j, reg) -> {
       reg.copy_from_3_to_1();
       reg.mult_1_by(-0.1 * rng.nextDouble());
       reg.add_0_to_1();
@@ -116,8 +117,8 @@ public class NormalGrowth {
     });
   }
 
-  public static void expand(final SelectablePoint2List chain, final boolean asLoop) {
-    augment(chain, asLoop, (buffer, j, reg) -> {
+  public static void expand(final SelectablePoint2List chain) {
+    augment(chain, (buffer, j, reg) -> {
       reg.copy_from_3_to_1();
       reg.mult_1_by(0.1);
       reg.add_0_to_1();
@@ -126,10 +127,10 @@ public class NormalGrowth {
     });
   }
 
-  public static void expandRandomly(final SelectablePoint2List chain, final boolean asLoop) {
+  public static void expandRandomly(final SelectablePoint2List chain) {
     final Random rng = new Random();
 
-    augment(chain, asLoop, (buffer, j, reg) -> {
+    augment(chain, (buffer, j, reg) -> {
       reg.copy_from_3_to_1();
       reg.mult_1_by(0.1 * rng.nextDouble());
       reg.add_0_to_1();
@@ -144,7 +145,7 @@ public class NormalGrowth {
    * @param asLoop
    *          is it a loop
    */
-  public static void seekColor(final AbstractThing thing, final Document document, final SelectablePoint2List chain, final boolean asLoop) {
-    augment(chain, asLoop, new ColorSeeker(thing, document));
+  public static void seekColor(final AbstractThing thing, final Document document, final SelectablePoint2List chain) {
+    augment(chain, new ColorSeeker(thing, document));
   }
 }

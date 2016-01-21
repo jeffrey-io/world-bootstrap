@@ -10,10 +10,6 @@ import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.points.SelectablePoint2;
 
 public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelectablePoints {
-  public static enum Property {
-    Finite, Looped
-  }
-
   /**
    * convert the list of doubles into a string
    *
@@ -36,6 +32,7 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
 
   public final boolean                      finite;
   public final boolean                      looped;
+
   private final ArrayList<SelectablePoint2> points;
 
   /**
@@ -66,6 +63,9 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
    *          what to remove
    */
   public void apply(final IndexRemoval removal) {
+    if (finite) {
+      throw new IllegalArgumentException("list is finite in size");
+    }
     removal.removeAll(points);
   }
 
@@ -76,18 +76,10 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
    *          what to add
    */
   public void apply(final PointAddition addition) {
+    if (finite) {
+      throw new IllegalArgumentException("list is finite in size");
+    }
     addition.insert(points);
-  }
-
-  /**
-   * get a point
-   *
-   * @param k
-   *          the index of the point to get
-   * @return a point at the given index
-   */
-  public SelectablePoint2 at(final int k) {
-    return points.get(k);
   }
 
   @Override
@@ -114,6 +106,88 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
         point.cachedIndex = k;
         final SelectablePoint2 next = points.get((k + 1) % points.size());
         all.add(new SelectablePoint2[] { point, next });
+      }
+      return all.iterator();
+    };
+  }
+
+  /**
+   * Commplex: look at all the selected points and return them as a set of connected segment.
+   *
+   */
+  public Iterable<SelectablePoint2[]> getSelectedSegments(final SegmentSelectMode mode) {
+    final boolean keepEnds = mode == SegmentSelectMode.SelectedAndBoundary;
+    return () -> {
+      index();
+      final ArrayList<SelectablePoint2[]> all = new ArrayList<SelectablePoint2[]>();
+      final int n = points.size();
+      final int sz = looped ? n : n - 1;
+      int offset = 0;
+      if (looped) {
+        int k1 = 0;
+        boolean found = false;
+        for (SelectablePoint2 p : points) {
+          if (!p.selected) {
+            offset = k1;
+            found = true;
+            break;
+          }
+          k1++;
+        }
+        if (!found) {
+          // THIS API is TOTALLY BUSTED
+          SelectablePoint2[] entire = new SelectablePoint2[points.size() + 2];
+          int at = 0;
+          entire[at] = points.get(points.size() - 1);
+          at ++;
+          for (SelectablePoint2 p : points) {
+            entire[at] = p;
+            at++;
+          }
+          entire[at] = points.get(0);
+          at++;
+          all.add(entire);
+          return all.iterator();
+        }
+      }
+      int k2 = 0;
+      while (k2 < sz) {
+        final SelectablePoint2 point = points.get((k2 + offset) % points.size());
+        final SelectablePoint2 next = points.get((k2 + offset + 1) % points.size());
+        if (point.selected && next.selected) {
+          final ArrayList<SelectablePoint2> segment = new ArrayList<SelectablePoint2>();
+          if (keepEnds) {
+            boolean includeStart = k2 + offset > 0;
+            if (looped) {
+              includeStart = true;
+            }
+            if (includeStart) {
+              segment.add(points.get((k2 + offset - 1 + points.size()) % points.size()));
+            }
+          }
+          segment.add(point);
+          while (k2 < sz) {
+            final SelectablePoint2 middle = points.get((k2 + offset + 1) % points.size());
+            if (middle.selected) {
+              segment.add(middle);
+            } else {
+              break;
+            }
+            k2++;
+          }
+          if (keepEnds) {
+            boolean includeEnd = k2 < sz;
+            if (looped) {
+              includeEnd = true;
+            }
+            if (includeEnd) {
+              segment.add(points.get((k2 + offset + 1) % points.size()));
+            }
+          }
+
+          all.add(segment.toArray(new SelectablePoint2[segment.size()]));
+        }
+        k2++;
       }
       return all.iterator();
     };
@@ -171,65 +245,6 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
       points.add(new SelectablePoint2(x, y));
     }
     return points;
-  }
-
-  public Iterable<SelectablePoint2[]> selectedSegments(final boolean asLoop) {
-    return selectedSegments(asLoop, false);
-  }
-
-  /**
-   * Commplex: look at all the selected points and return them as a set of connected segment.
-   *
-   * @param asLoop
-   *          should the chain be treated as a loop
-   * @return an iterable over point arrays where each point array is a chain of connected and selected points
-   */
-  public Iterable<SelectablePoint2[]> selectedSegments(final boolean asLoop, final boolean keepEnds) {
-    return () -> {
-      index();
-      final ArrayList<SelectablePoint2[]> all = new ArrayList<SelectablePoint2[]>();
-      final int n = points.size();
-      final int sz = asLoop ? n : n - 1;
-      int offset = 0;
-      if (asLoop) {
-        for (int k1 = 0; k1 < n; k1++) {
-          if (!points.get(k1).selected) {
-            offset = k1;
-            break;
-          }
-        }
-      }
-      for (int k2 = 0; k2 < sz; k2++) {
-        final SelectablePoint2 point = points.get((k2 + offset) % points.size());
-        final SelectablePoint2 next = points.get((k2 + offset + 1) % points.size());
-        if (point.selected && next.selected) {
-          final ArrayList<SelectablePoint2> segment = new ArrayList<SelectablePoint2>();
-          if (keepEnds) {
-            if (k2 + offset > 0 || asLoop) {
-              segment.add(points.get((k2 + offset - 1 + points.size()) % points.size()));
-            }
-          }
-          segment.add(point);
-          while (k2 < sz) {
-            final SelectablePoint2 middle = points.get((k2 + offset + 1) % points.size());
-            if (middle.selected) {
-              segment.add(middle);
-            } else {
-              break;
-            }
-            k2++;
-          }
-          if (keepEnds) {
-            if (k2 < sz || asLoop) {
-              segment.add(points.get((k2 + offset + 1) % points.size()));
-            }
-          }
-
-          all.add(segment.toArray(new SelectablePoint2[segment.size()]));
-        }
-      }
-      return all.iterator();
-    };
   }
 
   /**

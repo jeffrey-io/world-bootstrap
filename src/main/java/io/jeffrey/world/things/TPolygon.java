@@ -9,7 +9,7 @@ import io.jeffrey.world.things.parts.LazyPolygonPart;
 import io.jeffrey.world.things.parts.PointListEdgesPart;
 import io.jeffrey.world.things.parts.RenderPolygonPart;
 import io.jeffrey.world.things.points.PointListThing;
-import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
+import io.jeffrey.world.things.points.list.Property;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 

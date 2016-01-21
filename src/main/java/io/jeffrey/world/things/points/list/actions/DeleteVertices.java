@@ -11,7 +11,7 @@ public class DeleteVertices {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain) {
     final IndexRemoval remover = new IndexRemoval();
     for (final SelectablePoint2 p : chain) {
       if (p.selected) {

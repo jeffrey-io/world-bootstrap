@@ -4,6 +4,7 @@ import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.PointAddition;
+import io.jeffrey.world.things.points.list.SegmentSelectMode;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 /**
@@ -19,10 +20,10 @@ public class SmoothSplit {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain) {
     final VectorRegister8 temp = new VectorRegister8();
     final PointAddition adder = new PointAddition();
-    for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
+    for (final SelectablePoint2[] segment : chain.getSelectedSegments(SegmentSelectMode.SelectedOnly)) {
       for (int j = 1; j < segment.length - 2; j++) {
         final SelectablePoint2 p1 = segment[j - 1];
         final SelectablePoint2 p2 = segment[j + 0];

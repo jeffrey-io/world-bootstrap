@@ -1,5 +1,7 @@
 package io.jeffrey.world.things;
 
+import java.util.Iterator;
+
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.document.Document;
@@ -10,7 +12,7 @@ import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.points.PointListThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
+import io.jeffrey.world.things.points.list.Property;
 import io.jeffrey.zer.edits.EditString;
 
 /**
@@ -21,7 +23,7 @@ import io.jeffrey.zer.edits.EditString;
 public class TConnector extends PointListThing {
   /**
    *
-   * Represnets a vertex that is locked by name; this provides the snap-to effect when a node is editted
+   * Represents a vertex that is locked by name; this provides the snap-to effect when a node is editted
    *
    * @author jeffrey
    */
@@ -80,8 +82,9 @@ public class TConnector extends PointListThing {
    */
   public TConnector(final Document document, final ThingData node) {
     super(document, node, Property.Finite);
-    from = new LockedVertex(list.at(0), data, "from");
-    to = new LockedVertex(list.at(1), data, "to");
+    final Iterator<SelectablePoint2> it = list.iterator();
+    from = new LockedVertex(it.next(), data, "from");
+    to = new LockedVertex(it.next(), data, "to");
     points.update();
     points.requireUpToDate();
     dirty = true;

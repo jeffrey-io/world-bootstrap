@@ -2,6 +2,7 @@ package io.jeffrey.world.things.points.list.actions;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.PointAddition;
+import io.jeffrey.world.things.points.list.SegmentSelectMode;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 public class UniformEdgeSplit {
@@ -11,10 +12,10 @@ public class UniformEdgeSplit {
    * @param asLoop
    *          is it a loop
    */
-  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain) {
     double distance = 0;
     int c = 0;
-    for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
+    for (final SelectablePoint2[] segment : chain.getSelectedSegments(SegmentSelectMode.SelectedOnly)) {
       for (int k = 0; k < segment.length - 1; k++) {
         final double dx = segment[k + 1].x - segment[k].x;
         final double dy = segment[k + 1].y - segment[k].y;
@@ -25,7 +26,7 @@ public class UniformEdgeSplit {
     if (c > 0) {
       distance /= c;
       final PointAddition adder = new PointAddition();
-      for (final SelectablePoint2[] segment : chain.selectedSegments(asLoop)) {
+      for (final SelectablePoint2[] segment : chain.getSelectedSegments(SegmentSelectMode.SelectedOnly)) {
         for (int j = 0; j < segment.length - 1; j++) {
           final SelectablePoint2 p1 = segment[j];
           final SelectablePoint2 p2 = segment[j + 1];

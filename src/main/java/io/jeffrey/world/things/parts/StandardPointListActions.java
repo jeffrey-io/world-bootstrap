@@ -43,41 +43,40 @@ public class StandardPointListActions implements Part, HasActions {
    */
   @Override
   public void invokeAction(final String action, final SharedActionSpace space) {
-    final boolean looped = list.looped;
     if ("edge.colinear".equals(action)) {
-      ColinearReduction.perform(list, looped);
+      ColinearReduction.perform(list);
     } else if ("color.seek".equals(action)) {
       // NormalGrowth.seekColor(thing, document, this, looped);
     } else if ("normal.contract".equals(action)) {
-      NormalGrowth.contract(list, looped);
+      NormalGrowth.contract(list);
     } else if ("random.normal.contract".equals(action)) {
-      NormalGrowth.contractRandomly(list, looped);
+      NormalGrowth.contractRandomly(list);
     } else if ("normal.growth".equals(action)) {
-      NormalGrowth.expand(list, looped);
+      NormalGrowth.expand(list);
     } else if ("random.normal.growth".equals(action)) {
-      NormalGrowth.expandRandomly(list, looped);
+      NormalGrowth.expandRandomly(list);
     } else if ("edge.uniform".equals(action)) {
-      UniformEdgeSplit.perform(list, looped);
+      UniformEdgeSplit.perform(list);
     } else if ("edge.erode".equals(action)) {
-      EdgeErode.perform(list, looped);
+      EdgeErode.perform(list);
     } else if ("edge.split".equals(action)) {
-      EdgeSplit.perform(list, looped, false);
+      EdgeSplit.perform(list, false);
     } else if ("edge.fracture".equals(action)) {
-      FractureSplit.perform(list, looped);
+      FractureSplit.perform(list);
     } else if ("edge.smooth".equals(action)) {
-      SmoothSplit.perform(list, looped);
+      SmoothSplit.perform(list);
     } else if ("edge.split.random".equals(action)) {
-      EdgeSplit.perform(list, looped, true);
+      EdgeSplit.perform(list, true);
     } else if ("edge.collapse.1".equals(action)) {
-      EdgeCollapseKeepEnds.perform(list, looped);
+      EdgeCollapseKeepEnds.perform(list);
     } else if ("edge.collapse.2".equals(action)) {
-      EdgeCollapseAll.perform(list, looped);
+      EdgeCollapseAll.perform(list);
     } else if ("clean.edges".equals(action)) {
-      CleanEdges.perform(list, looped);
+      CleanEdges.perform(list);
     } else if ("delete.vertices".equals(action)) {
-      DeleteVertices.perform(list, looped);
+      DeleteVertices.perform(list);
     } else if ("springize".equals(action)) {
-      Springize.perform(list, looped);
+      Springize.perform(list);
     }
   }
 
@@ -97,17 +96,18 @@ public class StandardPointListActions implements Part, HasActions {
     }
     boolean canSplit = false;
     final int n = list.size();
-    final int m = list.looped ? n : n - 1;
     boolean canDeleteVertices = false;
-    for (int k = 0; k < m && !canSplit; k++) {
-      final SelectablePoint2 p1 = list.at(k);
-      final SelectablePoint2 p2 = k + 1 < n ? list.at(k + 1) : list.at(0);
-      if (p1.selected || p2.selected) {
+
+    boolean lastSelected = false;
+    for (final SelectablePoint2 p : list) {
+      if (p.selected) {
         canDeleteVertices = true;
+        if (lastSelected) {
+          canSplit = true;
+          break;
+        }
       }
-      if (p1.selected && p2.selected) {
-        canSplit = true;
-      }
+      lastSelected = p.selected;
     }
     if (canSplit) {
       actions.add("edge.split");

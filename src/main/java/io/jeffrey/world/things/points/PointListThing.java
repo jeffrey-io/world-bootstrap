@@ -7,8 +7,8 @@ import io.jeffrey.world.things.parts.EdgeMoverPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.PointSetPart;
 import io.jeffrey.world.things.parts.StandardPointListActions;
+import io.jeffrey.world.things.points.list.Property;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
-import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
 
 /**
  * Defines common operations on things that behave like polygons/lines/graph connects. That is, things that have a bunch of vertices connected on some kind of chain/loop

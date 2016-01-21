@@ -1,6 +1,7 @@
 package io.jeffrey.world.things.points.list.actions;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.list.SegmentSelectMode;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 public class Springize {
@@ -11,9 +12,9 @@ public class Springize {
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  public static void perform(final SelectablePoint2List chain, final boolean asLoop) {
+  public static void perform(final SelectablePoint2List chain) {
     final double step = 0.1 * 0.1 / 2.0;
-    for (final SelectablePoint2[] segments : chain.selectedSegments(asLoop, true)) {
+    for (final SelectablePoint2[] segments : chain.getSelectedSegments(SegmentSelectMode.SelectedOnly)) {
 
       final double[] buffer = new double[segments.length * 2];
 

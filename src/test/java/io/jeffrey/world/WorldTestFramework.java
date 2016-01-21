@@ -52,6 +52,10 @@ public class WorldTestFramework {
   public void assertTrue(final boolean b) {
     Assert.assertTrue(b);
   }
+  
+  public void fail() {
+    Assert.fail();
+  }
 
   @Before
   public void witness() {

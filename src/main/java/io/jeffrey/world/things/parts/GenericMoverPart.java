@@ -2,8 +2,8 @@ package io.jeffrey.world.things.parts;
 
 import java.util.Set;
 
-import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.behaviors.HasMover;
+import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;

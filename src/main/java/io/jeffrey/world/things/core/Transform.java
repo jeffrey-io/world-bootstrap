@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.base;
+package io.jeffrey.world.things.core;
 
 import io.jeffrey.vector.VectorRegister3;
 import javafx.scene.canvas.GraphicsContext;

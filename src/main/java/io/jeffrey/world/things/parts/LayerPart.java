@@ -3,12 +3,12 @@ package io.jeffrey.world.things.parts;
 import java.util.Set;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.base.LinkedDataMap;
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
-import io.jeffrey.world.things.base.Snap;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasUpdate;
+import io.jeffrey.world.things.core.LinkedDataMap;
+import io.jeffrey.world.things.core.Part;
+import io.jeffrey.world.things.core.SharedActionSpace;
+import io.jeffrey.world.things.core.Snap;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditDouble;
 import io.jeffrey.zer.edits.EditString;

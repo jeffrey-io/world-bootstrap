@@ -3,9 +3,9 @@ package io.jeffrey.world.things.parts;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
-import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
+import io.jeffrey.world.things.core.Part;
+import io.jeffrey.world.things.enforcer.GuideLineEnforcer;
 
 public class EnforcersPart implements Part, HasGuideLineEnforcers {
 

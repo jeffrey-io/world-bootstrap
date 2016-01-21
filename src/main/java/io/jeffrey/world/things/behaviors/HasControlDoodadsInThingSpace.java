@@ -1,6 +1,6 @@
 package io.jeffrey.world.things.behaviors;
 
-import io.jeffrey.world.things.base.ControlDoodad;
+import io.jeffrey.world.things.core.ControlDoodad;
 
 /**
  * Declares whether or not something has control doodads in the thing space.

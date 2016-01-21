@@ -7,8 +7,6 @@ import org.junit.Test;
 import io.jeffrey.world.WorldTestFramework;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
-import io.jeffrey.world.things.points.list.changes.IndexRemoval;
-import io.jeffrey.world.things.points.list.changes.PointAddition;
 
 public class TestSelectablePoint2List extends WorldTestFramework {
 

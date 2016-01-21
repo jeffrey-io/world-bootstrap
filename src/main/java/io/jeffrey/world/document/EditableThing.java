@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.ThingEditor;
 import io.jeffrey.world.things.parts.MetadataPart;
 import io.jeffrey.zer.Editable;

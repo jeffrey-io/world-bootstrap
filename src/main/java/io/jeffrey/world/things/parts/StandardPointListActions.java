@@ -2,9 +2,9 @@ package io.jeffrey.world.things.parts;
 
 import java.util.Set;
 
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.SharedActionSpace;
 import io.jeffrey.world.things.behaviors.HasActions;
+import io.jeffrey.world.things.core.Part;
+import io.jeffrey.world.things.core.SharedActionSpace;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 import io.jeffrey.world.things.points.list.actions.CleanEdges;

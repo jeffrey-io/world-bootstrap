@@ -2,7 +2,7 @@ package io.jeffrey.world.things;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.base.BasicThing;
+import io.jeffrey.world.things.core.BasicThing;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;

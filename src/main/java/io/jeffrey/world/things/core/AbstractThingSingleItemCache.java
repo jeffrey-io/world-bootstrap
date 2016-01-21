@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.base;
+package io.jeffrey.world.things.core;
 
 public abstract class AbstractThingSingleItemCache<T> {
 

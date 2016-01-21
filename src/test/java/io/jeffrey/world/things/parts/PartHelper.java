@@ -4,7 +4,7 @@ import java.util.TreeMap;
 
 import org.junit.Assert;
 
-import io.jeffrey.world.things.base.LinkedDataMap;
+import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class PartHelper {
@@ -24,7 +24,7 @@ public class PartHelper {
     return this;
   }
 
-  public LinkedDataMap getLinkedDataMap() {
+  public LinkedDataMap newLinkedDataMap() {
     return linkedDataMap;
   }
 }

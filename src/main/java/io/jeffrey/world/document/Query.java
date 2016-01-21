@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.zer.edits.Edit;
 
 /**

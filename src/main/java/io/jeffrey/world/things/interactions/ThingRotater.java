@@ -2,7 +2,7 @@ package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
-import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 

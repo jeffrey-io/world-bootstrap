@@ -1,8 +1,8 @@
 package io.jeffrey.world.things.parts;
 
-import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.behaviors.HasColorsToEmit;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.core.Part;
 import javafx.scene.paint.Color;
 
 public class SingleColorEmitterPart implements Part, HasColorsToEmit {

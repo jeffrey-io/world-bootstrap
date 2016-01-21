@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.base;
+package io.jeffrey.world.things.core;
 
 /**
  * Informs how to snap coordinates onto their respective grid (or other thing)

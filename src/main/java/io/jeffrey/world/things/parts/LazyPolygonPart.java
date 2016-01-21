@@ -1,7 +1,7 @@
 package io.jeffrey.world.things.parts;
 
-import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.core.Part;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;

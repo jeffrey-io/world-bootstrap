@@ -8,9 +8,10 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import io.jeffrey.world.things.behaviors.HasUpdate;
+import io.jeffrey.zer.Camera;
 
 public class WorldTestFramework {
-
+  
   public class HasUpdateMock implements HasUpdate {
 
     private int updateCallsMade = 0;

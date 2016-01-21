@@ -1,7 +1,7 @@
 package io.jeffrey.world.things.interactions;
 
 import io.jeffrey.world.document.history.History;
-import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;
 

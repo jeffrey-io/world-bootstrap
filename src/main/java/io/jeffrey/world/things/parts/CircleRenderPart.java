@@ -1,9 +1,9 @@
 package io.jeffrey.world.things.parts;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
+import io.jeffrey.world.things.core.Part;
+import io.jeffrey.world.things.core.Transform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;

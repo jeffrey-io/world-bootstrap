@@ -2,7 +2,6 @@ package io.jeffrey.world.things.enforcer;
 
 import java.util.Collection;
 
-import io.jeffrey.world.things.core.guides.GuideLineEnforcer;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.meta.GuideLine;
 

@@ -1,9 +1,9 @@
 package io.jeffrey.world.things.parts;
 
 import io.jeffrey.vector.VectorRegister3;
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
+import io.jeffrey.world.things.core.Part;
+import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 public class PointListEdgesPart implements Part, HasEdgesInWorldSpace {

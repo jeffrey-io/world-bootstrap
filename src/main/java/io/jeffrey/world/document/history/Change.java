@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.codehaus.jackson.JsonNode;
 
-import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.core.AbstractThing;
 
 /**
  * An atomic group change

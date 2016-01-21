@@ -5,7 +5,7 @@ import java.util.Random;
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 

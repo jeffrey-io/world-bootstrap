@@ -1,7 +1,7 @@
-package io.jeffrey.world.things.base;
+package io.jeffrey.world.things.core;
 
 import io.jeffrey.vector.VectorRegister3;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
+import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;

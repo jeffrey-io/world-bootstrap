@@ -1,9 +1,9 @@
 package io.jeffrey.world.things.parts;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
+import io.jeffrey.world.things.core.Part;
+import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 import javafx.scene.canvas.GraphicsContext;

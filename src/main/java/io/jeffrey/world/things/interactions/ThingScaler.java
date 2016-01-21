@@ -1,6 +1,6 @@
 package io.jeffrey.world.things.interactions;
 
-import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.parts.ScalePart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 

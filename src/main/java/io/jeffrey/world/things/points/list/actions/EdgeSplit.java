@@ -3,8 +3,8 @@ package io.jeffrey.world.things.points.list.actions;
 import java.util.Random;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.list.PointAddition;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
-import io.jeffrey.world.things.points.list.changes.PointAddition;
 
 /**
  * Split an edge in two

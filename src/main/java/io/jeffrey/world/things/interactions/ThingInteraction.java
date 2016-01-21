@@ -10,7 +10,11 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 public abstract class ThingInteraction implements Comparable<ThingInteraction> {
 
   public static enum Order {
-    SingleOfThing(2), SubsetOfThing(1), ThingLevel(0);
+    UserInterface(10000), 
+    SingleOfThing(1000),
+    SubsetOfThing(100),
+    ThingLevel(10),
+    WorldLevel(0);
 
     private final int ordinal;
 

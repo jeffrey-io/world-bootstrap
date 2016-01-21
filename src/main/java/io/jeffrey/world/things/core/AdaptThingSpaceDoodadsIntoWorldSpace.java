@@ -1,9 +1,9 @@
-package io.jeffrey.world.things.base;
+package io.jeffrey.world.things.core;
 
 import io.jeffrey.vector.VectorRegister3;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInWorldSpace;
+import io.jeffrey.world.things.core.ControlDoodad.Type;
 
 public class AdaptThingSpaceDoodadsIntoWorldSpace implements HasControlDoodadsInWorldSpace {
   private final HasControlDoodadsInThingSpace doodads;

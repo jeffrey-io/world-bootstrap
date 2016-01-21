@@ -1,6 +1,6 @@
 package io.jeffrey.world.document.history;
 
-import io.jeffrey.world.things.base.AbstractThing;
+import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.zer.edits.Edit;
 
 /**

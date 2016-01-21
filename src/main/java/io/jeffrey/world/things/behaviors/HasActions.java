@@ -2,7 +2,7 @@ package io.jeffrey.world.things.behaviors;
 
 import java.util.Set;
 
-import io.jeffrey.world.things.base.SharedActionSpace;
+import io.jeffrey.world.things.core.SharedActionSpace;
 
 public interface HasActions {
   /**

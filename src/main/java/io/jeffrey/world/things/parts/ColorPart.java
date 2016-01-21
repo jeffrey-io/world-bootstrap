@@ -1,7 +1,7 @@
 package io.jeffrey.world.things.parts;
 
-import io.jeffrey.world.things.base.LinkedDataMap;
-import io.jeffrey.world.things.base.Part;
+import io.jeffrey.world.things.core.LinkedDataMap;
+import io.jeffrey.world.things.core.Part;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 

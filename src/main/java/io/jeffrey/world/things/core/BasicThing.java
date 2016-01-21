@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.base;
+package io.jeffrey.world.things.core;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
-import io.jeffrey.world.things.base.AbstractThing;
 import io.jeffrey.world.things.behaviors.HasColorsToEmit;
 import io.jeffrey.world.things.behaviors.HasMouseInteractions;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.interactions.MultiThingInteraction;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingInteractionToMouseIteractionAdapter;

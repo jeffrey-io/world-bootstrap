@@ -1,7 +1,7 @@
 package io.jeffrey.world.things.behaviors;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.base.Transform;
+import io.jeffrey.world.things.core.Transform;
 import javafx.scene.canvas.GraphicsContext;
 
 public abstract class HasThingSpaceRendering implements HasWorldSpaceRendering {

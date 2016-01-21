@@ -2,13 +2,13 @@ package io.jeffrey.world.things.parts;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
-import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.core.ControlDoodad;
+import io.jeffrey.world.things.core.Part;
+import io.jeffrey.world.things.core.Transform;
+import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;

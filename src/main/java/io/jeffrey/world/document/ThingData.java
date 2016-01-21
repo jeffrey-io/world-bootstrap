@@ -9,7 +9,7 @@ import io.jeffrey.world.things.TImage;
 import io.jeffrey.world.things.TPath;
 import io.jeffrey.world.things.TPolygon;
 import io.jeffrey.world.things.TTurtle;
-import io.jeffrey.world.things.base.BasicThing;
+import io.jeffrey.world.things.core.BasicThing;
 import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class ThingData extends ObjectDataMap {

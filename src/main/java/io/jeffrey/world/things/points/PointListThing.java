@@ -2,7 +2,7 @@ package io.jeffrey.world.things.points;
 
 import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.base.BasicThing;
+import io.jeffrey.world.things.core.BasicThing;
 import io.jeffrey.world.things.parts.EdgeMoverPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.PointSetPart;

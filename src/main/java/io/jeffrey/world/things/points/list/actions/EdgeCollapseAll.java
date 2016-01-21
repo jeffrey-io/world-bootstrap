@@ -1,8 +1,8 @@
 package io.jeffrey.world.things.points.list.actions;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.list.IndexRemoval;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
-import io.jeffrey.world.things.points.list.changes.IndexRemoval;
 
 /**
  * Collapse all selected and connected vertices down to a single vertex by averaging them up

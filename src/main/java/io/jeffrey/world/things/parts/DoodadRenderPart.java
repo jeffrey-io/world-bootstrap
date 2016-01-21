@@ -3,16 +3,16 @@ package io.jeffrey.world.things.parts;
 import java.util.Set;
 
 import io.jeffrey.world.document.Document;
-import io.jeffrey.world.things.base.AbstractThing;
-import io.jeffrey.world.things.base.AbstractThingSingleItemCache;
-import io.jeffrey.world.things.base.AdaptThingSpaceDoodadsIntoWorldSpace;
-import io.jeffrey.world.things.base.ControlDoodad;
-import io.jeffrey.world.things.base.ControlDoodad.Type;
-import io.jeffrey.world.things.base.Part;
-import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
+import io.jeffrey.world.things.core.AbstractThing;
+import io.jeffrey.world.things.core.AbstractThingSingleItemCache;
+import io.jeffrey.world.things.core.AdaptThingSpaceDoodadsIntoWorldSpace;
+import io.jeffrey.world.things.core.ControlDoodad;
+import io.jeffrey.world.things.core.Part;
+import io.jeffrey.world.things.core.Transform;
+import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.zer.Camera;
 import javafx.scene.canvas.GraphicsContext;
 

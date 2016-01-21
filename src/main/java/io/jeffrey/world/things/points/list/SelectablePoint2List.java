@@ -1,4 +1,4 @@
-package io.jeffrey.world.things.points;
+package io.jeffrey.world.things.points.list;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,6 +11,7 @@ import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
+import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.actions.CleanEdges;
 import io.jeffrey.world.things.points.list.actions.ColinearReduction;
 import io.jeffrey.world.things.points.list.actions.DeleteVertices;
@@ -26,7 +27,7 @@ import io.jeffrey.world.things.points.list.actions.UniformEdgeSplit;
 import io.jeffrey.world.things.points.list.changes.IndexRemoval;
 import io.jeffrey.world.things.points.list.changes.PointAddition;
 
-public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesInWorldSpace, HasActions, HasSelectablePoints {
+public class SelectablePoint2List implements Part, HasSelectableEdges, HasActions, HasSelectablePoints {
   /**
    * convert the list of doubles into a string
    *
@@ -47,6 +48,10 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
     return pV.toString();
   }
 
+  public static enum Property {
+    Finite, Looped
+  }
+
   public final boolean                      finite;
   public final boolean                      looped;
   private final ArrayList<SelectablePoint2> points;
@@ -55,10 +60,20 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
    * @param raw
    *          the serialized form of the points
    */
-  public SelectablePoint2List(final String raw, final boolean looped, final boolean finite) {
+  public SelectablePoint2List(final String raw, Property... properties) {
     points = parse(raw);
-    this.looped = looped;
-    this.finite = finite;
+    boolean _looped = false;
+    boolean _finite = false;
+    for (Property property : properties) {
+      if (property == Property.Looped) {
+        _looped = true;
+      }
+      if (property == Property.Finite) {
+        _finite = true;
+      }
+    }
+    this.looped = _looped;
+    this.finite = _finite;
   }
 
   /**
@@ -106,8 +121,8 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
    */
   @Override
   public Iterable<SelectablePoint2[]> getSelectableEdges() {
-    index();
     return () -> {
+      index();
       final ArrayList<SelectablePoint2[]> all = new ArrayList<SelectablePoint2[]>();
       final int n = points.size();
       final int sz = looped ? n : n - 1;
@@ -128,8 +143,7 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
    *          is the chain a polygon?
    * @return an array of all edges (x0,y0,x1,y1,x1,y1,x2,y2,...)
    */
-  @Override
-  public double[] getWorldSpaceEdges() {
+  public double[] getThingSpaceEdges() {
     final int n = points.size() + (looped ? 0 : -1);
     final double[] values = new double[n * 4];
     for (int k = 0; k < n; k++) {
@@ -291,8 +305,8 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasEdgesI
    * @return an iterable over point arrays where each point array is a chain of connected and selected points
    */
   public Iterable<SelectablePoint2[]> selectedSegments(final boolean asLoop, final boolean keepEnds) {
-    index();
     return () -> {
+      index();
       final ArrayList<SelectablePoint2[]> all = new ArrayList<SelectablePoint2[]>();
       final int n = points.size();
       final int sz = asLoop ? n : n - 1;

@@ -30,7 +30,7 @@ import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.core.guides.Picker;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.MousePart;
-import io.jeffrey.world.things.points.SelectablePoint2List;
+import io.jeffrey.world.things.points.list.SelectablePoint2List;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.Editable;

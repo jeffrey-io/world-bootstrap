@@ -6,6 +6,8 @@ import io.jeffrey.world.things.base.BasicThing;
 import io.jeffrey.world.things.parts.EdgeMoverPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.PointSetPart;
+import io.jeffrey.world.things.points.list.SelectablePoint2List;
+import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
 
 /**
  * Defines common operations on things that behave like polygons/lines/graph connects. That is, things that have a bunch of vertices connected on some kind of chain/loop
@@ -29,9 +31,9 @@ public class PointListThing extends BasicThing {
    * @param node
    *          where the thing's data iss
    */
-  protected PointListThing(final Document document, final ThingData node, final boolean looped, final boolean finite) {
+  protected PointListThing(final Document document, final ThingData node, Property... properties) {
     super(document, node);
-    list = new SelectablePoint2List(node.getString("points", "0,-1,1,1,-1,1").value(), looped, finite);
+    list = new SelectablePoint2List(node.getString("points", "0,-1,1,1,-1,1").value(), properties);
     points = new PointSetPart(data, document, transform, position, scale, rotation, list);
     register(points);
     register(list);

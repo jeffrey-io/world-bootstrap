@@ -10,6 +10,7 @@ import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.points.PointListThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
 import io.jeffrey.zer.edits.EditString;
 
 /**
@@ -78,7 +79,7 @@ public class TConnector extends PointListThing {
    *          where the data for the thing iss
    */
   public TConnector(final Document document, final ThingData node) {
-    super(document, node, false, true);
+    super(document, node, Property.Finite);
     from = new LockedVertex(list.at(0), data, "from");
     to = new LockedVertex(list.at(1), data, "to");
     points.update();

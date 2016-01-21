@@ -1,7 +1,7 @@
 package io.jeffrey.world.things.points.list.actions;
 
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.world.things.points.SelectablePoint2List;
+import io.jeffrey.world.things.points.list.SelectablePoint2List;
 
 public class Springize {
 

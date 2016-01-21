@@ -5,7 +5,7 @@ import io.jeffrey.world.things.base.Part;
 import io.jeffrey.world.things.base.Transform;
 import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
 import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
-import io.jeffrey.world.things.points.SelectablePoint2List;
+import io.jeffrey.world.things.points.list.SelectablePoint2List;
 import javafx.scene.canvas.GraphicsContext;
 
 public class RenderPathPart extends HasThingSpaceRendering implements Part {

@@ -9,7 +9,7 @@ public class SelectablePoint2 {
   /**
    * was the point already selected; this enables selection caching
    */
-  public boolean alreadySelected = false;
+  public boolean alreadySelected;
 
   /**
    * a cached index for consumers to use for optimization
@@ -19,7 +19,7 @@ public class SelectablePoint2 {
   /**
    * is the point selected
    */
-  public boolean selected        = false;
+  public boolean selected;
 
   /**
    * the x coordinate
@@ -42,5 +42,6 @@ public class SelectablePoint2 {
     this.y = y;
     cachedIndex = -1;
     selected = false;
+    alreadySelected = false;
   }
 }

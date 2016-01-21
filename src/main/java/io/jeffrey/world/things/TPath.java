@@ -4,6 +4,7 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.points.PointListThing;
+import io.jeffrey.world.things.points.list.SelectablePoint2List.Property;
 
 /**
  * a point chain that is a path
@@ -20,7 +21,7 @@ public class TPath extends PointListThing {
    *          where the data for the thing iss
    */
   public TPath(final Document document, final ThingData node) {
-    super(document, node, false, false);
+    super(document, node);
     register(new RenderPathPart(transform, document, points, list));
   }
 

@@ -56,6 +56,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
     lifetime = thing.first(LifetimePart.class);
   }
 
+  // TODO: this should be moved out
   public void beginMoving(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
     if (editing != null) {
       if (editing.locked.value() || !editing.selected.value()) {

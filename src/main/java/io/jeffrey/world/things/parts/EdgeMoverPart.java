@@ -4,11 +4,11 @@ import java.util.Set;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.math.Lines;
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.behaviors.HasMouseInteractions;
 import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasUpdate;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.interactions.PairEventPoint2Mover;
@@ -20,14 +20,14 @@ import io.jeffrey.zer.edits.EditBoolean;
 
 public class EdgeMoverPart implements Part, HasMouseInteractions, HasMover {
 
-  private final Document           document;
+  private final Container          container;
   private final HasSelectableEdges edges;
   private final EditBoolean        lock;
   private final Transform          transform;
   private final HasUpdate          update;
 
-  public EdgeMoverPart(final Document document, final Transform transform, final HasSelectableEdges edges, final EditBoolean lock, final HasUpdate update) {
-    this.document = document;
+  public EdgeMoverPart(final Container container, final Transform transform, final HasSelectableEdges edges, final EditBoolean lock, final HasUpdate update) {
+    this.container = container;
     this.transform = transform;
     this.edges = edges;
     this.lock = lock;
@@ -70,7 +70,7 @@ public class EdgeMoverPart implements Part, HasMouseInteractions, HasMover {
         reg.set_2(event.position.x_0, event.position.y_0);
         final double distance = Lines.minimalDistanceV2toLineSegmentV0V1_Destructive(reg);
         if (distance > 0) {
-          if (event.doodadDistance(reg.x_0, reg.y_0) <= document.edgeWidthSize) {
+          if (event.doodadDistance(reg.x_0, reg.y_0) <= container.edgeWidthSize) {
             return new PairEventPoint2Mover(new EventedPoint2(begin, update), new EventedPoint2(end, update), event);
           }
         }

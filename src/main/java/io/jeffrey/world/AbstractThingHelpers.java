@@ -91,7 +91,7 @@ public class AbstractThingHelpers {
     }
 
     final ThingInteraction interaction = interactions.size() == 1 ? interactions.get(0) : new MultiThingInteraction(interactions);
-    thing.document.history.register(thing);
-    return new ThingInteractionToMouseIteractionAdapter(thing.document.history, interaction, thing.transform());
+    thing.container.history.register(thing);
+    return new ThingInteractionToMouseIteractionAdapter(thing.container.history, interaction, thing.transform());
   }
 }

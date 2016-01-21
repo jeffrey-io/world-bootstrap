@@ -2,13 +2,13 @@ package io.jeffrey.world.things.parts;
 
 import java.util.Set;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.AbstractThingSingleItemCache;
 import io.jeffrey.world.things.core.AdaptThingSpaceDoodadsIntoWorldSpace;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.Part;
@@ -38,8 +38,8 @@ public class DoodadRenderPart implements Part, HasWorldSpaceRendering {
 
   @Override
   public void render(final GraphicsContext gc) {
-    final Document document = thing.document;
-    final Camera camera = document.camera;
+    final Container conainer = thing.container;
+    final Camera camera = conainer.camera;
 
     if (lifetime.isDeleted()) {
       return;
@@ -48,13 +48,13 @@ public class DoodadRenderPart implements Part, HasWorldSpaceRendering {
       for (final HasControlDoodadsInWorldSpace parent : doodadCaches.get()) {
         for (final ControlDoodad doodad : parent.getDoodadsInWorldSpace()) {
           if (doodad.type == Type.Scale) {
-            gc.drawImage(document.SCALE_ICON, -document.controlPointSize + camera.x(doodad.u), -document.controlPointSize + camera.y(doodad.v), 2 * document.controlPointSize, 2 * document.controlPointSize);
+            gc.drawImage(conainer.SCALE_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
           } else if (doodad.type == Type.Rotate) {
-            gc.drawImage(document.ROTATE_ICON, -document.controlPointSize + camera.x(doodad.u), -document.controlPointSize + camera.y(doodad.v), 2 * document.controlPointSize, 2 * document.controlPointSize);
+            gc.drawImage(conainer.ROTATE_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
           } else if (doodad.type == Type.PointSelected) {
-            gc.drawImage(document.VERTEX_ICON_SELECTED, -document.controlPointSize + camera.x(doodad.u), -document.controlPointSize + camera.y(doodad.v), 2 * document.controlPointSize, 2 * document.controlPointSize);
+            gc.drawImage(conainer.VERTEX_ICON_SELECTED, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
           } else if (doodad.type == Type.PointUnselected) {
-            gc.drawImage(document.VERTEX_ICON, -document.controlPointSize + camera.x(doodad.u), -document.controlPointSize + camera.y(doodad.v), 2 * document.controlPointSize, 2 * document.controlPointSize);
+            gc.drawImage(conainer.VERTEX_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);
           }
         }
       }

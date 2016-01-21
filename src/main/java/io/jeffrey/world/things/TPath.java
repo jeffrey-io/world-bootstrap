@@ -1,7 +1,7 @@
 package io.jeffrey.world.things;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.points.PointListThing;
 
@@ -19,9 +19,9 @@ public class TPath extends PointListThing {
    * @param node
    *          where the data for the thing iss
    */
-  public TPath(final Document document, final ThingData node) {
-    super(document, node);
-    register(new RenderPathPart(transform, document, points, list));
+  public TPath(final Container container, final ThingData node) {
+    super(container, node);
+    register(new RenderPathPart(transform, container, points, list));
   }
 
 }

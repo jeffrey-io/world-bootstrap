@@ -21,6 +21,7 @@ import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.AdaptThingSpaceDoodadsIntoWorldSpace;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.LayerPart;
@@ -39,16 +40,18 @@ import javafx.scene.paint.Color;
 
 public class Document extends ModeledDocument implements DocumentFileSystem {
   public final Camera     camera;
+  public final Container  container;
   public final int        controlPointSize = 8;
   public final int        edgeWidthSize    = 4;
   private boolean         hasSomeSelection = false;
   private int             id;
-  public final ImageCache imageCache;
 
+  public final ImageCache imageCache;
   private final WorldData owner;
   public final Image      ROTATE_ICON;
   public final Image      SCALE_ICON;
   public final Image      VERTEX_ICON;
+
   public final Image      VERTEX_ICON_SELECTED;
 
   public Document(final Camera camera, final WorldData owner) {
@@ -60,6 +63,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
     ROTATE_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_rotate.png"));
     VERTEX_ICON = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex.png"));
     VERTEX_ICON_SELECTED = new Image(ClassLoader.getSystemResourceAsStream("icon_vertex_selected.png"));
+    container = new Container(this);
   }
 
   public void addThing(final AbstractThing thing) {
@@ -212,7 +216,7 @@ public class Document extends ModeledDocument implements DocumentFileSystem {
           tdata.put(key, value.asText());
         }
       }
-      final AbstractThing thingToAdd = new ThingData(tdata).make(this);
+      final AbstractThing thingToAdd = new ThingData(tdata).make(container);
       things.add(thingToAdd);
       lookup.put(thingToAdd.getID(), thingToAdd);
     }

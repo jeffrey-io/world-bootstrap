@@ -4,9 +4,9 @@ import java.util.Iterator;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.AbstractThing;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RenderPathPart;
@@ -38,16 +38,10 @@ public class TConnector extends PointListThing {
       currentThing = null;
     }
 
-    private void update(final Document document) {
-      final VectorRegister3 W = new VectorRegister3();
-      W.set_0(pnt.x, pnt.y);
-      transform.writeToWorldSpace(W);
-      currentThing = document.selectFirstVisible(W.x_1, W.y_1);
-      if (currentThing != null) {
-        updateFast();
-      } else {
-        link.value("");
-      }
+    private void update(final Container container) {
+      /*
+       * final VectorRegister3 W = new VectorRegister3(); W.set_0(pnt.x, pnt.y); transform.writeToWorldSpace(W); currentThing = container.selectFirstVisible(W.x_1, W.y_1); if (currentThing != null) { updateFast(); } else { link.value(""); }
+       */
     }
 
     private void updateFast() {
@@ -80,21 +74,21 @@ public class TConnector extends PointListThing {
    * @param node
    *          where the data for the thing iss
    */
-  public TConnector(final Document document, final ThingData node) {
-    super(document, node, Property.Finite);
+  public TConnector(final Container container, final ThingData node) {
+    super(container, node, Property.Finite);
     final Iterator<SelectablePoint2> it = list.iterator();
     from = new LockedVertex(it.next(), data, "from");
     to = new LockedVertex(it.next(), data, "to");
     points.update();
     points.requireUpToDate();
     dirty = true;
-    register(new RenderPathPart(transform, document, points, list));
+    register(new RenderPathPart(transform, container, points, list));
   }
 
   public void refresh() {
     if (dirty) {
-      from.update(document);
-      to.update(document);
+      from.update(container);
+      to.update(container);
     } else {
       from.updateFast();
       to.updateFast();

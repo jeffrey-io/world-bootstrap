@@ -126,7 +126,7 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
       if (looped) {
         int k1 = 0;
         boolean found = false;
-        for (SelectablePoint2 p : points) {
+        for (final SelectablePoint2 p : points) {
           if (!p.selected) {
             offset = k1;
             found = true;
@@ -136,11 +136,11 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
         }
         if (!found) {
           // THIS API is TOTALLY BUSTED
-          SelectablePoint2[] entire = new SelectablePoint2[points.size() + 2];
+          final SelectablePoint2[] entire = new SelectablePoint2[points.size() + 2];
           int at = 0;
           entire[at] = points.get(points.size() - 1);
-          at ++;
-          for (SelectablePoint2 p : points) {
+          at++;
+          for (final SelectablePoint2 p : points) {
             entire[at] = p;
             at++;
           }

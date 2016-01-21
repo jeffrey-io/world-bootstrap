@@ -1,7 +1,7 @@
 package io.jeffrey.world.things;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.EnforcersPart;
@@ -28,8 +28,8 @@ public class TPolygon extends PointListThing {
    * @param node
    *          where the data for the thing iss
    */
-  public TPolygon(final Document document, final ThingData node) {
-    super(document, node, Property.Looped);
+  public TPolygon(final Container container, final ThingData node) {
+    super(container, node, Property.Looped);
 
     final PointListEdgesPart edges = new PointListEdgesPart(list, transform);
     register(edges);
@@ -45,7 +45,7 @@ public class TPolygon extends PointListThing {
       lazyPolygonPart.set(polygon);
     });
 
-    register(new RenderPolygonPart(transform, document, points, list));
+    register(new RenderPolygonPart(transform, container, points, list));
   }
 
   /**

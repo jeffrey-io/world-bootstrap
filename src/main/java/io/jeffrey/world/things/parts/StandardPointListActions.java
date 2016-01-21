@@ -95,7 +95,7 @@ public class StandardPointListActions implements Part, HasActions {
       return;
     }
     boolean canSplit = false;
-    final int n = list.size();
+    list.size();
     boolean canDeleteVertices = false;
 
     boolean lastSelected = false;

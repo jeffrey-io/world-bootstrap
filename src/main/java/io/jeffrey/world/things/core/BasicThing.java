@@ -1,6 +1,5 @@
 package io.jeffrey.world.things.core;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.parts.ColorPart;
 import io.jeffrey.world.things.parts.DoodadRenderPart;
@@ -25,10 +24,10 @@ public abstract class BasicThing extends AbstractThing {
    * @param node
    *          where the data for the node comes from
    */
-  public BasicThing(final Document document, final ThingData node) {
-    super(document, node);
+  public BasicThing(final Container container, final ThingData node) {
+    super(container, node);
 
-    layer = new LayerPart(document, data);
+    layer = new LayerPart(container, data);
     register(layer);
 
     position = new PositionPart(data, layer);

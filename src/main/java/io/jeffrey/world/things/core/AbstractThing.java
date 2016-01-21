@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasUpdate;
@@ -22,8 +21,8 @@ import io.jeffrey.zer.edits.ObjectDataMap;
 
 public abstract class AbstractThing {
   private final HashMap<Class<?>, HashSet<Object>> cache;
+  public final Container                           container;
   protected final LinkedDataMap                    data;
-  public final Document                            document;
   public final EditingPart                         editing;
   public final IdentityPart                        identity;
   public final LifetimePart                        lifetime;
@@ -36,8 +35,8 @@ public abstract class AbstractThing {
    * @param node
    *          where the data lives
    */
-  public AbstractThing(final Document document, final ObjectDataMap node) {
-    this.document = document;
+  public AbstractThing(final Container container, final ObjectDataMap node) {
+    this.container = container;
     cache = new HashMap<>();
     data = new LinkedDataMap(node);
     parts = new ArrayList<>();
@@ -123,7 +122,7 @@ public abstract class AbstractThing {
     if (withHistory) {
       final HashMap<String, Edit> actualLinks = new HashMap<>();
       for (final Entry<String, Edit> link : data.getLinks().entrySet()) {
-        actualLinks.put(link.getKey(), new HistoryEditTrap(link.getValue(), document.history, this));
+        actualLinks.put(link.getKey(), new HistoryEditTrap(link.getValue(), container.history, this));
       }
       return actualLinks;
     } else {
@@ -163,14 +162,14 @@ public abstract class AbstractThing {
    */
   public SharedActionSpace invokeAction(final String action, final boolean withHistory) {
     if (withHistory) {
-      document.history.register(this);
+      container.history.register(this);
     }
     final SharedActionSpace sharedActionSpace = new SharedActionSpace();
     for (final HasActions part : collect(HasActions.class)) {
       part.invokeAction(action, sharedActionSpace);
     }
     if (withHistory) {
-      document.history.capture();
+      container.history.capture();
     }
     return sharedActionSpace;
   }

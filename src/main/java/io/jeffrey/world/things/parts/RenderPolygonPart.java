@@ -1,7 +1,7 @@
 package io.jeffrey.world.things.parts;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.parts.PointSetPart.SharedMutableCache;
@@ -14,8 +14,8 @@ public class RenderPolygonPart extends HasThingSpaceRendering implements Part {
   private SharedMutableCache cache;
   private final PointSetPart pointset;
 
-  public RenderPolygonPart(final Transform transform, final Document document, final PointSetPart pointset, final SelectablePoint2List pointlist) {
-    super(transform, document);
+  public RenderPolygonPart(final Transform transform, final Container container, final PointSetPart pointset, final SelectablePoint2List pointlist) {
+    super(transform, container);
     cache = null;
     pointset.subscribe(cache -> RenderPolygonPart.this.cache = cache);
     this.pointset = pointset;

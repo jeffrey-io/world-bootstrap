@@ -1,8 +1,8 @@
 package io.jeffrey.world.things;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.ThingData;
 import io.jeffrey.world.things.core.BasicThing;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.CirclePart;
 import io.jeffrey.world.things.parts.CircleRenderPart;
@@ -24,7 +24,7 @@ public class TCircle extends BasicThing {
    * @param node
    *          where the data is
    */
-  public TCircle(final Document document, final ThingData node) {
+  public TCircle(final Container document, final ThingData node) {
     super(document, node);
     circle = new CirclePart();
     register(circle);

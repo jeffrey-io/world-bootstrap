@@ -2,9 +2,9 @@ package io.jeffrey.world.things.parts;
 
 import java.util.Set;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasUpdate;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
@@ -16,14 +16,14 @@ import io.jeffrey.zer.meta.LayerProperties;
 
 public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions, HasUpdate {
   private LayerProperties  cachedLayerProperties;
-  private final Document   document;
+  private final Container  container;
   public final EditBoolean ignoreSnap;
   public final EditString  layer;
   public final EditBoolean layerlock;
   public final EditDouble  order;
 
-  public LayerPart(final Document document, final LinkedDataMap data) {
-    this.document = document;
+  public LayerPart(final Container container, final LinkedDataMap data) {
+    this.container = container;
     layer = data.getString("layer", "_");
     layer.subscribe((t, u) -> update());
     order = data.getDouble("order", Double.MAX_VALUE);
@@ -39,7 +39,7 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
 
   private Double getEstimatedSortingKey() {
     final int z = cachedLayerProperties.zorder.value();
-    return z * document.getThings().size() + order.value();
+    return z * container.size() + order.value();
   }
 
   public LayerProperties getLayerProperties() {
@@ -91,7 +91,7 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
 
   @Override
   public void update() {
-    cachedLayerProperties = document.layers.get(layer.getAsText());
+    cachedLayerProperties = container.layers.get(layer.getAsText());
   }
 
   @Override

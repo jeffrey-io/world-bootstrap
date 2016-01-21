@@ -1,7 +1,7 @@
 package io.jeffrey.world.things.parts;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,8 +15,8 @@ public class CircleRenderPart extends HasThingSpaceRendering implements Part {
   protected final ColorPart   fill;
   protected final ScalePart   scale;
 
-  public CircleRenderPart(final Transform transform, final Document document, final ColorPart fill, final ColorPart edge, final ScalePart scale, final EditingPart editing) {
-    super(transform, document);
+  public CircleRenderPart(final Transform transform, final Container container, final ColorPart fill, final ColorPart edge, final ScalePart scale, final EditingPart editing) {
+    super(transform, container);
     this.fill = fill;
     this.edge = edge;
     this.scale = scale;

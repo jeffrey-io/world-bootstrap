@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import io.jeffrey.vector.VectorRegister3;
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasInternalSelection;
@@ -13,6 +12,7 @@ import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.LinkedDataMap;
@@ -49,7 +49,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   }
 
   private final SharedMutableCache              cache;
-  private final Document                        document;
+  private final Container                       container;;
 
   private ControlDoodad[]                       doodads   = new ControlDoodad[0];
   public final EditBoolean                      lock;
@@ -65,10 +65,10 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   private final Transform                       transform;
   public final EditString                       vertices;
 
-  public PointSetPart(final LinkedDataMap data, final Document document, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, final HasSelectablePoints points) {
+  public PointSetPart(final LinkedDataMap data, final Container container, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, final HasSelectablePoints points) {
     lock = data.getBoolean("vlock", false);
     this.points = points;
-    this.document = document;
+    this.container = container;
     this.scale = scale;
     this.rotation = rotation;
     this.transform = transform;
@@ -140,12 +140,12 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   @Override
   public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
-    if (document != null) {
+    if (container != null) {
       for (final SelectablePoint2 point : points) {
         if (point.selected) {
           W.set_0(point.x, point.y);
           transform.writeToWorldSpace(W);
-          if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
+          if (event.doodadDistance(W.x_1, W.y_1) <= container.controlPointSize) {
             return true;
           }
         }
@@ -322,11 +322,11 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
 
   public ThingInteraction startInteractionWithClear(final AdjustedMouseEvent event, final boolean withClear) {
     final VectorRegister3 W = new VectorRegister3();
-    if (document != null) {
+    if (container != null) {
       for (final SelectablePoint2 point : points) {
         W.set_0(point.x, point.y);
         transform.writeToWorldSpace(W);
-        if (event.doodadDistance(W.x_1, W.y_1) <= document.controlPointSize) {
+        if (event.doodadDistance(W.x_1, W.y_1) <= container.controlPointSize) {
           if (withClear) {
             for (final SelectablePoint2 other : points) {
               other.selected = false;

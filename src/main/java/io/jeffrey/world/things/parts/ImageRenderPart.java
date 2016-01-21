@@ -1,9 +1,9 @@
 package io.jeffrey.world.things.parts;
 
-import io.jeffrey.world.document.Document;
 import io.jeffrey.world.things.behaviors.HasColorsToEmit;
 import io.jeffrey.world.things.behaviors.HasThingSpaceRendering;
 import io.jeffrey.world.things.behaviors.HasUpdate;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,8 +22,8 @@ public class ImageRenderPart extends HasThingSpaceRendering implements Part, Has
 
   protected final UriPart       uri;
 
-  public ImageRenderPart(final Transform transform, final Document document, final UriPart uri, final EditingPart editing, final RectanglePart rectangle) {
-    super(transform, document);
+  public ImageRenderPart(final Transform transform, final Container container, final UriPart uri, final EditingPart editing, final RectanglePart rectangle) {
+    super(transform, container);
     this.uri = uri;
     this.editing = editing;
     this.rectangle = rectangle;
@@ -55,7 +55,7 @@ public class ImageRenderPart extends HasThingSpaceRendering implements Part, Has
 
   @Override
   public void update() {
-    img = document.imageCache.of(document.find(uri.uri.value()));
+    img = container.imageCache.of(container.find(uri.uri.value()));
     if (img != null) {
       rectangle.set(-img.getWidth() / 2, -img.getHeight() / 2, img.getWidth(), img.getHeight());
     }

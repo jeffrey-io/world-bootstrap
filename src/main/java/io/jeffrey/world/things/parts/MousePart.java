@@ -71,7 +71,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
     for (final HasMover mover : thing.collect(HasMover.class)) {
       mover.iterateMovers(local, event);
     }
-    final Collection<GuideLine> lines = thing.document.getGuideLines(layer.layer.getAsText());
+    final Collection<GuideLine> lines = thing.container.getGuideLines(layer.layer.getAsText());
 
     GuideLineEnforcer enforcer = null;
     if (lines.size() > 0) {
@@ -80,12 +80,12 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
     for (final ThingInteraction itRaw : local) {
       final ThingInteraction it;
       if (lines.size() > 0 && enforcer != null) {
-        it = new ThingSnapper(thing.document.camera, lines, enforcer, itRaw);
+        it = new ThingSnapper(thing.container.camera, lines, enforcer, itRaw);
       } else {
         it = itRaw;
       }
-      thing.document.history.register(thing);
-      interactions.add(new ThingInteractionToMouseIteractionAdapter(thing.document.history, it, transform));
+      thing.container.history.register(thing);
+      interactions.add(new ThingInteractionToMouseIteractionAdapter(thing.container.history, it, transform));
     }
   }
 
@@ -127,7 +127,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
       W.set_0(doodad.u, doodad.v);
       transform.writeToWorldSpace(W);
       final double d = event.doodadDistance(W.x_1, W.y_1);
-      if (d <= thing.document.controlPointSize) {
+      if (d <= thing.container.controlPointSize) {
         if (doodad.type == Type.PointSelected || doodad.type == Type.PointSelected) {
           break;
         }
@@ -146,11 +146,11 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
       return null;
     }
     if (interaction instanceof ThingMover && layer != null) {
-      final Collection<GuideLine> lines = thing.document.getGuideLines(layer.layer.getAsText());
+      final Collection<GuideLine> lines = thing.container.getGuideLines(layer.layer.getAsText());
       if (lines.size() > 0) {
         final GuideLineEnforcer enforcer = getGuideLineEnforcer();
         if (enforcer != null) {
-          interaction = new ThingSnapper(thing.document.camera, lines, enforcer, interaction);
+          interaction = new ThingSnapper(thing.container.camera, lines, enforcer, interaction);
         }
       }
     }

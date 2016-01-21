@@ -159,7 +159,7 @@ public class WorldData extends SurfaceData {
     if (data != null) {
       data.fields.put("x", Double.toString(at_x));
       data.fields.put("y", Double.toString(at_y));
-      document.addThing(data.make(document));
+      document.addThing(data.make(document.container));
     }
   }
 
@@ -412,7 +412,7 @@ public class WorldData extends SurfaceData {
     data.fields.put("x", Double.toString(nx));
     data.fields.put("y", Double.toString(ny));
     data.fields.put("id", newId);
-    document.addThing(data.make(document));
+    document.addThing(data.make(document.container));
   }
 
   /**

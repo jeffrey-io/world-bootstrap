@@ -10,6 +10,7 @@ import io.jeffrey.world.things.TPath;
 import io.jeffrey.world.things.TPolygon;
 import io.jeffrey.world.things.TTurtle;
 import io.jeffrey.world.things.core.BasicThing;
+import io.jeffrey.world.things.core.Container;
 import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class ThingData extends ObjectDataMap {
@@ -23,24 +24,24 @@ public class ThingData extends ObjectDataMap {
     fields.put("_type", type);
   }
 
-  public BasicThing make(final Document document) {
+  public BasicThing make(final Container container) {
     if (fields.get("_type").equals("circle")) {
-      return new TCircle(document, this);
+      return new TCircle(container, this);
     }
     if (fields.get("_type").equals("polygon")) {
-      return new TPolygon(document, this);
+      return new TPolygon(container, this);
     }
     if (fields.get("_type").equals("turtle")) {
-      return new TTurtle(document, this);
+      return new TTurtle(container, this);
     }
     if (fields.get("_type").equals("path")) {
-      return new TPath(document, this);
+      return new TPath(container, this);
     }
     if (fields.get("_type").equals("image")) {
-      return new TImage(document, this);
+      return new TImage(container, this);
     }
     if (fields.get("_type").equals("connector")) {
-      return new TConnector(document, this);
+      return new TConnector(container, this);
     }
     return null;
   }

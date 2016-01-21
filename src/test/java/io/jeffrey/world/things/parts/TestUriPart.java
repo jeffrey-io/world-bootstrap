@@ -7,7 +7,7 @@ public class TestUriPart {
   public void sanityCheck() {
     final PartHelper helper = new PartHelper();
     final UriPart uri = new UriPart("p_", helper.newLinkedDataMap());
-    uri.uri.set("cake");
+    uri.uri.setByText("cake");
     helper.assertWritten("p_uri", "cake");
   }
 }

@@ -31,7 +31,7 @@ public class ObjectDataMap {
     return new EditBoolean(name, lookup(name, def)) {
       @Override
       public boolean setByTextWithPublishing(final String txt) {
-        if (super.setByText(txt)) {
+        if (super.setByTextWithPublishing(txt)) {
           fields.put(name, txt);
           return true;
         }
@@ -53,7 +53,7 @@ public class ObjectDataMap {
     return new EditDouble(name, lookup(name, def)) {
       @Override
       public boolean setByTextWithPublishing(final String txt) {
-        if (super.setByText(txt)) {
+        if (super.setByTextWithPublishing(txt)) {
           fields.put(name, txt);
           return true;
         }
@@ -76,7 +76,7 @@ public class ObjectDataMap {
     return new EditInteger(name, lookup(name, def)) {
       @Override
       public boolean setByTextWithPublishing(final String txt) {
-        if (super.setByText(txt)) {
+        if (super.setByTextWithPublishing(txt)) {
           fields.put(name, txt);
           return true;
         }
@@ -99,7 +99,7 @@ public class ObjectDataMap {
     return new EditString(name, lookup(name, def)) {
       @Override
       public boolean setByTextWithPublishing(final String txt) {
-        if (super.setByText(txt)) {
+        if (super.setByTextWithPublishing(txt)) {
           fields.put(name, txt);
           return true;
         }

@@ -42,7 +42,7 @@ public abstract class EditPrimitive<T> implements Edit {
    */
   @Override
   public final boolean setByText(final String txt) {
-    return false;
+    return setByTextWithPublishing(txt);
   }
 
   protected abstract boolean setByTextWithPublishing(String txt);

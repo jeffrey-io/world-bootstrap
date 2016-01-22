@@ -3,7 +3,6 @@ package io.jeffrey.world.things.parts;
 import java.util.Set;
 
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
-import io.jeffrey.world.things.behaviors.HasControlDoodadsInWorldSpace;
 import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.AbstractThingSingleItemCache;
@@ -45,7 +44,7 @@ public class DoodadRenderPart implements Part, HasWorldSpaceRendering {
       return;
     }
     if (!editing.locked.value() && editing.selected.value()) {
-      for (final HasControlDoodadsInWorldSpace parent : doodadCaches.get()) {
+      for (final AdaptThingSpaceDoodadsIntoWorldSpace parent : doodadCaches.get()) {
         for (final ControlDoodad doodad : parent.getDoodadsInWorldSpace()) {
           if (doodad.type == Type.Scale) {
             gc.drawImage(conainer.imageCache.SCALE_ICON, -conainer.controlPointSize + camera.x(doodad.u), -conainer.controlPointSize + camera.y(doodad.v), 2 * conainer.controlPointSize, 2 * conainer.controlPointSize);

@@ -2,10 +2,9 @@ package io.jeffrey.world.things.core;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
-import io.jeffrey.world.things.behaviors.HasControlDoodadsInWorldSpace;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
 
-public class AdaptThingSpaceDoodadsIntoWorldSpace implements HasControlDoodadsInWorldSpace {
+public class AdaptThingSpaceDoodadsIntoWorldSpace {
   private final HasControlDoodadsInThingSpace doodads;
   private final Transform                     transform;
 
@@ -23,7 +22,6 @@ public class AdaptThingSpaceDoodadsIntoWorldSpace implements HasControlDoodadsIn
   /**
    * @return all the control doodads in the world space for rendering
    */
-  @Override
   public ControlDoodad[] getDoodadsInWorldSpace() {
     final ControlDoodad[] original = doodads.getDoodadsInThingSpace();
     if (worldDoodadCache.length != original.length) {

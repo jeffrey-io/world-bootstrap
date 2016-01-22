@@ -128,6 +128,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       p.x -= cx;
       p.y -= cy;
     }
+
     // TODO: figure out how to translate the parent by a meaningful amount
     update();
   }

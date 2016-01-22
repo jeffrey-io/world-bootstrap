@@ -8,9 +8,9 @@ public class TestEventedPoint2 extends WorldTestFramework {
 
   @Test
   public void verifyPropagation() {
-    SelectablePoint2 point = new SelectablePoint2(1, 2);
-    HasUpdateMock mock = new HasUpdateMock();
-    EventedPoint2 evPoint = new EventedPoint2(point, mock);
+    final SelectablePoint2 point = new SelectablePoint2(1, 2);
+    final HasUpdateMock mock = new HasUpdateMock();
+    final EventedPoint2 evPoint = new EventedPoint2(point, mock);
     mock.assertUpdateCallsMadeEquals(0);
     evPoint.setChange(4, 5);
     assertEquals(5, point.x);

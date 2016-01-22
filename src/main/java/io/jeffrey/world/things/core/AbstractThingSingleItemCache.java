@@ -16,7 +16,7 @@ public abstract class AbstractThingSingleItemCache<T> {
 
   public T get() {
     final long current = thing.getSequencer();
-    if (current != cachedAt || cached == null) {
+    if (current != cachedAt) {
       cached = compute();
       cachedAt = current;
     }

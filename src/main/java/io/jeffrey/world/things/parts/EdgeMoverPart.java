@@ -1,11 +1,8 @@
 package io.jeffrey.world.things.parts;
 
-import java.util.Set;
-
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.math.Lines;
 import io.jeffrey.world.things.behaviors.HasMouseInteractions;
-import io.jeffrey.world.things.behaviors.HasMover;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.core.Container;
@@ -18,7 +15,7 @@ import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.EditBoolean;
 
-public class EdgeMoverPart implements Part, HasMouseInteractions, HasMover {
+public class EdgeMoverPart implements Part, HasMouseInteractions {
 
   private final Container          container;
   private final HasSelectableEdges edges;
@@ -32,14 +29,6 @@ public class EdgeMoverPart implements Part, HasMouseInteractions, HasMover {
     this.edges = edges;
     this.lock = lock;
     this.update = update;
-  }
-
-  @Override
-  public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
-    final ThingInteraction interaction = startInteraction(event);
-    if (interaction != null) {
-      interactions.add(interaction);
-    }
   }
 
   @Override

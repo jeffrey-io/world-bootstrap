@@ -19,6 +19,14 @@ public class EditDouble extends EditPrimitive<Double> {
   }
 
   /**
+   * @param dv
+   *          the quantity added to the value
+   */
+  public void add(final double dv) {
+    value(value() + dv);
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override

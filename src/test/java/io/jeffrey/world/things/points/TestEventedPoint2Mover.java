@@ -9,11 +9,11 @@ import io.jeffrey.world.things.interactions.ThingInteraction.Order;
 public class TestEventedPoint2Mover extends WorldTestFramework {
   @Test
   public void verifyEventing() {
-    SelectablePoint2 point = new SelectablePoint2(1, 2);
-    HasUpdateMock mock = new HasUpdateMock();
-    EventedPoint2 evPoint = new EventedPoint2(point, mock);
-    SimulatedMouse mouse = new SimulatedMouse();
-    EventedPoint2Mover mover = new EventedPoint2Mover(evPoint, mouse.get());
+    final SelectablePoint2 point = new SelectablePoint2(1, 2);
+    final HasUpdateMock mock = new HasUpdateMock();
+    final EventedPoint2 evPoint = new EventedPoint2(point, mock);
+    final SimulatedMouse mouse = new SimulatedMouse();
+    final EventedPoint2Mover mover = new EventedPoint2Mover(evPoint, mouse.get());
     mouse.add(mover);
     mock.assertUpdateCallsMadeEquals(0);
     mouse.move(7, 8);

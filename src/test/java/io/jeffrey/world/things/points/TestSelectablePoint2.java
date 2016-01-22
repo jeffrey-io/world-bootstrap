@@ -8,7 +8,7 @@ public class TestSelectablePoint2 extends WorldTestFramework {
 
   @Test
   public void sanityCheckStructuralPropertiesAndInitialConditions() {
-    SelectablePoint2 point = new SelectablePoint2(1, 2);
+    final SelectablePoint2 point = new SelectablePoint2(1, 2);
     assertEquals(1, point.x);
     assertEquals(2, point.y);
     assertEquals(-1, point.cachedIndex);

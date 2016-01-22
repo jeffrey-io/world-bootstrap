@@ -8,6 +8,6 @@ public class TestTCircle extends WorldTestFramework {
 
   @Test
   public void construct() {
-    TCircle thing = new TCircle(makeSimpleContainer(), emptyData()); 
+    new TCircle(makeSimpleContainer(), emptyData());
   }
 }

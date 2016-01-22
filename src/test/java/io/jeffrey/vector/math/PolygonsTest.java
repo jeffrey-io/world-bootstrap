@@ -9,6 +9,11 @@ import io.jeffrey.vector.VectorRegister6;
 public class PolygonsTest {
 
   @Test
+  public void coverageOddity() {
+    new Polygons();
+  }
+
+  @Test
   public void testInside() {
     final VectorRegister4 reg = new VectorRegister4();
     final VectorRegister6 temp = new VectorRegister6();

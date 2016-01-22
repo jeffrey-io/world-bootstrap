@@ -8,33 +8,33 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 
 public class TestThingInteraction extends WorldTestFramework {
 
-  @Test
-  public void sanityCheckOrdering() {
-    Order a = Order.SingleOfThing;
-    Order b = Order.WorldLevel;
-    ThingInteraction ta = minimalThing(a);
-    ThingInteraction tb = minimalThing(b);
-    assertTrue(ta.compareTo(tb) > 0);
-    assertTrue(tb.compareTo(ta) < 0);
-    assertTrue(ta.compareTo(ta) == 0);
-    assertTrue(tb.compareTo(tb) == 0);
-  }
-  
   private ThingInteraction minimalThing(final Order order) {
     return new ThingInteraction() {
-      
+
+      @Override
+      public void cancel() {
+      }
+
+      @Override
+      public void moved(final AdjustedMouseEvent event) {
+      }
+
       @Override
       public Order order() {
         return order;
       }
-      
-      @Override
-      public void moved(AdjustedMouseEvent event) {
-      }
-      
-      @Override
-      public void cancel() {
-      }
     };
+  }
+
+  @Test
+  public void sanityCheckOrdering() {
+    final Order a = Order.SingleOfThing;
+    final Order b = Order.WorldLevel;
+    final ThingInteraction ta = minimalThing(a);
+    final ThingInteraction tb = minimalThing(b);
+    assertTrue(ta.compareTo(tb) > 0);
+    assertTrue(tb.compareTo(ta) < 0);
+    assertTrue(ta.compareTo(ta) == 0);
+    assertTrue(tb.compareTo(tb) == 0);
   }
 }

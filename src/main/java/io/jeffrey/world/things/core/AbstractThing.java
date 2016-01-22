@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -19,14 +20,14 @@ import io.jeffrey.world.things.parts.LifetimePart;
 import io.jeffrey.zer.edits.Edit;
 
 public abstract class AbstractThing {
-  private final HashMap<Class<?>, HashSet<Object>> cache;
-  public final Container                           container;
-  protected final LinkedDataMap                    data;
-  public final EditingPart                         editing;
-  public final IdentityPart                        identity;
-  public final LifetimePart                        lifetime;
-  private final ArrayList<Part>                    parts;
-  private long                                     sequencer;
+  private final HashMap<Class<?>, ArrayList<Object>> cache;
+  public final Container                             container;
+  protected final LinkedDataMap                      data;
+  public final EditingPart                           editing;
+  public final IdentityPart                          identity;
+  public final LifetimePart                          lifetime;
+  private final ArrayList<Part>                      parts;
+  private long                                       sequencer;
 
   /**
    * @param document
@@ -49,10 +50,10 @@ public abstract class AbstractThing {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> Set<T> collect(final Class<T> clazz) {
-    HashSet<Object> cached = cache.get(clazz);
+  public <T> List<T> collect(final Class<T> clazz) {
+    ArrayList<Object> cached = cache.get(clazz);
     if (cached == null) {
-      final HashSet<Object> result = new HashSet<>();
+      final ArrayList<Object> result = new ArrayList<>();
       for (final Part part : parts) {
         if (clazz.isAssignableFrom(part.getClass())) {
           result.add(part);
@@ -61,7 +62,7 @@ public abstract class AbstractThing {
       cache.put(clazz, result);
       cached = result;
     }
-    return (HashSet<T>) cached;
+    return (ArrayList<T>) cached;
   }
 
   public <T, O> Set<O> collect(final Class<T> clazz, final Function<T, O> collector) {

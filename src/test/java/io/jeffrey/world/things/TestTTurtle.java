@@ -7,6 +7,6 @@ import io.jeffrey.world.WorldTestFramework;
 public class TestTTurtle extends WorldTestFramework {
   @Test
   public void construct() {
-    TTurtle thing = new TTurtle(makeSimpleContainer(), emptyData());
+    new TTurtle(makeSimpleContainer(), emptyData());
   }
 }

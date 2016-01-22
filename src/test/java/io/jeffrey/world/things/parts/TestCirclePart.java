@@ -7,6 +7,6 @@ import io.jeffrey.world.WorldTestFramework;
 public class TestCirclePart extends WorldTestFramework {
   @Test
   public void verify() {
-    
+
   }
 }

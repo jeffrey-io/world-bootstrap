@@ -10,6 +10,22 @@ import io.jeffrey.vector.VectorRegister4;
 public class TrianglesTest {
 
   @Test
+  public void coverageOddity() {
+    new Triangles();
+  }
+
+  @Test
+  public void testCoLinear() {
+    final VectorRegister4 reg = new VectorRegister4();
+    reg.set_0(1, 1);
+    reg.set_1(2, 2);
+    reg.set_2(3, 3);
+    reg.set_3(1, 1);
+    final boolean result = Triangles.pointInsideTriangle_Destructively(reg);
+    Assert.assertFalse(result);
+  }
+
+  @Test
   public void testInside() {
     final VectorRegister4 reg = new VectorRegister4();
     final Random rng = new Random();

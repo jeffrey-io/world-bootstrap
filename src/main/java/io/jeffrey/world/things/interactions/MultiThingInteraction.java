@@ -26,9 +26,7 @@ public class MultiThingInteraction extends ThingInteraction {
       } else {
         final ArrayList<ThingInteraction> next = new ArrayList<>();
         Order lastOrder = Order.ThingLevel;
-        System.out.println("PICKING:");
         for (final ThingInteraction ti : interactions) {
-          System.out.println("TI:" + ti.getClass() + "/" + ti.order());
           if (ti.order() != lastOrder) {
             next.clear();
             lastOrder = ti.order();

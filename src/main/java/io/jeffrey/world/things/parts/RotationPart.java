@@ -50,20 +50,21 @@ public class RotationPart implements Part, HasActions, HasUpdate {
 
   @Override
   public void invokeAction(final String action, final SharedActionSpace space) {
-    if ("reset.angle".equals(action)) {
+    if ("reset_angle".equals(action)) {
       angle(0);
     }
   }
 
   @Override
   public void listActions(final Set<String> actionsAvailable) {
-    actionsAvailable.add("reset.angle");
+    actionsAvailable.add("reset_angle");
   }
 
   @Override
   public void update() {
-    cx = Math.cos(DEGREES_TO_RADIANS * angle.value());
-    cy = Math.sin(DEGREES_TO_RADIANS * angle.value());
+    double rads = DEGREES_TO_RADIANS * angle.value();
+    cx = Math.cos(rads);
+    cy = Math.sin(rads);
   }
 
 }

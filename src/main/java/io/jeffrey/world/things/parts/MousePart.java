@@ -174,15 +174,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
     if (lifetime.isDeleted()) {
       return;
     }
-    final double[] adjusted = window.rect();
-    final VectorRegister3 scratch = new VectorRegister8();
-    for (int k = 0; k < 8; k += 2) {
-      scratch.set_0(adjusted[k], adjusted[k + 1]);
-      transform.writeToThingSpace(scratch);
-      adjusted[k] = scratch.x_1;
-      adjusted[k + 1] = scratch.y_1;
-    }
-    final Polygon polygon = new Polygon(adjusted);
+    final Polygon polygon = transformSelectionWindow(window, transform);
     boolean touches = false;
     for (final boolean mayTouch : thing.collect(IsSelectable.class, t -> t.selectionIntersect(polygon, window.mode))) {
       if (mayTouch) {
@@ -195,5 +187,17 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
     } else {
       editing.selected.value(false);
     }
+  }
+  
+  public static Polygon transformSelectionWindow(SelectionWindow window, Transform transform) {
+    final double[] adjusted = window.rect();
+    final VectorRegister3 scratch = new VectorRegister8();
+    for (int k = 0; k < 8; k += 2) {
+      scratch.set_0(adjusted[k], adjusted[k + 1]);
+      transform.writeToThingSpace(scratch);
+      adjusted[k] = scratch.x_1;
+      adjusted[k + 1] = scratch.y_1;
+    }
+    return new Polygon(adjusted);
   }
 }

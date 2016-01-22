@@ -6,6 +6,8 @@ import java.util.function.Consumer;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
+import io.jeffrey.zer.SelectionWindow;
+import io.jeffrey.zer.SelectionWindow.Mode;
 
 public class SimulatedMouse {
   private final boolean                                 altdown;
@@ -34,7 +36,9 @@ public class SimulatedMouse {
   }
 
   public AdjustedMouseEvent get() {
-    return new AdjustedMouseEvent(camera, x, y, altdown, ctrldown);
+    AdjustedMouseEvent event = new AdjustedMouseEvent(camera, x, y, altdown, ctrldown);
+    event.position.set_1(x, y);
+    return event;
   }
 
   public void move(final double dx, final double dy) {
@@ -45,5 +49,19 @@ public class SimulatedMouse {
     for (final Consumer<AdjustedMouseEvent> listener : listeners) {
       listener.accept(event);
     }
+  }
+  
+  public void go(final double x, final double y) {
+    this.x = x;
+    this.y = y;
+    move(0, 0);
+  }
+  
+  public SelectionWindow dragTo(final double endx, final double endy) {
+    SelectionWindow window = new SelectionWindow();
+    window.start(x, y);
+    window.update(endx, endy, Mode.Add);
+    go(endx, endy);
+    return window;
   }
 }

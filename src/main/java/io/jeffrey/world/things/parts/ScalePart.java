@@ -24,7 +24,7 @@ public class ScalePart implements Part, HasActions {
 
   @Override
   public void invokeAction(final String action, final SharedActionSpace space) {
-    if ("normalize.scale".equals(action)) {
+    if ("normalize_scale".equals(action)) {
       final double s = (sx() + sy()) / 2.0;
       sx(s);
       sy(s);
@@ -33,7 +33,7 @@ public class ScalePart implements Part, HasActions {
 
   @Override
   public void listActions(final Set<String> actionsAvailable) {
-    actionsAvailable.add("normalize.scale");
+    actionsAvailable.add("normalize_scale");
   }
 
   /**

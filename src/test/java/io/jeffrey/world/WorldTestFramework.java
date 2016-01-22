@@ -11,12 +11,14 @@ import java.util.TreeSet;
 import org.junit.Assert;
 import org.junit.Before;
 
+import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ControlDoodad;
+import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
@@ -24,6 +26,7 @@ import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.edits.ObjectDataMap;
 import io.jeffrey.zer.meta.WorldFileSystem;
+import javafx.scene.canvas.GraphicsContext;
 
 public class WorldTestFramework {
 
@@ -74,6 +77,29 @@ public class WorldTestFramework {
     public void update() {
       updateCallsMade++;
     }
+  }
+  
+  public class IdentityTransform implements Transform {
+
+    @Override
+    public boolean allowed(Type doodadType) {
+      return true;
+    }
+
+    @Override
+    public void readyGraphicsContext(GraphicsContext gc) {
+    }
+
+    @Override
+    public void writeToThingSpace(VectorRegister3 reg) {
+      reg.copy_from_0_to_1();
+    }
+
+    @Override
+    public void writeToWorldSpace(VectorRegister3 reg) {
+      reg.copy_from_0_to_1();
+    }
+    
   }
 
   public class SimpleAbstractThing extends AbstractThing {

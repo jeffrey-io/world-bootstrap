@@ -1,6 +1,8 @@
-world-bootstrap
-===============
+# World Bootstrap
 
+**Preview Edition**
+
+World Bootstrap is a two dimensional computer aided design program.
 A tool to bootstrap 2D worlds. At present time, this is considere pre-alpha, and it may be entirely broken.
 
 

@@ -8,7 +8,7 @@ import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
 
-public abstract class BasicThing extends AbstractThing {
+public class BasicThing extends AbstractThing {
   protected final ColorPart    fill;
   protected final LayerPart    layer;
   protected final MetadataPart metadata;

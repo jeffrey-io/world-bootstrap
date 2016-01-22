@@ -12,9 +12,11 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import io.jeffrey.world.things.behaviors.HasActions;
+import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.Container;
+import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
@@ -49,7 +51,15 @@ public class WorldTestFramework {
         actionsAvailable.add(action);
       }
     }
+  }
 
+  public class HasControlDoodadsInThingSpaceMock implements HasControlDoodadsInThingSpace {
+    public ControlDoodad[] doodads = new ControlDoodad[0];
+
+    @Override
+    public ControlDoodad[] getDoodadsInThingSpace() {
+      return doodads;
+    }
   }
 
   public class HasUpdateMock implements Part, HasUpdate {

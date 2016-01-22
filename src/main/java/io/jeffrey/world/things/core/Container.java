@@ -94,6 +94,7 @@ public class Container implements Iterable<AbstractThing> {
     return things.size();
   }
 
+  // this violates the goal of insertion order serialization
   public void sort() {
     if (things.size() == 0) {
       return;

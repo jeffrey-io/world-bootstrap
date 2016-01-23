@@ -138,7 +138,7 @@ public abstract class SurfaceData {
    *          where we begin our query for the things to manipulate that are selection
    * @return a set of all ways the selection can be manipulated
    */
-   //public abstract MouseInteraction getSelectionMovers(AdjustedMouseEvent event);
+  // public abstract MouseInteraction getSelectionMovers(AdjustedMouseEvent event);
 
   /**
    * @return the current title
@@ -148,30 +148,12 @@ public abstract class SurfaceData {
   /**
    * indicate that a selection window has been initiated
    */
-  //public abstract void initiateSelectionWindow();
-
-  /**
-   * Test whether or not the given event is in a selected item
-   *
-   * @param event
-   *          the mouse event that is transformed into world space
-   * @return true if the point lies in a selection region
-   */
-  public abstract boolean isInSelectionSet(final AdjustedMouseEvent event);
+  // public abstract void initiateSelectionWindow();
 
   /**
    * indicate that we are about to do work on the stuff
    */
   public abstract void ready();
-
-  /**
-   * grant the surface a file
-   *
-   * @param file
-   *          the file for the surface
-   * @return true if the name is valid
-   */
-  public abstract boolean setFile(File file);
 
   /**
    * begin a mouse interaction in the world space
@@ -182,10 +164,19 @@ public abstract class SurfaceData {
    *          the surface context for the request
    * @return a mouse interaction
    */
-  //public abstract MouseInteraction startSurfaceInteraction(final AdjustedMouseEvent event, SurfaceContext context);
+  // public abstract MouseInteraction startSurfaceInteraction(final AdjustedMouseEvent event, SurfaceContext context);
 
   public abstract MouseInteraction selectByPoint(final AdjustedMouseEvent event, final SurfaceContext context);
-  
+
+  /**
+   * grant the surface a file
+   *
+   * @param file
+   *          the file for the surface
+   * @return true if the name is valid
+   */
+  public abstract boolean setFile(File file);
+
   /**
    * force the selection window over all the details
    *

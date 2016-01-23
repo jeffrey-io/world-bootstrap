@@ -62,7 +62,7 @@ public class RotationPart implements Part, HasActions, HasUpdate {
 
   @Override
   public void update() {
-    double rads = DEGREES_TO_RADIANS * angle.value();
+    final double rads = DEGREES_TO_RADIANS * angle.value();
     cx = Math.cos(rads);
     cy = Math.sin(rads);
   }

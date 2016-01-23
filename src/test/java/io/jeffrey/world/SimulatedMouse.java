@@ -35,10 +35,24 @@ public class SimulatedMouse {
     listeners.add(ev -> it.moved(ev));
   }
 
+  public SelectionWindow dragTo(final double endx, final double endy) {
+    final SelectionWindow window = new SelectionWindow();
+    window.start(x, y);
+    window.update(endx, endy, Mode.Add);
+    go(endx, endy);
+    return window;
+  }
+
   public AdjustedMouseEvent get() {
-    AdjustedMouseEvent event = new AdjustedMouseEvent(camera, x, y, altdown, ctrldown);
+    final AdjustedMouseEvent event = new AdjustedMouseEvent(camera, x, y, altdown, ctrldown);
     event.position.set_1(x, y);
     return event;
+  }
+
+  public void go(final double x, final double y) {
+    this.x = x;
+    this.y = y;
+    move(0, 0);
   }
 
   public void move(final double dx, final double dy) {
@@ -49,19 +63,5 @@ public class SimulatedMouse {
     for (final Consumer<AdjustedMouseEvent> listener : listeners) {
       listener.accept(event);
     }
-  }
-  
-  public void go(final double x, final double y) {
-    this.x = x;
-    this.y = y;
-    move(0, 0);
-  }
-  
-  public SelectionWindow dragTo(final double endx, final double endy) {
-    SelectionWindow window = new SelectionWindow();
-    window.start(x, y);
-    window.update(endx, endy, Mode.Add);
-    go(endx, endy);
-    return window;
   }
 }

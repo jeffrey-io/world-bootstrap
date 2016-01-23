@@ -131,11 +131,11 @@ public class Surface {
     if (event.isControlDown() && event.isSecondaryButtonDown() || event.isMiddleButtonDown()) {
       return new Pan(camera, event);
     }
-    
+
     final AdjustedMouseEvent aevent = new AdjustedMouseEvent(camera, event.getX(), event.getY(), event.isAltDown(), event.isControlDown());
 
     final MouseInteraction interaction = data.selectByPoint(aevent, context);
-    
+
     if (interaction != null) {
       return interaction;
     }

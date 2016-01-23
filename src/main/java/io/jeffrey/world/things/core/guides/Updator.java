@@ -39,12 +39,11 @@ public class Updator implements MouseInteraction {
     final double N = Math.sqrt(dx * dx + dy * dy);
     dx /= N;
     dy /= N;
-    if (event.altdown) {
+    if (event.locked_angle) {
       double angle = Math.atan2(dy, dx);
       angle = Math.round(angle / LOCK_AT) * LOCK_AT;
       dx = Math.round(Math.cos(angle) / PRECISION) * PRECISION;
       dy = Math.round(Math.sin(angle) / PRECISION) * PRECISION;
-      ;
     }
     line.a.value(dy);
     line.b.value(-dx);

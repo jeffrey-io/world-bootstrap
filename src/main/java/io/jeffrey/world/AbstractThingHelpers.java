@@ -1,17 +1,11 @@
 package io.jeffrey.world;
 
-import java.util.ArrayList;
-
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.things.behaviors.HasColorsToEmit;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.AbstractThing;
-import io.jeffrey.world.things.interactions.MultiThingInteraction;
-import io.jeffrey.world.things.interactions.ThingInteraction;
-import io.jeffrey.world.things.interactions.ThingInteractionToMouseIteractionAdapter;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import io.jeffrey.zer.MouseInteraction;
 import javafx.scene.paint.Color;
 
 public class AbstractThingHelpers {
@@ -61,38 +55,4 @@ public class AbstractThingHelpers {
     return null;
   }
 
-  /**
-   * start a new interaction
-   *
-   * @param event
-   *          the world space event
-   * @return a mouse interaction to manipulate things (or null if nothing to do)
-   */
-  public static MouseInteraction startInteractionXYZ(final AbstractThing thing, final AdjustedMouseEvent event) {
-    if (thing.lifetime.isDeleted()) {
-      return null;
-    }
-    if (thing.editing.locked.value()) {
-      return null;
-    }
-
-    thing.transform().writeToThingSpace(event.position);
-
-    final ArrayList<ThingInteraction> interactions = new ArrayList<>(1);
-    /*
-    for (final HasMouseInteractionsDEFUNCT mouse : thing.collect(HasMouseInteractionsDEFUNCT.class)) {
-      final ThingInteraction interaction = mouse.startInteraction(event);
-      if (interaction != null) {
-        interactions.add(interaction);
-      }
-    }
-    */
-    if (interactions.size() == 0) {
-      return null;
-    }
-
-    final ThingInteraction interaction = interactions.size() == 1 ? interactions.get(0) : new MultiThingInteraction(interactions);
-    thing.container.history.register(thing);
-    return new ThingInteractionToMouseIteractionAdapter(thing.container.history, interaction, thing.transform());
-  }
 }

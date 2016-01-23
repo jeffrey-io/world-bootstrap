@@ -11,13 +11,13 @@ public class TestScalePart extends WorldTestFramework {
 
   @Test
   public void sanityCheck() {
-    LinkedDataMap data = emptyData();
-    ScalePart scale = new ScalePart(data);
+    final LinkedDataMap data = emptyData();
+    final ScalePart scale = new ScalePart(data);
     scale.sx(4);
     assertEquals(4, scale.sx());
     scale.sy(6);
     assertEquals(6, scale.sy());
-    HashSet<String> actions = new HashSet<>();
+    final HashSet<String> actions = new HashSet<>();
     scale.listActions(actions);
     assertEquals(1, actions.size());
     assertEquals("normalize_scale", actions.iterator().next());

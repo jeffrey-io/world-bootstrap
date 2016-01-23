@@ -38,4 +38,6 @@ public abstract class ThingInteraction implements Comparable<ThingInteraction> {
   public abstract void moved(AdjustedMouseEvent event);
 
   public abstract Order order();
+
+  public abstract void select();
 }

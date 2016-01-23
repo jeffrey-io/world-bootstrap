@@ -49,4 +49,10 @@ public class PairEventPoint2Mover extends ThingInteraction {
     return Order.SubsetOfThing;
   }
 
+  @Override
+  public void select() {
+    a.select();
+    b.select();
+  }
+
 }

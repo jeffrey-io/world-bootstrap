@@ -78,28 +78,28 @@ public class WorldTestFramework {
       updateCallsMade++;
     }
   }
-  
+
   public class IdentityTransform implements Transform {
 
     @Override
-    public boolean allowed(Type doodadType) {
+    public boolean allowed(final Type doodadType) {
       return true;
     }
 
     @Override
-    public void readyGraphicsContext(GraphicsContext gc) {
+    public void readyGraphicsContext(final GraphicsContext gc) {
     }
 
     @Override
-    public void writeToThingSpace(VectorRegister3 reg) {
+    public void writeToThingSpace(final VectorRegister3 reg) {
       reg.copy_from_0_to_1();
     }
 
     @Override
-    public void writeToWorldSpace(VectorRegister3 reg) {
+    public void writeToWorldSpace(final VectorRegister3 reg) {
       reg.copy_from_0_to_1();
     }
-    
+
   }
 
   public class SimpleAbstractThing extends AbstractThing {

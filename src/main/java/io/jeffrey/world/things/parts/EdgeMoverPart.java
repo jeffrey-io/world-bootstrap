@@ -10,6 +10,7 @@ import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.interactions.PairEventPoint2Mover;
 import io.jeffrey.world.things.interactions.SelectionSolver;
+import io.jeffrey.world.things.interactions.SelectionSolver.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.world.things.points.SelectablePoint2;
@@ -32,7 +33,17 @@ public class EdgeMoverPart implements Part, HasSelectionByPoint {
     this.update = update;
   }
 
-  public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
+  @Override
+  public boolean buildSelectionSolver(final SelectionSolver solver) {
+    // TODO: need a quick test
+    final ThingInteraction edgeMover = findEdgeMover(solver.event);
+    if (edgeMover != null) {
+      solver.accept(Rule.NotAlreadySelectedAndPointIsIn, () -> edgeMover);
+    }
+    return false;
+  }
+
+  public ThingInteraction findEdgeMover(final AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
     if (!lock.value()) {
       final VectorRegister3 reg = new VectorRegister3();
@@ -66,10 +77,5 @@ public class EdgeMoverPart implements Part, HasSelectionByPoint {
       }
     }
     return null;
-  }
-
-  @Override
-  public void buildSelectionSolver(SelectionSolver solver) {
-
   }
 }

@@ -1,7 +1,9 @@
 package io.jeffrey.world.things.parts;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.world.things.behaviors.HasActions;
@@ -19,7 +21,9 @@ import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
 import io.jeffrey.world.things.core.Subscribers;
 import io.jeffrey.world.things.core.Transform;
+import io.jeffrey.world.things.interactions.MultiThingInteraction;
 import io.jeffrey.world.things.interactions.SelectionSolver;
+import io.jeffrey.world.things.interactions.SelectionSolver.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.points.EventedPoint2;
@@ -32,6 +36,53 @@ import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
 public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasActions, HasUpdate, HasSelectionByPoint {
+
+  public class PointSetMoverModel implements Supplier<ThingInteraction> {
+    private boolean                  all;
+    private boolean                  any;
+    private final AdjustedMouseEvent event;
+
+    public PointSetMoverModel(final AdjustedMouseEvent event) {
+      this.event = event;
+      requireUpToDate();
+      all = true;
+      any = false;
+      for (final SelectablePoint2 point : points) {
+        if (point.selected) {
+          any = true;
+        } else {
+          all = false;
+        }
+      }
+    }
+
+    @Override
+    public ThingInteraction get() {
+      if (all || !any && editing.selected.value()) {
+        // this will be faster
+        return new ThingMover(event, position, rotation, editing);
+      }
+
+      if (any) {
+        final ArrayList<ThingInteraction> its = new ArrayList<>();
+        for (final SelectablePoint2 point : points) {
+          if (point.selected) {
+            its.add(new EventedPoint2Mover(new EventedPoint2(point, PointSetPart.this), event));
+          }
+        }
+        return new MultiThingInteraction(its);
+      } else {
+        return null;
+      }
+    }
+
+    public boolean should() {
+      if (all || any || !any && editing.selected.value()) {
+        return true;
+      }
+      return false;
+    }
+  }
 
   public class SharedMutableCache {
     public double       boundingRadiusForControls;
@@ -48,24 +99,25 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     }
   }
 
-  private final SharedMutableCache              cache;
-  private final Container                       container;;
+  private final SharedMutableCache              cache;;
 
+  private final Container                       container;
   private ControlDoodad[]                       doodads   = new ControlDoodad[0];
+
+  public final EditingPart                      editing;
   public final EditBoolean                      lock;
 
   private final Subscribers<SharedMutableCache> notification;
   public boolean                                outOfDate = false;
-
   public final HasSelectablePoints              points;
   private final PositionPart                    position;
+
   private final RotationPart                    rotation;
   private final ScalePart                       scale;
 
   private final Transform                       transform;
+
   public final EditString                       vertices;
-  
-  public final EditingPart editing;
 
   public PointSetPart(final LinkedDataMap data, final Container container, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, final HasSelectablePoints points, final EditingPart editing) {
     lock = data.getBoolean("vlock", false);
@@ -100,6 +152,25 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       p.y *= my;
     }
     update();
+  }
+
+  @Override
+  public boolean buildSelectionSolver(final SelectionSolver solver) {
+    final boolean overPoint = doesMouseEventPreserveExistingSelection(solver.event);
+    final PointSetMoverModel mover = new PointSetMoverModel(solver.event);
+    if (mover.should()) {
+      Rule rule = Rule.AlreadySelectedButNotInvolved;
+      if (overPoint) {
+        rule = Rule.AlreadySelectedAndPointPreserves;
+      }
+      solver.accept(rule, mover);
+      return true;
+    } else if (overPoint) {
+      solver.accept(Rule.NotAlreadySelectedAndPointIsIn, () -> {
+        return startInteractionWithClear(solver.event, !solver.event.selective_addititive_mode);
+      });
+    }
+    return false;
   }
 
   @Override
@@ -143,6 +214,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
 
   @Override
   public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
+    requireUpToDate();
     final VectorRegister3 W = new VectorRegister3();
     if (container != null) {
       for (final SelectablePoint2 point : points) {
@@ -184,37 +256,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     }
     if ("center_points_internally".equals(action)) {
       center_points_internally();
-    }
-  }
-
-  public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
-    requireUpToDate();
-    boolean all = true;
-    boolean any = false;
-
-    final ThingInteraction singleVertex = startInteractionWithClear(event, false);
-    if (singleVertex != null) {
-      interactions.add(singleVertex);
-      any = true;
-    }
-
-    for (final SelectablePoint2 point : points) {
-      if (!point.selected) {
-        all = false;
-      } else {
-        any = true;
-      }
-    }
-    if (all || !any) {
-      // this will be faster
-      interactions.add(new ThingMover(event, position, rotation));
-      return;
-    }
-
-    for (final SelectablePoint2 point : points) {
-      if (point.selected) {
-        interactions.add(new EventedPoint2Mover(new EventedPoint2(point, this), event));
-      }
     }
   }
 
@@ -288,6 +329,13 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   }
 
   @Override
+  public void restoreCachedInternalSelection() {
+    for (final SelectablePoint2 p : points) {
+      p.selected = p.alreadySelected;
+    }
+  }
+
+  @Override
   public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
     requireUpToDate();
     boolean doUpdate = false;
@@ -316,10 +364,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       return false;
     }
     return isSelected;
-  }
-
-  public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
-    return startInteractionWithClear(event, true);
   }
 
   public ThingInteraction startInteractionWithClear(final AdjustedMouseEvent event, final boolean withClear) {
@@ -351,12 +395,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   @Override
   public void update() {
     outOfDate = true;
-  }
-
-  @Override
-  public void buildSelectionSolver(SelectionSolver solver) {
-    // TODO Auto-generated method stub
-    
   }
 
 }

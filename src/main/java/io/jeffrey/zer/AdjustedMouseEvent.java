@@ -9,21 +9,15 @@ import io.jeffrey.vector.VectorRegister8;
  *
  */
 public class AdjustedMouseEvent {
-
-  /**
-   * is the alt key held down
-   */
-  public final boolean         altdown;
-
   private final Camera         camera;
-
   public final double          clientX;
   public final double          clientY;
-  /**
-   * is the control key is held down
-   */
-  public final boolean         ctrldown;
+  public final boolean         locked_angle;
+
   public final VectorRegister8 position;
+  public final boolean         respect_aspect_scaling;
+  public final boolean         selective_addititive_mode;
+  public final boolean         selective_subtractive_mode;
 
   /**
    * @param camera
@@ -37,8 +31,10 @@ public class AdjustedMouseEvent {
     clientY = y;
     position.set_0((clientX - camera.tX) / camera.scale, (clientY - camera.tY) / camera.scale);
     this.camera = camera;
-    this.altdown = altdown;
-    this.ctrldown = ctrldown;
+    selective_addititive_mode = altdown;
+    selective_subtractive_mode = ctrldown;
+    locked_angle = altdown;
+    respect_aspect_scaling = altdown || ctrldown;
   }
 
   /**

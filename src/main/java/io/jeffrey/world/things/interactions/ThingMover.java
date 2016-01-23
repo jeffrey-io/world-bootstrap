@@ -1,5 +1,6 @@
 package io.jeffrey.world.things.interactions;
 
+import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.PositionPart;
 import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
@@ -11,6 +12,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  */
 public class ThingMover extends ThingInteraction {
   private final double       angle;
+  private final EditingPart  editing;
   private final double       ix;
   private final double       iy;
   private final PositionPart position;
@@ -22,7 +24,8 @@ public class ThingMover extends ThingInteraction {
    * @param initial
    *          the initial event in the thing space
    */
-  public ThingMover(final AdjustedMouseEvent initial, final PositionPart position, final RotationPart rotation) {
+  public ThingMover(final AdjustedMouseEvent initial, final PositionPart position, final RotationPart rotation, final EditingPart editing) {
+    this.editing = editing;
     x = position.x();
     y = position.y();
     ix = initial.position.x_0;
@@ -64,5 +67,10 @@ public class ThingMover extends ThingInteraction {
   @Override
   public Order order() {
     return Order.ThingLevel;
+  }
+
+  @Override
+  public void select() {
+    editing.selected.value(true);
   }
 }

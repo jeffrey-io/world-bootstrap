@@ -49,10 +49,10 @@ public class SelectionBand implements MouseInteraction {
   @Override
   public void moved(final AdjustedMouseEvent event) {
     Mode mode = Mode.Set;
-    if (event.altdown) {
+    if (event.selective_addititive_mode) {
       mode = Mode.Add;
     }
-    if (event.ctrldown) {
+    if (event.selective_subtractive_mode) {
       mode = Mode.Subtract;
     }
     window.update(event.position.x_0, event.position.y_0, mode);

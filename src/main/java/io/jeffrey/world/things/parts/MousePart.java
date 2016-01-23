@@ -1,8 +1,7 @@
 package io.jeffrey.world.things.parts;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.function.Supplier;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
@@ -19,28 +18,39 @@ import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.enforcer.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.SerialEnforcer;
 import io.jeffrey.world.things.interactions.SelectionSolver;
+import io.jeffrey.world.things.interactions.SelectionSolver.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
-import io.jeffrey.world.things.interactions.ThingInteractionToMouseIteractionAdapter;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingRotater;
 import io.jeffrey.world.things.interactions.ThingScaler;
 import io.jeffrey.world.things.interactions.ThingSnapper;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.meta.GuideLine;
 import javafx.scene.shape.Polygon;
 
 public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoint {
 
-  private final EditingPart   editing;
+  public static Polygon transformSelectionWindow(final SelectionWindow window, final Transform transform) {
+    final double[] adjusted = window.rect();
+    final VectorRegister3 scratch = new VectorRegister8();
+    for (int k = 0; k < 8; k += 2) {
+      scratch.set_0(adjusted[k], adjusted[k + 1]);
+      transform.writeToThingSpace(scratch);
+      adjusted[k] = scratch.x_1;
+      adjusted[k + 1] = scratch.y_1;
+    }
+    return new Polygon(adjusted);
+  }
 
+  private final EditingPart   editing;
   private final LayerPart     layer;
   private final LifetimePart  lifetime;
   private final PositionPart  position;
   private final RotationPart  rotation;
   private final ScalePart     scale;
   private boolean             selectedPriorSelectionWindow;
+
   private final AbstractThing thing;
 
   private final Transform     transform;
@@ -56,44 +66,33 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
     lifetime = thing.first(LifetimePart.class);
   }
 
-  // TODO: this should be moved out
-  public void beginMovingXYZ(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
-    if (editing != null) {
-      if (editing.locked.value() || !editing.selected.value()) {
-        return;
-      }
-    }
-    if (lifetime != null && lifetime.isDeleted()) {
-      return;
-    }
-    transform.writeToThingSpace(event.position);
-    final HashSet<ThingInteraction> local = new HashSet<>();
-    /*
-    for (final HasMoverDEFUNCT mover : thing.collect(HasMoverDEFUNCT.class)) {
-      mover.iterateMovers(local, event);
-    }
-    */
-    final Collection<GuideLine> lines = thing.container.getGuideLines(layer.layer.getAsText());
-
-    GuideLineEnforcer enforcer = null;
-    if (lines.size() > 0) {
-      enforcer = getGuideLineEnforcer();
-    }
-    for (final ThingInteraction itRaw : local) {
-      final ThingInteraction it;
-      if (lines.size() > 0 && enforcer != null) {
-        it = new ThingSnapper(thing.container.camera, lines, enforcer, itRaw);
-      } else {
-        it = itRaw;
-      }
-      thing.container.history.register(thing);
-      interactions.add(new ThingInteractionToMouseIteractionAdapter(thing.container.history, it, transform));
-    }
-  }
-
   @Override
   public void beginSelectionWindow() {
     selectedPriorSelectionWindow = editing.selected.value();
+  }
+
+  @Override
+  public boolean buildSelectionSolver(final SelectionSolver solver) {
+    if (produceDoodad(solver)) {
+      return true;
+    } else if (contains(solver.event)) {
+      if (editing.selected.value()) {
+        solver.accept(Rule.AlreadySelectedAndPointPreserves, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
+      } else {
+        solver.accept(Rule.NotAlreadySelectedAndPointIsIn, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
+      }
+      return true;
+    }
+    return false;
+  }
+
+  private boolean contains(final AdjustedMouseEvent event) {
+    for (final IsSelectable isSelectable : thing.collect(IsSelectable.class)) {
+      if (isSelectable.doesMouseEventPreserveExistingSelection(event)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -109,65 +108,54 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
     }
   }
 
-  public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
-    transform.writeToThingSpace(event.position);
-    ThingInteraction interaction = null;
+  private boolean produceDoodad(final SelectionSolver solver) {
+    if (!editing.selected.value()) {
+      return false;
+    }
     final VectorRegister3 W = new VectorRegister3();
 
     for (final ControlDoodad doodad : thing.collectAndMergeOverArray(HasControlDoodadsInThingSpace.class, t -> t.getDoodadsInThingSpace())) {
-      if (editing != null && editing.locked.value()) {
-        break;
-      }
-      if (interaction != null) {
-        break;
-      }
       if (!transform.allowed(doodad.type)) {
         continue;
       }
 
       W.set_0(doodad.u, doodad.v);
       transform.writeToWorldSpace(W);
-      final double d = event.doodadDistance(W.x_1, W.y_1);
+      final double d = solver.event.doodadDistance(W.x_1, W.y_1);
       if (d <= thing.container.controlPointSize) {
         if (doodad.type == Type.PointSelected || doodad.type == Type.PointSelected) {
-          break;
+          return false;
         }
         if (doodad.type == Type.Scale && scale != null) {
-          interaction = new ThingScaler(event, transform, scale);
+          solver.accept(Rule.Doodad, () -> new ThingScaler(solver.event, transform, scale, editing));
+          return true;
         }
         if (doodad.type == Type.Rotate && rotation != null) {
-          interaction = new ThingRotater(event, transform, rotation);
+          solver.accept(Rule.Doodad, () -> new ThingRotater(solver.event, transform, rotation, editing));
+          return true;
         }
       }
     }
-    if (interaction == null) {
-      interaction = startTargetAdjustedInteraction(event);
-    }
-    if (interaction == null) {
-      return null;
-    }
-    if (interaction instanceof ThingMover && layer != null) {
-      final Collection<GuideLine> lines = thing.container.getGuideLines(layer.layer.getAsText());
-      if (lines.size() > 0) {
-        final GuideLineEnforcer enforcer = getGuideLineEnforcer();
-        if (enforcer != null) {
-          interaction = new ThingSnapper(thing.container.camera, lines, enforcer, interaction);
-        }
-      }
-    }
-    if (editing != null) {
-      editing.selected.value(true);
-    }
-    return interaction;
+    return false;
   }
 
-  private ThingInteraction startTargetAdjustedInteraction(final AdjustedMouseEvent event) {
-    for (final IsSelectable isSelectable : thing.collect(IsSelectable.class)) {
-      if (isSelectable.doesMouseEventPreserveExistingSelection(event)) {
-        return new ThingMover(event, position, rotation);
+  private Supplier<ThingInteraction> snap(final Supplier<ThingInteraction> delegate) {
+    return () -> {
+      ThingInteraction interaction = delegate.get();
+
+      // TODO; to this as a higher level
+      if (interaction != null && layer != null && interaction instanceof ThingMover) {
+        final Collection<GuideLine> lines = thing.container.getGuideLines(layer.layer.getAsText());
+        if (lines.size() > 0) {
+          final GuideLineEnforcer enforcer = getGuideLineEnforcer();
+          if (enforcer != null) {
+            interaction = new ThingSnapper(thing.container.camera, lines, enforcer, interaction);
+          }
+        }
       }
-    }
-    return null;
+
+      return interaction;
+    };
   }
 
   @Override
@@ -189,22 +177,5 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
       editing.selected.value(false);
     }
   }
-  
-  public static Polygon transformSelectionWindow(SelectionWindow window, Transform transform) {
-    final double[] adjusted = window.rect();
-    final VectorRegister3 scratch = new VectorRegister8();
-    for (int k = 0; k < 8; k += 2) {
-      scratch.set_0(adjusted[k], adjusted[k + 1]);
-      transform.writeToThingSpace(scratch);
-      adjusted[k] = scratch.x_1;
-      adjusted[k + 1] = scratch.y_1;
-    }
-    return new Polygon(adjusted);
-  }
 
-  @Override
-  public void buildSelectionSolver(SelectionSolver solver) {
-    // TODO Auto-generated method stub
-    
-  }
 }

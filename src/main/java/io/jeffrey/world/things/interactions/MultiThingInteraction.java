@@ -58,4 +58,11 @@ public class MultiThingInteraction extends ThingInteraction {
     return order;
   }
 
+  @Override
+  public void select() {
+    for (final ThingInteraction ti : interactions) {
+      ti.select();
+    }
+  }
+
 }

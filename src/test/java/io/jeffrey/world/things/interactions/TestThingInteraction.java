@@ -23,6 +23,10 @@ public class TestThingInteraction extends WorldTestFramework {
       public Order order() {
         return order;
       }
+
+      @Override
+      public void select() {
+      }
     };
   }
 

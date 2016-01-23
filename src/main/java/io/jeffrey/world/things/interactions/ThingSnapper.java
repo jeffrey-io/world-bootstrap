@@ -57,4 +57,9 @@ public class ThingSnapper extends ThingInteraction {
     return delegate.order();
   }
 
+  @Override
+  public void select() {
+    delegate.select();
+  }
+
 }

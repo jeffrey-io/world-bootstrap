@@ -23,11 +23,12 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.EditableThing;
 import io.jeffrey.world.document.Iconify;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.document.history.HistoryMouseInteractionTrapper;
 import io.jeffrey.world.things.behaviors.HasInternalSelection;
+import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.guides.Picker;
+import io.jeffrey.world.things.interactions.SelectionSolver;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
@@ -37,9 +38,7 @@ import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.IconResolver;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.Notifications;
-import io.jeffrey.zer.Pan;
 import io.jeffrey.zer.SelectionWindow;
-import io.jeffrey.zer.SetMover;
 import io.jeffrey.zer.SurfaceContext;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.ZERStage;
@@ -307,6 +306,30 @@ public class WorldData extends SurfaceData {
     return edits;
   }
 
+  // DONE
+  private MouseInteraction getGuidelineEditor(final AdjustedMouseEvent event, final SurfaceContext context) {
+    final double left = camera.projX(document.container.controlPointSize);
+    final double top = camera.projY(document.container.controlPointSize);
+    final double right = camera.projX(context.width - document.container.controlPointSize);
+    final double bottom = camera.projY(context.height - document.container.controlPointSize);
+    String layerId = "";
+    final LayerProperties lp = getActiveLayer();
+    if (lp != null) {
+      layerId = lp.id();
+    }
+    final Collection<GuideLine> lines = document.container.getGuideLines(layerId);
+    final Picker picker = new Picker(left, right, top, bottom);
+
+    MouseInteraction lineIt = null;
+    for (final GuideLine line : lines) {
+      if (lineIt != null) {
+        break;
+      }
+      lineIt = picker.select(line, camera, event.position.x_0, event.position.y_0, document.container.controlPointSize);
+    }
+    return lineIt;
+  }
+
   @Override
   public IconResolver getIconResolver() {
     return resolver;
@@ -344,48 +367,6 @@ public class WorldData extends SurfaceData {
       return "Bootstrapping <New World>";
     }
     return file.getPath();
-  }
-
-  public void initiateSelectionWindow() {
-    for (final AbstractThing thing : document.container) {
-
-      thing.collect(HasSelectionByWindow.class, t -> {
-        t.beginSelectionWindow();
-        return null;
-      });
-
-      thing.collect(HasInternalSelection.class, t -> {
-        t.cacheInternalSelection();
-        return null;
-      });
-    }
-  }
-
-  public MouseInteraction getSelectionMovers(final AdjustedMouseEvent event) {
-    document.container.history.capture();
-    final HashSet<MouseInteraction> set = new HashSet<MouseInteraction>();
-    for (final AbstractThing thing : document.container) {
-      final MousePart mouse = thing.first(MousePart.class);
-      if (mouse != null) {
-        // mouse.beginMoving(set, event);
-      }
-    }
-    if (set.size() == 0) {
-      return null;
-    }
-
-    final MouseInteraction setmover = new SetMover(set);
-    return new HistoryMouseInteractionTrapper(document.container.history, setmover);
-  }
-
-  @Override
-  public boolean isInSelectionSet(final AdjustedMouseEvent event) {
-    for (final AbstractThing thing : document.container) {
-      if (AbstractThingHelpers.isInCurrertSelection(thing, event)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private void paste(final double x, final double y) throws Exception {
@@ -445,62 +426,97 @@ public class WorldData extends SurfaceData {
   }
 
   @Override
+  public MouseInteraction selectByPoint(final AdjustedMouseEvent event, final SurfaceContext context) {
+    final SelectionSolver selectionSolver = new SelectionSolver(document.container.history, event);
+    System.out.println("----------------------");
+    System.out.println("Starting selectByPoint");
+    for (final AbstractThing thing : document.container) {
+      System.out.println("@thing.id=" + thing.getID());
+      // it's deleted, we do nothing
+      if (thing.lifetime.isDeleted()) {
+        continue;
+      }
+
+      // it's locked, we do nothing
+      if (thing.editing.locked.value()) {
+        // clear the selection
+        if (thing.editing.selected.value()) {
+          thing.editing.selected.value(false);
+        }
+        continue;
+      }
+
+      // indicate we may do a selection window (although, is this needed)
+      thing.collect(HasSelectionByWindow.class, t -> {
+        t.beginSelectionWindow();
+        return null;
+      });
+
+      thing.collect(HasInternalSelection.class, t -> {
+        t.cacheInternalSelection();
+        return null;
+      });
+
+      thing.transform().writeToThingSpace(event.position);
+
+      selectionSolver.focus(thing);
+      for (final HasSelectionByPoint behavior : thing.collect(HasSelectionByPoint.class)) {
+        if (behavior.buildSelectionSolver(selectionSolver)) {
+          System.out.println(" ^^ from:" + behavior.getClass().getSimpleName());
+        }
+      }
+
+      thing.invokeAction("unselect", false);
+    }
+
+    final MouseInteraction it = selectionSolver.solve();
+    if (it != null) {
+      return it;
+    }
+
+    return getGuidelineEditor(event, context);
+  }
+
+  /*
+   * public MouseInteraction startSurfaceInteraction(final AdjustedMouseEvent event, final SurfaceContext context) { document.container.history.capture(); for (int k = document.container.size() - 1; k >= 0; k--) { final AbstractThing thing = document.container.get(k); if (!event.altdown) { thing.invokeAction("unselect", false); } } for (int k = document.container.size() - 1; k >= 0; k--) { final AbstractThing thing = document.container.get(k); final MouseInteraction it = null; // AbstractThingHelpers.startInteraction(thing, event); if (it != null) { return new HistoryMouseInteractionTrapper(document.container.history, it); } } }
+   */
+
+  @Override
   public boolean setFile(final File file) {
     this.file = file;
     return this.file != null;
   }
 
-  @Override
-  public MouseInteraction selectByPoint(final AdjustedMouseEvent event, final SurfaceContext context) {
-    initiateSelectionWindow();
+  /**
+   * start a new interaction
+   *
+   * @param event
+   *          the world space event
+   * @return a mouse interaction to manipulate things (or null if nothing to do)
+   */
+  /*
+   * public static MouseInteraction startInteractionXYZx(final AbstractThing thing, final AdjustedMouseEvent event) {
+   * 
+   * thing.transform().writeToThingSpace(event.position);
+   * 
+   * final ArrayList<ThingInteraction> interactions = new ArrayList<>(1);
+   * 
+   * for (final HasMouseInteractionsDEFUNCT mouse : thing.collect(HasMouseInteractionsDEFUNCT.class)) { final ThingInteraction interaction = mouse.startInteraction(event); if (interaction != null) { interactions.add(interaction); } }
+   * 
+   * if (interactions.size() == 0) { return null; }
+   * 
+   * final ThingInteraction interaction = interactions.size() == 1 ? interactions.get(0) : new MultiThingInteraction(interactions); thing.container.history.register(thing); return new ThingInteractionToMouseIteractionAdapter(thing.container.history, interaction, thing.transform()); }
+   */
 
-    if (isInSelectionSet(event)) {
-      final MouseInteraction setmove = getSelectionMovers(event);
-      if (setmove != null) {
-        return setmove;
-      }
-    }
+  /*
+   * public MouseInteraction getSelectionMovers(final AdjustedMouseEvent event) { document.container.history.capture(); final HashSet<MouseInteraction> set = new HashSet<MouseInteraction>(); for (final AbstractThing thing : document.container) { final MousePart mouse = thing.first(MousePart.class); if (mouse != null) { // mouse.beginMoving(set, event); } } if (set.size() == 0) { return null; }
+   * 
+   * final MouseInteraction setmover = new SetMover(set); return new HistoryMouseInteractionTrapper(document.container.history, setmover); }
+   */
 
-    return startSurfaceInteraction(event, context);
-  }
-
-  public MouseInteraction startSurfaceInteraction(final AdjustedMouseEvent event, final SurfaceContext context) {
-    document.container.history.capture();
-    for (int k = document.container.size() - 1; k >= 0; k--) {
-      final AbstractThing thing = document.container.get(k);
-      if (!event.altdown) {
-        thing.invokeAction("unselect", false);
-      }
-    }
-    for (int k = document.container.size() - 1; k >= 0; k--) {
-      final AbstractThing thing = document.container.get(k);
-      final MouseInteraction it = null; 
-      // AbstractThingHelpers.startInteraction(thing, event);
-      if (it != null) {
-        return new HistoryMouseInteractionTrapper(document.container.history, it);
-      }
-    }
-    final double left = camera.projX(document.container.controlPointSize);
-    final double top = camera.projY(document.container.controlPointSize);
-    final double right = camera.projX(context.width - document.container.controlPointSize);
-    final double bottom = camera.projY(context.height - document.container.controlPointSize);
-    String layerId = "";
-    final LayerProperties lp = getActiveLayer();
-    if (lp != null) {
-      layerId = lp.id();
-    }
-    final Collection<GuideLine> lines = document.container.getGuideLines(layerId);
-    final Picker picker = new Picker(left, right, top, bottom);
-
-    MouseInteraction lineIt = null;
-    for (final GuideLine line : lines) {
-      if (lineIt != null) {
-        break;
-      }
-      lineIt = picker.select(line, camera, event.position.x_0, event.position.y_0, document.container.controlPointSize);
-    }
-    return lineIt;
-  }
+  /*
+   * public boolean isInSelectionSet(final AdjustedMouseEvent event) { for (final AbstractThing thing : document.container) { if (AbstractThingHelpers.isInCurrertSelection(thing, event)) { return true; } } return false; }
+   */
 
   @Override
   public void updateSelectionWindow(final SelectionWindow window) {
@@ -511,5 +527,4 @@ public class WorldData extends SurfaceData {
       }
     }
   }
-
 }

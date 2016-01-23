@@ -64,7 +64,7 @@ public class EdgeMoverPart implements Part, HasSelectionByPoint {
           if (solver.event.doodadDistance(reg.x_0, reg.y_0) <= container.edgeWidthSize) {
             Rule rule = Rule.NotAlreadySelectedAndPointIsInSubset;
             if (selected || begin.selected && end.selected) {
-              rule = Rule.AlreadySelectedAndPointPreservesSubset;
+              rule = Rule.AlreadySelectedSubsetAndPointPreserves;
             }
             solver.propose(rule, () -> new PairEventPoint2Mover(new EventedPoint2(begin, update), new EventedPoint2(end, update), solver.event));
             return true;

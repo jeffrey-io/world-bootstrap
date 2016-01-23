@@ -21,7 +21,7 @@ public class GenericMoverPart implements Part, HasSelectionByPoint {
   @Override
   public boolean buildSelectionSolver(final SelectionSolver solver) {
     if (editing.selected.value()) {
-      solver.propose(Rule.AlreadySelectedButNotInvolved, () -> new ThingMover(solver.event, position, rotation, editing));
+      solver.propose(Rule.AlreadySelectedItemButNotInvolved, () -> new ThingMover(solver.event, position, rotation, editing));
       return true;
     }
     return false;

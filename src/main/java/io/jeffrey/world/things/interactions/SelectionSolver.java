@@ -68,13 +68,13 @@ public class SelectionSolver {
     NotAlreadySelectedAndPointIsInSubset(11, GroupingRule.Item, false), // the point is inside and we are not selected
     NotAlreadySelectedAndPointIsInItem(12, GroupingRule.Item, false), // we are not selected, but the point touches a sub selection
 
-    AlreadySelectedAndPointPreservesFacet(100, GroupingRule.Set, true), // we are selected and the point preserves us
-    AlreadySelectedAndPointPreservesSubset(101, GroupingRule.Set, true), // we are selected and the point preserves us
-    AlreadySelectedAndPointPreservesItem(102, GroupingRule.Set, true), // we are selected and the point preserves us
+    AlreadySelectedFacetAndPointPreserves(100, GroupingRule.Set, true),
 
-    AlreadySelectedSubsetButNotInvolved(1000, GroupingRule.Set, false), // we are selected but not selected, and should something be moved, we would like to be moved as well
-    AlreadySelectedFacetButNotInvolved(1001, GroupingRule.Set, false), // we are selected but not selected, and should something be moved, we would like to be moved as well
-
+    AlreadySelectedSubsetButNotInvolved(200, GroupingRule.Set, false),
+    AlreadySelectedSubsetAndPointPreserves(201, GroupingRule.Set, true),
+    
+    AlreadySelectedItemAndPointPreserves(300, GroupingRule.Set, true),
+    AlreadySelectedItemButNotInvolved(301, GroupingRule.Set, false),
     
     Nothing(Integer.MAX_VALUE, GroupingRule.Nothing, false);
 
@@ -112,6 +112,10 @@ public class SelectionSolver {
       this.proposedRule = rule;
       this.proposedSupplier = supplier;
     }
+    if (rule.togglesSet) {
+      System.out.println(" +set");
+      setEnabled = true;
+    }
   }
 
   private Possibily get(GroupingRule group) {
@@ -127,15 +131,13 @@ public class SelectionSolver {
     System.out.println("Accepted:" + proposedRule + " \\in " + proposedRule.group);
     AdaptThingToMouse adapted = new AdaptThingToMouse(current, proposedSupplier);
     get(proposedRule.group).suppliers.add(adapted);
-    if (proposedRule.togglesSet) {
-      setEnabled = true;
-    }
   }
 
   public void focus(final AbstractThing thing) {
     current = thing;
     this.proposedRule = Rule.Nothing;
     this.proposedSupplier = null;
+    this.setEnabled = false;
   }
 
   public void unfocus() {
@@ -145,9 +147,9 @@ public class SelectionSolver {
   public MouseInteraction solve() {
     MouseInteraction solution = solveWithoutHistory();
     if (solution != null) {
-      return new HistoryMouseInteractionTrapper(history, solution);
+      solution = new HistoryMouseInteractionTrapper(history, solution);
     }
-    return null;
+    return solution;
   }
 
   private MouseInteraction solveWithoutHistory() {

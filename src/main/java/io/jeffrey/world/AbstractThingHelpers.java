@@ -22,26 +22,6 @@ public class AbstractThingHelpers {
     return false;
   }
 
-  /**
-   * is the given point in the selection?
-   *
-   * @param document
-   * @param event
-   * @return
-   */
-  public static boolean isInCurrertSelection(final AbstractThing thing, final AdjustedMouseEvent event) {
-    if (!thing.editing.selected.value()) {
-      return false;
-    }
-    thing.transform().writeToThingSpace(event.position);
-    for (final IsSelectable selectable : thing.collect(IsSelectable.class)) {
-      if (selectable.doesMouseEventPreserveExistingSelection(event)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public static Color query(final AbstractThing thing, final double x, final double y) {
     final VectorRegister6 W = new VectorRegister6();
     W.set_0(x, y);

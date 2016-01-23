@@ -47,6 +47,8 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       requireUpToDate();
       all = true;
       any = false;
+      System.out.println("Building model:");
+      
       for (final SelectablePoint2 point : points) {
         if (point.selected) {
           point.alreadySelected = true;
@@ -162,8 +164,9 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     if (mover.should()) { // any points selected
       Rule rule = Rule.AlreadySelectedSubsetButNotInvolved;
       if (overPoint) {
-        rule = Rule.AlreadySelectedAndPointPreservesFacet;
+        rule = Rule.AlreadySelectedFacetAndPointPreserves;
       }
+      System.out.println("pointset should /w rule: " + rule);
       solver.propose(rule, mover);
       return true;
     } else if (overPoint) {
@@ -221,12 +224,24 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     final VectorRegister3 W = new VectorRegister3();
     if (container != null) {
       for (final SelectablePoint2 point : points) {
-        if (point.selected) {
-          W.set_0(point.x, point.y);
-          transform.writeToWorldSpace(W);
-          if (event.doodadDistance(W.x_1, W.y_1) <= container.controlPointSize) {
-            return true;
+        W.set_0(point.x, point.y);
+        transform.writeToWorldSpace(W);
+        if (event.doodadDistance(W.x_1, W.y_1) <= container.controlPointSize) {
+          if (event.selective_subtractive_mode) {
+            point.alreadySelected = false;
+            point.selected = false;
+          } else {
+            if (!event.selective_addititive_mode) {
+              for (final SelectablePoint2 other : points) {
+                other.alreadySelected = false;
+                other.selected = false;
+              }
+            }
+            point.alreadySelected = true;
+            point.selected = true;
+            editing.selected.value(true);
           }
+          return true;
         }
       }
     }

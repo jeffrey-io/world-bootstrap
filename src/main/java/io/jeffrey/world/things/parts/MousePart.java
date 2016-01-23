@@ -77,7 +77,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
       return true;
     } else if (contains(solver.event)) {
       if (editing.selected.value()) {
-        solver.propose(Rule.AlreadySelectedAndPointPreservesItem, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
+        solver.propose(Rule.AlreadySelectedItemAndPointPreserves, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
       } else {
         solver.propose(Rule.NotAlreadySelectedAndPointIsInItem, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
       }

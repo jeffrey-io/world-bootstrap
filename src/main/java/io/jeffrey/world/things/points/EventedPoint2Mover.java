@@ -43,11 +43,6 @@ public class EventedPoint2Mover extends ThingInteraction {
   }
 
   @Override
-  public Order order() {
-    return Order.SingleOfThing;
-  }
-
-  @Override
   public void select() {
     point.data.selected = true;
   }

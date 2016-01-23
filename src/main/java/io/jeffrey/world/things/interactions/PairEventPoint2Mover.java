@@ -45,11 +45,6 @@ public class PairEventPoint2Mover extends ThingInteraction {
   }
 
   @Override
-  public Order order() {
-    return Order.SubsetOfThing;
-  }
-
-  @Override
   public void select() {
     a.select();
     b.select();

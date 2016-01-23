@@ -53,11 +53,6 @@ public class ThingSnapper extends ThingInteraction {
   }
 
   @Override
-  public Order order() {
-    return delegate.order();
-  }
-
-  @Override
   public void select() {
     delegate.select();
   }

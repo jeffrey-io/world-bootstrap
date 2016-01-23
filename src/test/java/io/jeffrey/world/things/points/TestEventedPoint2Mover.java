@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import io.jeffrey.world.SimulatedMouse;
 import io.jeffrey.world.WorldTestFramework;
-import io.jeffrey.world.things.interactions.ThingInteraction.Order;
 
 public class TestEventedPoint2Mover extends WorldTestFramework {
   @Test
@@ -24,6 +23,5 @@ public class TestEventedPoint2Mover extends WorldTestFramework {
     assertEquals(1, point.x);
     assertEquals(2, point.y);
     mock.assertUpdateCallsMadeEquals(2);
-    assertEquals(Order.SingleOfThing, mover.order());
   }
 }

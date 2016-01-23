@@ -8,35 +8,9 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 public class MultiThingInteraction extends ThingInteraction {
 
   private final ArrayList<ThingInteraction> interactions;
-  private final Order                       order;
 
   public MultiThingInteraction(final ArrayList<ThingInteraction> interactions) {
-    if (interactions.size() == 0) {
-      throw new IllegalStateException();
-    }
-    if (interactions.size() == 1) {
-      this.interactions = interactions;
-      order = interactions.get(0).order();
-    } else {
-      Collections.sort(interactions);
-      final boolean allSame = interactions.get(0) == interactions.get(interactions.size() - 1);
-      if (allSame) {
-        this.interactions = interactions;
-        order = interactions.get(0).order();
-      } else {
-        final ArrayList<ThingInteraction> next = new ArrayList<>();
-        Order lastOrder = Order.ThingLevel;
-        for (final ThingInteraction ti : interactions) {
-          if (ti.order() != lastOrder) {
-            next.clear();
-            lastOrder = ti.order();
-          }
-          next.add(ti);
-        }
-        this.interactions = next;
-        order = lastOrder;
-      }
-    }
+    this.interactions = interactions;
   }
 
   @Override
@@ -51,11 +25,6 @@ public class MultiThingInteraction extends ThingInteraction {
     for (final ThingInteraction interaction : interactions) {
       interaction.moved(event);
     }
-  }
-
-  @Override
-  public Order order() {
-    return order;
   }
 
   @Override

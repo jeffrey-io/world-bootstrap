@@ -3,12 +3,11 @@ package io.jeffrey.world.things.interactions;
 import org.junit.Test;
 
 import io.jeffrey.world.WorldTestFramework;
-import io.jeffrey.world.things.interactions.ThingInteraction.Order;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
 public class TestThingInteraction extends WorldTestFramework {
 
-  private ThingInteraction minimalThing(final Order order) {
+  private ThingInteraction minimalThing() {
     return new ThingInteraction() {
 
       @Override
@@ -20,11 +19,6 @@ public class TestThingInteraction extends WorldTestFramework {
       }
 
       @Override
-      public Order order() {
-        return order;
-      }
-
-      @Override
       public void select() {
       }
     };
@@ -32,13 +26,5 @@ public class TestThingInteraction extends WorldTestFramework {
 
   @Test
   public void sanityCheckOrdering() {
-    final Order a = Order.SingleOfThing;
-    final Order b = Order.WorldLevel;
-    final ThingInteraction ta = minimalThing(a);
-    final ThingInteraction tb = minimalThing(b);
-    assertTrue(ta.compareTo(tb) > 0);
-    assertTrue(tb.compareTo(ta) < 0);
-    assertTrue(ta.compareTo(ta) == 0);
-    assertTrue(tb.compareTo(tb) == 0);
   }
 }

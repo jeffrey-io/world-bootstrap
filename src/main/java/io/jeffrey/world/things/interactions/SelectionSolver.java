@@ -50,11 +50,6 @@ public class SelectionSolver {
     public MouseInteraction last() {
       return suppliers.get(suppliers.size() - 1).get();
     }
-
-    @Override
-    public String toString() {
-      return "sized=" + suppliers.size();
-    }
   }
 
   private static enum GroupingRule {
@@ -89,7 +84,7 @@ public class SelectionSolver {
     }
   }
 
-  private AbstractThing                          current;
+  private AbstractThing                          currentThing;
   public final AdjustedMouseEvent                event;
   private final History                          history;
 
@@ -99,7 +94,8 @@ public class SelectionSolver {
     this.history = history;
     this.event = event;
     possibilites = new HashMap<>();
-    current = null;
+    currentThing = null;
+    this.setEnabled = false;
   }
 
   private Rule                       proposedRule;
@@ -107,13 +103,11 @@ public class SelectionSolver {
   private boolean setEnabled;
 
   public void propose(final Rule rule, final Supplier<ThingInteraction> supplier) {
-    System.out.println(" {{ proposed: " + rule + "}}");
     if (rule.precedence < proposedRule.precedence) {
       this.proposedRule = rule;
       this.proposedSupplier = supplier;
     }
     if (rule.togglesSet) {
-      System.out.println(" +set");
       setEnabled = true;
     }
   }
@@ -128,16 +122,16 @@ public class SelectionSolver {
   }
 
   private void accept() {
-    System.out.println("Accepted:" + proposedRule + " \\in " + proposedRule.group);
-    AdaptThingToMouse adapted = new AdaptThingToMouse(current, proposedSupplier);
+    AdaptThingToMouse adapted = new AdaptThingToMouse(currentThing, proposedSupplier);
     get(proposedRule.group).suppliers.add(adapted);
+    
+    System.out.println("accepted:" + proposedRule + " on " + currentThing.getClass());
   }
 
   public void focus(final AbstractThing thing) {
-    current = thing;
+    currentThing = thing;
     this.proposedRule = Rule.Nothing;
     this.proposedSupplier = null;
-    this.setEnabled = false;
   }
 
   public void unfocus() {
@@ -153,22 +147,21 @@ public class SelectionSolver {
   }
 
   private MouseInteraction solveWithoutHistory() {
-    for (final GroupingRule rule : possibilites.keySet()) {
-      System.out.println("rule:" + rule + " " + possibilites.get(rule));
-    }
-
     final Possibily doodad = possibilites.get(GroupingRule.Doodad);
     if (doodad != null) {
+      System.out.println("using doodad's last");
       return doodad.last();
     }
 
     final Possibily item = possibilites.get(GroupingRule.Item);
     if (item != null) {
+      System.out.println("using item's last");
       return item.last();
     }
 
     final Possibily already = possibilites.get(GroupingRule.Set);
     if (already != null && setEnabled) {
+      System.out.println("using group");
       return possibilites.get(GroupingRule.Set).all();
     }
     return null;

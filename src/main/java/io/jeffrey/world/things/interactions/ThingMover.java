@@ -65,11 +65,6 @@ public class ThingMover extends ThingInteraction {
   }
 
   @Override
-  public Order order() {
-    return Order.ThingLevel;
-  }
-
-  @Override
   public void select() {
     editing.selected.value(true);
   }

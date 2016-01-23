@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
-import io.jeffrey.world.things.behaviors.HasInternalSelection;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasUpdate;
@@ -26,6 +25,7 @@ import io.jeffrey.world.things.interactions.SelectionSolver;
 import io.jeffrey.world.things.interactions.SelectionSolver.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
+import io.jeffrey.world.things.interactions.ThingSelector;
 import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.world.things.points.EventedPoint2Mover;
 import io.jeffrey.world.things.points.SelectablePoint2;
@@ -35,7 +35,7 @@ import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
-public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasActions, HasUpdate, HasSelectionByPoint {
+public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSelectable, HasActions, HasUpdate, HasSelectionByPoint {
 
   public class PointSetMoverModel implements Supplier<ThingInteraction> {
     private boolean                  all;
@@ -48,10 +48,10 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       all = true;
       any = false;
       System.out.println("Building model:");
-      
+
       for (final SelectablePoint2 point : points) {
+        point.alreadySelected = point.selected;
         if (point.selected) {
-          point.alreadySelected = true;
           any = true;
         } else {
           all = false;
@@ -68,6 +68,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
 
       if (any) {
         final ArrayList<ThingInteraction> its = new ArrayList<>();
+        its.add(new ThingSelector(editing));
         for (final SelectablePoint2 point : points) {
           if (point.selected || point.alreadySelected) {
             its.add(new EventedPoint2Mover(new EventedPoint2(point, PointSetPart.this), event));
@@ -159,7 +160,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
 
   @Override
   public boolean buildSelectionSolver(final SelectionSolver solver) {
-    final boolean overPoint = doesMouseEventPreserveExistingSelection(solver.event);
+    final boolean overPoint = doesMouseEventPreserveExistingSelection(solver.event, true);
     final PointSetMoverModel mover = new PointSetMoverModel(solver.event);
     if (mover.should()) { // any points selected
       Rule rule = Rule.AlreadySelectedSubsetButNotInvolved;
@@ -177,13 +178,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       });
     }
     return false;
-  }
-
-  @Override
-  public void cacheInternalSelection() {
-    for (final SelectablePoint2 p : points) {
-      p.alreadySelected = p.selected;
-    }
   }
 
   private void center_points_internally() {
@@ -220,28 +214,36 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
 
   @Override
   public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
+    return doesMouseEventPreserveExistingSelection(event, false);
+  }
+
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event, boolean shouldSelect) {
     requireUpToDate();
     final VectorRegister3 W = new VectorRegister3();
     if (container != null) {
       for (final SelectablePoint2 point : points) {
-        W.set_0(point.x, point.y);
-        transform.writeToWorldSpace(W);
-        if (event.doodadDistance(W.x_1, W.y_1) <= container.controlPointSize) {
-          if (event.selective_subtractive_mode) {
-            point.alreadySelected = false;
-            point.selected = false;
-          } else {
-            if (!event.selective_addititive_mode) {
-              for (final SelectablePoint2 other : points) {
-                other.alreadySelected = false;
-                other.selected = false;
+        if (shouldSelect || point.selected) {
+          W.set_0(point.x, point.y);
+          transform.writeToWorldSpace(W);
+          if (event.doodadDistance(W.x_1, W.y_1) <= container.controlPointSize) {
+            if (shouldSelect) {
+              if (event.selective_subtractive_mode) {
+                point.alreadySelected = false;
+                point.selected = false;
+              } else {
+                if (!event.selective_addititive_mode) {
+                  for (final SelectablePoint2 other : points) {
+                    other.alreadySelected = false;
+                    other.selected = false;
+                  }
+                }
+                point.alreadySelected = true;
+                point.selected = true;
+                editing.selected.value(true);
               }
             }
-            point.alreadySelected = true;
-            point.selected = true;
-            editing.selected.value(true);
+            return true;
           }
-          return true;
         }
       }
     }
@@ -344,13 +346,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
 
     cache.owner = this;
     notification.publish(cache);
-  }
-
-  @Override
-  public void restoreCachedInternalSelection() {
-    for (final SelectablePoint2 p : points) {
-      p.selected = p.alreadySelected;
-    }
   }
 
   @Override

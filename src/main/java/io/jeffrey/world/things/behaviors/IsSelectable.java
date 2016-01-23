@@ -24,15 +24,6 @@ public interface IsSelectable {
   public boolean contains(final double x, final double y);
 
   /**
-   * does the given mouse event preserve the existing selection
-   *
-   * @param event
-   *          the mouse even
-   * @return whether or not the event will not mess with existing selection
-   */
-  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event);
-
-  /**
    * @param polygon
    *          the shape test
    * @param mode
@@ -41,4 +32,5 @@ public interface IsSelectable {
    */
   public boolean selectionIntersect(final Polygon polygon, final Mode mode);
 
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event);
 }

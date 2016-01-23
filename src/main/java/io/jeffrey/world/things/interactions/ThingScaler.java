@@ -64,11 +64,6 @@ public class ThingScaler extends ThingInteraction {
   }
 
   @Override
-  public Order order() {
-    return Order.ThingLevel;
-  }
-
-  @Override
   public void select() {
     editing.selected.value(true);
   }

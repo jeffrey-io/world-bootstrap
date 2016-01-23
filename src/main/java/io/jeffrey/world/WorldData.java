@@ -37,6 +37,7 @@ import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.IconResolver;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.Notifications;
+import io.jeffrey.zer.Pan;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SetMover;
 import io.jeffrey.zer.SurfaceContext;
@@ -338,6 +339,28 @@ public class WorldData extends SurfaceData {
   }
 
   @Override
+  public String getTitle() {
+    if (file == null) {
+      return "Bootstrapping <New World>";
+    }
+    return file.getPath();
+  }
+
+  public void initiateSelectionWindow() {
+    for (final AbstractThing thing : document.container) {
+
+      thing.collect(HasSelectionByWindow.class, t -> {
+        t.beginSelectionWindow();
+        return null;
+      });
+
+      thing.collect(HasInternalSelection.class, t -> {
+        t.cacheInternalSelection();
+        return null;
+      });
+    }
+  }
+
   public MouseInteraction getSelectionMovers(final AdjustedMouseEvent event) {
     document.container.history.capture();
     final HashSet<MouseInteraction> set = new HashSet<MouseInteraction>();
@@ -353,30 +376,6 @@ public class WorldData extends SurfaceData {
 
     final MouseInteraction setmover = new SetMover(set);
     return new HistoryMouseInteractionTrapper(document.container.history, setmover);
-  }
-
-  @Override
-  public String getTitle() {
-    if (file == null) {
-      return "Bootstrapping <New World>";
-    }
-    return file.getPath();
-  }
-
-  @Override
-  public void initiateSelectionWindow() {
-    for (final AbstractThing thing : document.container) {
-
-      thing.collect(HasSelectionByWindow.class, t -> {
-        t.beginSelectionWindow();
-        return null;
-      });
-
-      thing.collect(HasInternalSelection.class, t -> {
-        t.cacheInternalSelection();
-        return null;
-      });
-    }
   }
 
   @Override
@@ -452,6 +451,19 @@ public class WorldData extends SurfaceData {
   }
 
   @Override
+  public MouseInteraction selectByPoint(final AdjustedMouseEvent event, final SurfaceContext context) {
+    initiateSelectionWindow();
+
+    if (isInSelectionSet(event)) {
+      final MouseInteraction setmove = getSelectionMovers(event);
+      if (setmove != null) {
+        return setmove;
+      }
+    }
+
+    return startSurfaceInteraction(event, context);
+  }
+
   public MouseInteraction startSurfaceInteraction(final AdjustedMouseEvent event, final SurfaceContext context) {
     document.container.history.capture();
     for (int k = document.container.size() - 1; k >= 0; k--) {

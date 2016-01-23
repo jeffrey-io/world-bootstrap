@@ -2,7 +2,7 @@ package io.jeffrey.world.things.parts;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.math.Lines;
-import io.jeffrey.world.things.behaviors.HasMouseInteractions;
+import io.jeffrey.world.things.behaviors.HasMouseInteractionsDEFUNCT;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.core.Container;
@@ -15,7 +15,7 @@ import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.EditBoolean;
 
-public class EdgeMoverPart implements Part, HasMouseInteractions {
+public class EdgeMoverPart implements Part, HasMouseInteractionsDEFUNCT {
 
   private final Container          container;
   private final HasSelectableEdges edges;

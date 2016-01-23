@@ -8,8 +8,8 @@ import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
-import io.jeffrey.world.things.behaviors.HasMouseInteractions;
-import io.jeffrey.world.things.behaviors.HasMover;
+import io.jeffrey.world.things.behaviors.HasMouseInteractionsDEFUNCT;
+import io.jeffrey.world.things.behaviors.HasMoverDEFUNCT;
 import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.AbstractThing;
@@ -31,7 +31,7 @@ import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.meta.GuideLine;
 import javafx.scene.shape.Polygon;
 
-public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractions {
+public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractionsDEFUNCT {
 
   private final EditingPart   editing;
 
@@ -68,7 +68,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
     }
     transform.writeToThingSpace(event.position);
     final HashSet<ThingInteraction> local = new HashSet<>();
-    for (final HasMover mover : thing.collect(HasMover.class)) {
+    for (final HasMoverDEFUNCT mover : thing.collect(HasMoverDEFUNCT.class)) {
       mover.iterateMovers(local, event);
     }
     final Collection<GuideLine> lines = thing.container.getGuideLines(layer.layer.getAsText());

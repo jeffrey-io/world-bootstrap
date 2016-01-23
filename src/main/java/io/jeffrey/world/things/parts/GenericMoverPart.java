@@ -2,13 +2,13 @@ package io.jeffrey.world.things.parts;
 
 import java.util.Set;
 
-import io.jeffrey.world.things.behaviors.HasMover;
+import io.jeffrey.world.things.behaviors.HasMoverDEFUNCT;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
-public class GenericMoverPart implements Part, HasMover {
+public class GenericMoverPart implements Part, HasMoverDEFUNCT {
 
   private final PositionPart position;
   private final RotationPart rotation;

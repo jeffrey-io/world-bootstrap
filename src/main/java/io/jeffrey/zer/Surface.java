@@ -128,22 +128,14 @@ public class Surface {
    * @return a mouse interaction to update with move() and ultimately a commit()
    */
   public MouseInteraction startInteraction(final MouseEvent event) {
-    final AdjustedMouseEvent aevent = new AdjustedMouseEvent(camera, event.getX(), event.getY(), event.isAltDown(), event.isControlDown());
-    data.initiateSelectionWindow();
-
     if (event.isControlDown() && event.isSecondaryButtonDown() || event.isMiddleButtonDown()) {
       return new Pan(camera, event);
     }
+    
+    final AdjustedMouseEvent aevent = new AdjustedMouseEvent(camera, event.getX(), event.getY(), event.isAltDown(), event.isControlDown());
 
-    if (data.isInSelectionSet(aevent)) {
-      final MouseInteraction setmove = data.getSelectionMovers(aevent);
-      if (setmove != null) {
-        return setmove;
-      }
-    }
-
-    final MouseInteraction interaction = data.startSurfaceInteraction(aevent, context());
-
+    final MouseInteraction interaction = data.selectByPoint(aevent, context);
+    
     if (interaction != null) {
       return interaction;
     }

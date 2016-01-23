@@ -7,8 +7,8 @@ import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasInternalSelection;
-import io.jeffrey.world.things.behaviors.HasMouseInteractions;
-import io.jeffrey.world.things.behaviors.HasMover;
+import io.jeffrey.world.things.behaviors.HasMouseInteractionsDEFUNCT;
+import io.jeffrey.world.things.behaviors.HasMoverDEFUNCT;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.behaviors.IsSelectable;
@@ -31,7 +31,7 @@ import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
-public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMover, HasActions, HasUpdate, HasMouseInteractions {
+public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMoverDEFUNCT, HasActions, HasUpdate, HasMouseInteractionsDEFUNCT {
 
   public class SharedMutableCache {
     public double       boundingRadiusForControls;

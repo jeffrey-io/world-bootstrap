@@ -85,14 +85,14 @@ public class SelectionSolver {
   }
 
   private AbstractThing                          currentThing;
-  public final AdjustedMouseEvent                event;
+  public AdjustedMouseEvent                event;
   private final History                          history;
 
   private final HashMap<GroupingRule, Possibily> possibilites;
 
-  public SelectionSolver(final History history, final AdjustedMouseEvent event) {
+  public SelectionSolver(final History history) {
     this.history = history;
-    this.event = event;
+    this.event = null;
     possibilites = new HashMap<>();
     currentThing = null;
     this.setEnabled = false;
@@ -128,7 +128,8 @@ public class SelectionSolver {
     System.out.println("accepted:" + proposedRule + " on " + currentThing.getClass());
   }
 
-  public void focus(final AbstractThing thing) {
+  public void focus(final AbstractThing thing, AdjustedMouseEvent event) {
+    this.event = event;
     currentThing = thing;
     this.proposedRule = Rule.Nothing;
     this.proposedSupplier = null;

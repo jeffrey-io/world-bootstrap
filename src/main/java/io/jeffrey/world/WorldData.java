@@ -426,7 +426,7 @@ public class WorldData extends SurfaceData {
 
   @Override
   public MouseInteraction selectByPoint(final AdjustedMouseEvent event, final SurfaceContext context) {
-    final SelectionSolver selectionSolver = new SelectionSolver(document.container.history, event);
+    final SelectionSolver selectionSolver = new SelectionSolver(document.container.history);
     for (final AbstractThing thing : document.container) {
       // it's deleted, we do nothing
       if (thing.lifetime.isDeleted()) {
@@ -448,13 +448,15 @@ public class WorldData extends SurfaceData {
         return null;
       });
 
-      thing.transform().writeToThingSpace(event.position);
 
-      selectionSolver.focus(thing);
+      AdjustedMouseEvent cevent = event.clone();
+      thing.transform().writeToThingSpace(cevent.position);
+      selectionSolver.focus(thing, cevent);
       for (final HasSelectionByPoint behavior : thing.collect(HasSelectionByPoint.class)) {
         behavior.buildSelectionSolver(selectionSolver);
       }
       selectionSolver.unfocus();
+      
       thing.invokeAction("unselect", false);
     }
 

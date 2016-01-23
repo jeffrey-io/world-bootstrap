@@ -18,6 +18,8 @@ public class AdjustedMouseEvent {
   public final boolean         respect_aspect_scaling;
   public final boolean         selective_addititive_mode;
   public final boolean         selective_subtractive_mode;
+  private final boolean altdown;
+  private final boolean ctrldown;
 
   /**
    * @param camera
@@ -35,6 +37,12 @@ public class AdjustedMouseEvent {
     selective_subtractive_mode = ctrldown;
     locked_angle = altdown;
     respect_aspect_scaling = altdown || ctrldown;
+    this.altdown = altdown;
+    this.ctrldown = ctrldown;
+  }
+  
+  public AdjustedMouseEvent clone() {
+     return new AdjustedMouseEvent(camera, clientX, clientY, altdown, ctrldown);
   }
 
   /**

@@ -38,7 +38,7 @@ public class TImage extends BasicThing {
     register(new ImageRenderPart(transform, container, uri, editing, rectangle));
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(rectangle, position, rotation));
     register(enforcers);
-    register(new GenericMoverPart(position, rotation));
+    register(new GenericMoverPart(position, rotation, editing));
     register(new MousePart(this, transform));
   }
 }

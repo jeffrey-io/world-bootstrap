@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.things.behaviors.HasColorsToEmit;
-import io.jeffrey.world.things.behaviors.HasMouseInteractionsDEFUNCT;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.interactions.MultiThingInteraction;
@@ -69,7 +68,7 @@ public class AbstractThingHelpers {
    *          the world space event
    * @return a mouse interaction to manipulate things (or null if nothing to do)
    */
-  public static MouseInteraction startInteraction(final AbstractThing thing, final AdjustedMouseEvent event) {
+  public static MouseInteraction startInteractionXYZ(final AbstractThing thing, final AdjustedMouseEvent event) {
     if (thing.lifetime.isDeleted()) {
       return null;
     }
@@ -80,12 +79,14 @@ public class AbstractThingHelpers {
     thing.transform().writeToThingSpace(event.position);
 
     final ArrayList<ThingInteraction> interactions = new ArrayList<>(1);
+    /*
     for (final HasMouseInteractionsDEFUNCT mouse : thing.collect(HasMouseInteractionsDEFUNCT.class)) {
       final ThingInteraction interaction = mouse.startInteraction(event);
       if (interaction != null) {
         interactions.add(interaction);
       }
     }
+    */
     if (interactions.size() == 0) {
       return null;
     }

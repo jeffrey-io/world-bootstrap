@@ -8,8 +8,7 @@ import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
-import io.jeffrey.world.things.behaviors.HasMouseInteractionsDEFUNCT;
-import io.jeffrey.world.things.behaviors.HasMoverDEFUNCT;
+import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.AbstractThing;
@@ -19,6 +18,7 @@ import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.enforcer.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.SerialEnforcer;
+import io.jeffrey.world.things.interactions.SelectionSolver;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingInteractionToMouseIteractionAdapter;
 import io.jeffrey.world.things.interactions.ThingMover;
@@ -31,7 +31,7 @@ import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.meta.GuideLine;
 import javafx.scene.shape.Polygon;
 
-public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractionsDEFUNCT {
+public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoint {
 
   private final EditingPart   editing;
 
@@ -57,7 +57,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
   }
 
   // TODO: this should be moved out
-  public void beginMoving(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
+  public void beginMovingXYZ(final Set<MouseInteraction> interactions, final AdjustedMouseEvent event) {
     if (editing != null) {
       if (editing.locked.value() || !editing.selected.value()) {
         return;
@@ -68,9 +68,11 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
     }
     transform.writeToThingSpace(event.position);
     final HashSet<ThingInteraction> local = new HashSet<>();
+    /*
     for (final HasMoverDEFUNCT mover : thing.collect(HasMoverDEFUNCT.class)) {
       mover.iterateMovers(local, event);
     }
+    */
     final Collection<GuideLine> lines = thing.container.getGuideLines(layer.layer.getAsText());
 
     GuideLineEnforcer enforcer = null;
@@ -107,7 +109,6 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
     }
   }
 
-  @Override
   public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
     transform.writeToThingSpace(event.position);
     ThingInteraction interaction = null;
@@ -199,5 +200,11 @@ public class MousePart implements Part, HasSelectionByWindow, HasMouseInteractio
       adjusted[k + 1] = scratch.y_1;
     }
     return new Polygon(adjusted);
+  }
+
+  @Override
+  public void buildSelectionSolver(SelectionSolver solver) {
+    // TODO Auto-generated method stub
+    
   }
 }

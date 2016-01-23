@@ -31,7 +31,7 @@ public class TCircle extends BasicThing {
     register(new CircleRenderPart(transform, document, fill, fill, scale, editing));
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
     register(enforcers);
-    register(new GenericMoverPart(position, rotation));
+    register(new GenericMoverPart(position, rotation, editing));
     register(new MousePart(this, transform));
   }
 }

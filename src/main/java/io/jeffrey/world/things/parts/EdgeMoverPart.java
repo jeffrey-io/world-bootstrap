@@ -2,20 +2,21 @@ package io.jeffrey.world.things.parts;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.math.Lines;
-import io.jeffrey.world.things.behaviors.HasMouseInteractionsDEFUNCT;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
+import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.interactions.PairEventPoint2Mover;
+import io.jeffrey.world.things.interactions.SelectionSolver;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.edits.EditBoolean;
 
-public class EdgeMoverPart implements Part, HasMouseInteractionsDEFUNCT {
+public class EdgeMoverPart implements Part, HasSelectionByPoint {
 
   private final Container          container;
   private final HasSelectableEdges edges;
@@ -31,7 +32,6 @@ public class EdgeMoverPart implements Part, HasMouseInteractionsDEFUNCT {
     this.update = update;
   }
 
-  @Override
   public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
     final VectorRegister3 W = new VectorRegister3();
     if (!lock.value()) {
@@ -66,5 +66,10 @@ public class EdgeMoverPart implements Part, HasMouseInteractionsDEFUNCT {
       }
     }
     return null;
+  }
+
+  @Override
+  public void buildSelectionSolver(SelectionSolver solver) {
+
   }
 }

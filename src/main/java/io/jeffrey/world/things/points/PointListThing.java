@@ -35,7 +35,7 @@ public class PointListThing extends BasicThing {
   protected PointListThing(final Container container, final LinkedDataMap data, final Property... properties) {
     super(container, data);
     list = new SelectablePoint2List(data.getString("points", "0,-1,1,1,-1,1").value(), properties);
-    points = new PointSetPart(data, container, transform, position, scale, rotation, list);
+    points = new PointSetPart(data, container, transform, position, scale, rotation, list, editing);
     register(points);
     register(list);
     register(new MousePart(this, transform));

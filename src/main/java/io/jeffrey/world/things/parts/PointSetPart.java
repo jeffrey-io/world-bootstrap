@@ -7,9 +7,8 @@ import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasInternalSelection;
-import io.jeffrey.world.things.behaviors.HasMouseInteractionsDEFUNCT;
-import io.jeffrey.world.things.behaviors.HasMoverDEFUNCT;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
+import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.Container;
@@ -20,6 +19,7 @@ import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
 import io.jeffrey.world.things.core.Subscribers;
 import io.jeffrey.world.things.core.Transform;
+import io.jeffrey.world.things.interactions.SelectionSolver;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.points.EventedPoint2;
@@ -31,7 +31,7 @@ import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
 import javafx.scene.shape.Polygon;
 
-public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasMoverDEFUNCT, HasActions, HasUpdate, HasMouseInteractionsDEFUNCT {
+public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInternalSelection, IsSelectable, HasActions, HasUpdate, HasSelectionByPoint {
 
   public class SharedMutableCache {
     public double       boundingRadiusForControls;
@@ -64,20 +64,23 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
 
   private final Transform                       transform;
   public final EditString                       vertices;
+  
+  public final EditingPart editing;
 
-  public PointSetPart(final LinkedDataMap data, final Container container, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, final HasSelectablePoints points) {
+  public PointSetPart(final LinkedDataMap data, final Container container, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, final HasSelectablePoints points, final EditingPart editing) {
     lock = data.getBoolean("vlock", false);
     this.points = points;
     this.container = container;
     this.scale = scale;
     this.rotation = rotation;
     this.transform = transform;
+    this.position = position;
+    this.editing = editing;
     cache = new SharedMutableCache();
 
     lock.subscribe((t, u) -> PointSetPart.this.update());
     outOfDate = true;
     notification = new Subscribers<>();
-    this.position = position;
 
     vertices = data.getString("points", "0,-1,1,1,-1,1");
     update();
@@ -184,7 +187,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     }
   }
 
-  @Override
   public void iterateMovers(final Set<ThingInteraction> interactions, final AdjustedMouseEvent event) {
     requireUpToDate();
     boolean all = true;
@@ -316,7 +318,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     return isSelected;
   }
 
-  @Override
   public ThingInteraction startInteraction(final AdjustedMouseEvent event) {
     return startInteractionWithClear(event, true);
   }
@@ -350,6 +351,12 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   @Override
   public void update() {
     outOfDate = true;
+  }
+
+  @Override
+  public void buildSelectionSolver(SelectionSolver solver) {
+    // TODO Auto-generated method stub
+    
   }
 
 }

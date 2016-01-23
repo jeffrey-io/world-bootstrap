@@ -367,7 +367,7 @@ public class WorldData extends SurfaceData {
     for (final AbstractThing thing : document.container) {
       final MousePart mouse = thing.first(MousePart.class);
       if (mouse != null) {
-        mouse.beginMoving(set, event);
+        // mouse.beginMoving(set, event);
       }
     }
     if (set.size() == 0) {
@@ -474,7 +474,8 @@ public class WorldData extends SurfaceData {
     }
     for (int k = document.container.size() - 1; k >= 0; k--) {
       final AbstractThing thing = document.container.get(k);
-      final MouseInteraction it = AbstractThingHelpers.startInteraction(thing, event);
+      final MouseInteraction it = null; 
+      // AbstractThingHelpers.startInteraction(thing, event);
       if (it != null) {
         return new HistoryMouseInteractionTrapper(document.container.history, it);
       }

@@ -5,5 +5,5 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 
 public interface HasSelectionByPoint {
 
-  public void resolveSelection(SelectionSolver solver, AdjustedMouseEvent event);
+  public void buildSelectionSolver(SelectionSolver solver);
 }

@@ -465,7 +465,7 @@ public class WorldData extends SurfaceData {
           System.out.println(" ^^ from:" + behavior.getClass().getSimpleName());
         }
       }
-
+      selectionSolver.unfocus();
       thing.invokeAction("unselect", false);
     }
 

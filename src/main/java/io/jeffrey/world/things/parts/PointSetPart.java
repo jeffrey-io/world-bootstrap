@@ -49,6 +49,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       any = false;
       for (final SelectablePoint2 point : points) {
         if (point.selected) {
+          point.alreadySelected = true;
           any = true;
         } else {
           all = false;
@@ -66,7 +67,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
       if (any) {
         final ArrayList<ThingInteraction> its = new ArrayList<>();
         for (final SelectablePoint2 point : points) {
-          if (point.selected) {
+          if (point.selected || point.alreadySelected) {
             its.add(new EventedPoint2Mover(new EventedPoint2(point, PointSetPart.this), event));
           }
         }
@@ -77,7 +78,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
     }
 
     public boolean should() {
-      if (all || any || !any && editing.selected.value()) {
+      if (all || any) {
         return true;
       }
       return false;
@@ -158,15 +159,17 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, HasInt
   public boolean buildSelectionSolver(final SelectionSolver solver) {
     final boolean overPoint = doesMouseEventPreserveExistingSelection(solver.event);
     final PointSetMoverModel mover = new PointSetMoverModel(solver.event);
-    if (mover.should()) {
-      Rule rule = Rule.AlreadySelectedButNotInvolved;
+    if (mover.should()) { // any points selected
+      Rule rule = Rule.AlreadySelectedSubsetButNotInvolved;
       if (overPoint) {
-        rule = Rule.AlreadySelectedAndPointPreserves;
+        rule = Rule.AlreadySelectedAndPointPreservesFacet;
       }
-      solver.accept(rule, mover);
+      solver.propose(rule, mover);
       return true;
     } else if (overPoint) {
-      solver.accept(Rule.NotAlreadySelectedAndPointIsIn, () -> {
+      solver.propose(Rule.NotAlreadySelectedAndPointIsInSubset, () -> {
+        // need to select it
+        // well, this kind of sucks, we may want to move all the vertices selected
         return startInteractionWithClear(solver.event, !solver.event.selective_addititive_mode);
       });
     }

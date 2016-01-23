@@ -51,7 +51,7 @@ public class PointListThing extends BasicThing {
       points.update();
     });
     register(new StandardPointListActions(list));
-    register(new EdgeMoverPart(container, transform, list, points.lock, points));
+    register(new EdgeMoverPart(container, transform, list, points.lock, points, editing));
   }
 
 }

@@ -92,7 +92,11 @@ public abstract class AbstractThing {
   }
 
   public <T> T first(final Class<T> clazz) {
-    return collect(clazz).iterator().next();
+    List<T> list = collect(clazz);
+    if (list.size() == 0) {
+      return null;
+    }
+    return list.iterator().next();
   }
 
   /**

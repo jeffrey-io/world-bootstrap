@@ -77,9 +77,9 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
       return true;
     } else if (contains(solver.event)) {
       if (editing.selected.value()) {
-        solver.accept(Rule.AlreadySelectedAndPointPreserves, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
+        solver.propose(Rule.AlreadySelectedAndPointPreservesItem, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
       } else {
-        solver.accept(Rule.NotAlreadySelectedAndPointIsIn, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
+        solver.propose(Rule.NotAlreadySelectedAndPointIsInItem, snap(() -> new ThingMover(solver.event, position, rotation, editing)));
       }
       return true;
     }
@@ -127,11 +127,11 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
           return false;
         }
         if (doodad.type == Type.Scale && scale != null) {
-          solver.accept(Rule.Doodad, () -> new ThingScaler(solver.event, transform, scale, editing));
+          solver.propose(Rule.Doodad, () -> new ThingScaler(solver.event, transform, scale, editing));
           return true;
         }
         if (doodad.type == Type.Rotate && rotation != null) {
-          solver.accept(Rule.Doodad, () -> new ThingRotater(solver.event, transform, rotation, editing));
+          solver.propose(Rule.Doodad, () -> new ThingRotater(solver.event, transform, rotation, editing));
           return true;
         }
       }

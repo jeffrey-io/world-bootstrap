@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import io.jeffrey.world.things.TCircle;
+import io.jeffrey.world.things.TPolygon;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ContainerQueryEngine;
 import io.jeffrey.world.things.core.LinkedDataMap;
@@ -52,6 +53,25 @@ public class Benchmark {
         final Container container = createContainer();
         for (int k = 0; k < 1000; k++) {
           container.add(new TCircle(container, data("x", Double.toString(k * 100))));
+        }
+        final ContainerQueryEngine engine = new ContainerQueryEngine(container);
+        final SelectionWindow window = new SelectionWindow();
+        window.start(-1, -1);
+        window.update(1, 1, Mode.Set);
+        return () -> {
+          for (int k = 0; k < 1000; k++) {
+            engine.updateSelectionWindow(window);
+          }
+        };
+      }
+    });
+
+    benchmark.register("select-1000-sparse-triangles-by-window", new BenchmarkTask() {
+      @Override
+      public Runnable setup() {
+        final Container container = createContainer();
+        for (int k = 0; k < 1000; k++) {
+          container.add(new TPolygon(container, data("x", Double.toString(k * 100))));
         }
         final ContainerQueryEngine engine = new ContainerQueryEngine(container);
         final SelectionWindow window = new SelectionWindow();

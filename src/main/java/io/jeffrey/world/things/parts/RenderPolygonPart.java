@@ -45,11 +45,11 @@ public class RenderPolygonPart extends HasThingSpaceRendering implements Part {
       gc.setStroke(Color.valueOf(edge.color.getAsText()));
       gc.strokePolygon(cache.x, cache.y, cache.y.length);
     }
-    if (editing.selected.value() && cache.boundingRadiusForControls > 0) {
+    if (editing.selected.value() && cache.boundingRadius > 0) {
       gc.setStroke(Color.RED);
       gc.setLineWidth(2.0 / (scale.sx() + scale.sy()));
-      gc.moveTo(-cache.boundingRadiusForControls, 0);
-      gc.strokeArc(-cache.boundingRadiusForControls, -cache.boundingRadiusForControls, 2 * cache.boundingRadiusForControls, 2 * cache.boundingRadiusForControls, 0, 3601, ArcType.ROUND);
+      gc.moveTo(-cache.boundingRadius, 0);
+      gc.strokeArc(-cache.boundingRadius, -cache.boundingRadius, 2 * cache.boundingRadius, 2 * cache.boundingRadius, 0, 3601, ArcType.ROUND);
       gc.strokePolygon(cache.x, cache.y, cache.y.length);
     }
 

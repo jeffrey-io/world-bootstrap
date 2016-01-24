@@ -38,6 +38,22 @@ public class SelectionModel {
     return new Polygon(adjusted);
   }
 
+  public boolean contains(final double x, final double y) {
+    for (int k = 0; k < adjusted.length; k += 2) {
+      scratch.set_0(wrap[k], wrap[k + 1]);
+      scratch.set_1(wrap[k + 2], wrap[k + 3]);
+      scratch.set_2(x, y);
+      scratch.sub_0_from_1();
+      scratch.sub_0_from_2();
+
+      // check if point is on the outside
+      if (scratch.planer_cross_at_zero_1_2() < 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public Polygon getPolygon() {
     if (cachedPolygon == null) {
       cachedPolygon = computePolygon();
@@ -49,7 +65,7 @@ public class SelectionModel {
     for (int k = 0; k < adjusted.length; k += 2) {
       scratch.set_0(wrap[k], wrap[k + 1]);
       scratch.set_1(wrap[k + 2], wrap[k + 3]);
-      scratch.set_2(0, 0);
+      scratch.set_2(x, y);
       scratch.copy_from_1_to_3();
       scratch.sub_0_from_3();
       scratch.copy_from_2_to_4();

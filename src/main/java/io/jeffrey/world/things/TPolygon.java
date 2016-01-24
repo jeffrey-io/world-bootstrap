@@ -39,7 +39,7 @@ public class TPolygon extends PointListThing {
     register(lazyPolygonPart);
 
     points.subscribe(c -> {
-      lazyPolygonPart.set(new Polygon(c.inlineXYPairs));
+      lazyPolygonPart.set(new Polygon(c.inlineXYPairs), c.boundingRadius);
     });
 
     final ColorPart fill = new ColorPart("fill", "ccc", data);

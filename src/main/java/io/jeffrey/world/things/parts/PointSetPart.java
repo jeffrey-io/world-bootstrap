@@ -87,14 +87,14 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
   }
 
   public class SharedMutableCache {
-    public double       boundingRadiusForControls;
+    public double       boundingRadius;
     public double[]     inlineXYPairs;
     public PointSetPart owner;
     public double[]     x;
     public double[]     y;
 
     public SharedMutableCache() {
-      boundingRadiusForControls = 0;
+      boundingRadius = 0;
       inlineXYPairs = new double[0];
       x = new double[0];
       y = new double[0];
@@ -299,14 +299,14 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
     int k;
 
     // walk the points
-    cache.boundingRadiusForControls = 0;
+    cache.boundingRadius = 0;
     k = 0;
     for (final SelectablePoint2 p : points) {
       cache.inlineXYPairs[2 * k] = p.x;
       cache.inlineXYPairs[2 * k + 1] = p.y;
       cache.x[k] = p.x;
       cache.y[k] = p.y;
-      cache.boundingRadiusForControls = Math.max(cache.boundingRadiusForControls, p.x * p.x + p.y * p.y);
+      cache.boundingRadius = Math.max(cache.boundingRadius, p.x * p.x + p.y * p.y);
       if (!lock.value()) {
         doodads[k].u = p.x;
         doodads[k].v = p.y;
@@ -321,21 +321,21 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
     if (canScale || canRotate) {
       final double scale_norm = scale.sx() + scale.sy();
       final double aug = 32 / scale_norm;
-      cache.boundingRadiusForControls = Math.sqrt(cache.boundingRadiusForControls) + aug;
+      cache.boundingRadius = Math.sqrt(cache.boundingRadius) + aug;
       int j;
       if (canScale) {
         for (j = 0; j < 4; j++) {
           doodads[k].type = Type.Scale;
-          doodads[k].u = Math.cos(ANGLES[j]) * cache.boundingRadiusForControls;
-          doodads[k].v = Math.sin(ANGLES[j]) * cache.boundingRadiusForControls;
+          doodads[k].u = Math.cos(ANGLES[j]) * cache.boundingRadius;
+          doodads[k].v = Math.sin(ANGLES[j]) * cache.boundingRadius;
           k++;
         }
       }
       if (canRotate) {
         for (j = 0; j < 4; j++) {
           doodads[k].type = Type.Rotate;
-          doodads[k].u = Math.cos(ANGLES[j + 4]) * cache.boundingRadiusForControls;
-          doodads[k].v = Math.sin(ANGLES[j + 4]) * cache.boundingRadiusForControls;
+          doodads[k].u = Math.cos(ANGLES[j + 4]) * cache.boundingRadius;
+          doodads[k].v = Math.sin(ANGLES[j + 4]) * cache.boundingRadius;
           k++;
         }
       }
@@ -348,12 +348,13 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
   @Override
   public boolean selectionIntersect(final SelectionModel model) {
     requireUpToDate();
+    boolean attemptContainment = model.isOriginCircleSelected(cache.boundingRadius);
     boolean doUpdate = false;
     boolean isSelected = false;
     boolean anySelected = false;
     for (final SelectablePoint2 point : points) {
       final boolean old = point.selected;
-      if (model.getPolygon().contains(point.x, point.y)) {
+      if (attemptContainment && model.contains(point.x, point.y)) {
         point.selected = true;
         isSelected = true;
       } else {

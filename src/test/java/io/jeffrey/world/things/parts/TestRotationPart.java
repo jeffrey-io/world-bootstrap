@@ -10,7 +10,7 @@ import io.jeffrey.world.things.core.LinkedDataMap;
 public class TestRotationPart extends WorldTestFramework {
   @Test
   public void sanityCheck() {
-    final LinkedDataMap data = emptyData();
+    final LinkedDataMap data = data();
     final RotationPart rotation = new RotationPart(data);
 
     rotation.angle(90);

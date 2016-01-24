@@ -11,7 +11,7 @@ import javafx.scene.shape.Polygon;
 public class TestCirclePart extends WorldTestFramework {
   @Test
   public void verify() {
-    emptyData();
+    data();
     final CirclePart circle = new CirclePart();
     assertTrue(circle.contains(0, 0));
     assertFalse(circle.contains(1, 1));

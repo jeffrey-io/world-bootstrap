@@ -7,6 +7,6 @@ import io.jeffrey.world.WorldTestFramework;
 public class TestTPolygon extends WorldTestFramework {
   @Test
   public void construct() {
-    new TPolygon(makeSimpleContainer(), emptyData());
+    new TPolygon(makeSimpleContainer(), data());
   }
 }

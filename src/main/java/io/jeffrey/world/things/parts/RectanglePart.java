@@ -20,11 +20,27 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   private final ControlDoodad[] doodads;
   private Rectangle             rect;
   private final Transform       transform;
+  private final DoodadControls  controls;
 
-  public RectanglePart(final Transform transform) {
-    rect = new Rectangle(-1, -1, 2, 2);
-    doodads = new ControlDoodad[8];
+  public static enum DoodadControls {
+    All(8, true, true), Scale(4, true, false), Rotation(4, false, true), None(0, false, false);
+
+    public final boolean scale;
+    public final boolean rotation;
+    public final int     size;
+
+    private DoodadControls(int size, boolean scale, boolean rotation) {
+      this.size = size;
+      this.scale = scale;
+      this.rotation = rotation;
+    }
+  }
+
+  public RectanglePart(final Transform transform, DoodadControls controls) {
     this.transform = transform;
+    this.controls = controls;
+    rect = new Rectangle(-1, -1, 2, 2);
+    doodads = new ControlDoodad[controls.size];
     set(-1, -1, 2, 2);
   }
 
@@ -47,41 +63,26 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   public double[] getWorldSpaceEdges() {
     final double[] edges = new double[16];
     final VectorRegister3 W = new VectorRegister8();
-
     W.set_0(-rect.getWidth() / 2, -rect.getHeight() / 2);
     transform.writeToWorldSpace(W);
     W.extract_1(edges, 0);
     W.set_0(rect.getWidth() / 2, -rect.getHeight() / 2);
     transform.writeToWorldSpace(W);
     W.extract_1(edges, 2);
-
-    /*
-     * W.set_0(rect.getWidth() / 2, -rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 4); W.set_0(rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 6);
-     *
-     * W.set_0(rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 8); W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 10);
-     *
-     * W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 12); W.set_0(-rect.getWidth() / 2, -rect.getHeight() / 2); writeToWorld(W); W.extract_1(edges, 14);
-     */
-
     edges[4] = edges[2];
     edges[5] = edges[3];
-
     W.set_0(rect.getWidth() / 2, rect.getHeight() / 2);
     transform.writeToWorldSpace(W);
     W.extract_1(edges, 6);
-
     edges[8] = edges[6];
     edges[9] = edges[7];
-
     W.set_0(-rect.getWidth() / 2, rect.getHeight() / 2);
     transform.writeToWorldSpace(W);
     W.extract_1(edges, 10);
-
     edges[12] = edges[10];
     edges[13] = edges[11];
     edges[14] = edges[0];
     edges[15] = edges[1];
-
     return edges;
   }
 
@@ -92,14 +93,27 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
 
   public void set(final double x, final double y, final double width, final double height) {
     rect = new Rectangle(x, y, width, height);
-    doodads[0] = new ControlDoodad(Type.Rotate, 0, rect.getHeight() / 2);
-    doodads[1] = new ControlDoodad(Type.Rotate, 0, -rect.getHeight() / 2);
-    doodads[2] = new ControlDoodad(Type.Rotate, -rect.getWidth() / 2, 0);
-    doodads[3] = new ControlDoodad(Type.Rotate, rect.getWidth() / 2, 0);
-    doodads[4] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, -rect.getHeight() / 2);
-    doodads[5] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, rect.getHeight() / 2);
-    doodads[6] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, -rect.getHeight() / 2);
-    doodads[7] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, rect.getHeight() / 2);
+    int at = 0;
+    if (controls.rotation) {
+      doodads[at] = new ControlDoodad(Type.Rotate, 0, rect.getHeight() / 2);
+      at++;
+      doodads[at] = new ControlDoodad(Type.Rotate, 0, -rect.getHeight() / 2);
+      at++;
+      doodads[at] = new ControlDoodad(Type.Rotate, -rect.getWidth() / 2, 0);
+      at++;
+      doodads[at] = new ControlDoodad(Type.Rotate, rect.getWidth() / 2, 0);
+      at++;
+    }
+    if (controls.scale) {
+      doodads[at] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, -rect.getHeight() / 2);
+      at++;
+      doodads[at] = new ControlDoodad(Type.Scale, -rect.getWidth() / 2, rect.getHeight() / 2);
+      at++;
+      doodads[at] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, -rect.getHeight() / 2);
+      at++;
+      doodads[at] = new ControlDoodad(Type.Scale, rect.getWidth() / 2, rect.getHeight() / 2);
+      at++;
+    }
   }
 
 }

@@ -7,6 +7,6 @@ import io.jeffrey.world.WorldTestFramework;
 public class TestTPath extends WorldTestFramework {
   @Test
   public void construct() {
-    new TPath(makeSimpleContainer(), emptyData());
+    new TPath(makeSimpleContainer(), data());
   }
 }

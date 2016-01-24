@@ -9,7 +9,7 @@ import io.jeffrey.world.things.core.RoundingSnap;
 public class TestPositionPart extends WorldTestFramework {
   @Test
   public void sanityCheck() {
-    final LinkedDataMap data = emptyData();
+    final LinkedDataMap data = data();
     final PositionPart position = new PositionPart(data, new RoundingSnap());
 
     position.x(1.2);

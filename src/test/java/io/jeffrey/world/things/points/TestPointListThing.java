@@ -10,13 +10,13 @@ public class TestPointListThing extends WorldTestFramework {
   @Test
   public void construct() {
     PointListThing thing;
-    thing = new PointListThing(makeSimpleContainer(), emptyData(), Property.Finite);
+    thing = new PointListThing(makeSimpleContainer(), data(), Property.Finite);
     assertTrue(thing.list.finite);
     assertFalse(thing.list.looped);
-    thing = new PointListThing(makeSimpleContainer(), emptyData(), Property.Looped);
+    thing = new PointListThing(makeSimpleContainer(), data(), Property.Looped);
     assertFalse(thing.list.finite);
     assertTrue(thing.list.looped);
-    thing = new PointListThing(makeSimpleContainer(), emptyData(), Property.Looped, Property.Finite);
+    thing = new PointListThing(makeSimpleContainer(), data(), Property.Looped, Property.Finite);
     assertTrue(thing.list.finite);
     assertTrue(thing.list.looped);
   }
@@ -24,7 +24,7 @@ public class TestPointListThing extends WorldTestFramework {
   @Test
   public void verifyUnselectPropagates() {
     PointListThing thing;
-    thing = new PointListThing(makeSimpleContainer(), emptyData(), Property.Finite);
+    thing = new PointListThing(makeSimpleContainer(), data(), Property.Finite);
     thing.editing.selected.value(true);
     thing.list.iterator().next().selected = true;
     thing.editing.selected.value(false);

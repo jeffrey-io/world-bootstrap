@@ -23,5 +23,8 @@ public class TestEventedPoint2Mover extends WorldTestFramework {
     assertEquals(1, point.x);
     assertEquals(2, point.y);
     mock.assertUpdateCallsMadeEquals(2);
+    point.selected = false;
+    mover.select();
+    assertTrue(point.selected);
   }
 }

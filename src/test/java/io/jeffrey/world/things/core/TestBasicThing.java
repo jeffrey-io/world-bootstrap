@@ -8,7 +8,7 @@ public class TestBasicThing extends WorldTestFramework {
 
   @Test
   public void verifyTransformPresent() {
-    final BasicThing thing = new BasicThing(makeSimpleContainer(), emptyData());
+    final BasicThing thing = new BasicThing(makeSimpleContainer(), data());
     assertTrue(thing.transform() instanceof StandardTransform);
   }
 }

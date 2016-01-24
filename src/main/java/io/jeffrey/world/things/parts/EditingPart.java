@@ -27,7 +27,7 @@ public class EditingPart implements Part, HasActions {
       selected.value(true);
     } else if ("unselect".equals(action)) {
       selected.value(false);
-    } else if ("inverse-selection".equals(action)) {
+    } else if ("inverse_selection".equals(action)) {
       selected.value(!selected.value());
     }
   }
@@ -44,5 +44,7 @@ public class EditingPart implements Part, HasActions {
     } else {
       actionsAvailable.add("select");
     }
+    actionsAvailable.add("inverse_selection");
+    
   }
 }

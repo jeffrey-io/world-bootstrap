@@ -11,6 +11,7 @@ import io.jeffrey.world.things.parts.ImageRenderPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.RectanglePart;
 import io.jeffrey.world.things.parts.UriPart;
+import io.jeffrey.world.things.parts.RectanglePart.DoodadControls;
 
 /**
  * A thing that is an image
@@ -31,7 +32,7 @@ public class TImage extends BasicThing {
    */
   public TImage(final Container container, final LinkedDataMap data) {
     super(container, data);
-    rectangle = new RectanglePart(transform);
+    rectangle = new RectanglePart(transform, DoodadControls.All);
     register(rectangle);
     uri = new UriPart("", data);
     register(uri);

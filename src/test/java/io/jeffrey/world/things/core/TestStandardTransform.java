@@ -13,7 +13,7 @@ public class TestStandardTransform extends WorldTestFramework {
 
   @Test
   public void validate() {
-    final LinkedDataMap data = emptyData();
+    final LinkedDataMap data = data();
     final PositionPart position = new PositionPart(data, new IdentitySnap());
     final ScalePart scale = new ScalePart(data);
     final RotationPart rotation = new RotationPart(data);

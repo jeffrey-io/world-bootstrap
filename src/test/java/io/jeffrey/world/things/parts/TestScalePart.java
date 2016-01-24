@@ -11,7 +11,7 @@ public class TestScalePart extends WorldTestFramework {
 
   @Test
   public void sanityCheck() {
-    final LinkedDataMap data = emptyData();
+    final LinkedDataMap data = data();
     final ScalePart scale = new ScalePart(data);
     scale.sx(4);
     assertEquals(4, scale.sx());

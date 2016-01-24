@@ -40,7 +40,7 @@ public class TestAbstractThing extends WorldTestFramework {
     actions2.allow("b");
     thing.register(actions1);
     thing.register(actions2);
-    assertEquals("a,b,delete,lock,select,templatize", joinStringsOrderly(thing.getActionsAvailable()));
+    assertEquals("a,b,delete,inverse_selection,lock,select,templatize", joinStringsOrderly(thing.getActionsAvailable()));
   }
 
   @Test

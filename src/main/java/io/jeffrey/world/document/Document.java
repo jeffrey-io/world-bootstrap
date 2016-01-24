@@ -255,7 +255,7 @@ public class Document extends ModeledDocument {
     tree.put("metaclasses", metaClassesPacked);
 
     final ArrayList<Object> store = new ArrayList<Object>();
-    for (final AbstractThing t : container) {
+    for (final AbstractThing t : container.getThingsByPersistenceOrder()) {
       final HashMap<String, String> tdata = new HashMap<String, String>();
       t.saveTo(tdata);
       store.add(tdata);

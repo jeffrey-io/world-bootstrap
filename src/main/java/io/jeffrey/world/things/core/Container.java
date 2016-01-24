@@ -25,16 +25,14 @@ public class Container implements Iterable<AbstractThing> {
   public final ImageCache                   imageCache       = new ImageCache();
 
   public final Map<String, LayerProperties> layers;
-  private final ArrayList<AbstractThing>    things;
+  private final ArrayList<AbstractThing>    thingsByOrder;
+  private final ArrayList<AbstractThing>    thingsByPersistence;
 
   public Container(final Camera camera, final WorldFileSystem fs) {
     this.camera = camera;
     this.fs = fs;
-    /*
-     * camera = document.camera; history = document.history; imageCache = document.imageCache; ROTATE_ICON = document.ROTATE_ICON; SCALE_ICON = document.SCALE_ICON; VERTEX_ICON = document.VERTEX_ICON; VERTEX_ICON_SELECTED = document.VERTEX_ICON_SELECTED; controlPointSize = document.controlPointSize; edgeWidthSize = document.edgeWidthSize;
-     */
-
-    things = new ArrayList<>();
+    thingsByOrder = new ArrayList<>();
+    thingsByPersistence = new ArrayList<>();
 
     // history of all changes in the container
     history = new History();
@@ -44,9 +42,14 @@ public class Container implements Iterable<AbstractThing> {
     layers.put("_", new LayerProperties("_", "Foreground"));
   }
 
+  public Iterable<AbstractThing> getThingsByPersistenceOrder() {
+    return thingsByPersistence;
+  }
+
   public void add(final AbstractThing thing) {
     history.capture();
-    things.add(thing);
+    thingsByOrder.add(thing);
+    thingsByPersistence.add(thing);
     thing.invokeAction("delete", false);
     history.register(thing);
     thing.invokeAction("undelete", false);
@@ -72,11 +75,6 @@ public class Container implements Iterable<AbstractThing> {
     }
   }
 
-  @Deprecated // we need a reverse traversal
-  public AbstractThing get(final int k) {
-    return things.get(k);
-  }
-
   public Collection<GuideLine> getGuideLines(final String layerId) {
     final LayerProperties lp = layers.get(layerId);
     if (lp != null) {
@@ -87,23 +85,21 @@ public class Container implements Iterable<AbstractThing> {
 
   @Override
   public Iterator<AbstractThing> iterator() {
-    return things.iterator();
+    return thingsByOrder.iterator();
   }
 
   public int size() {
-    return things.size();
+    return thingsByOrder.size();
   }
 
-  // this violates the goal of insertion order serialization
   public void sort() {
-    if (things.size() == 0) {
+    if (thingsByOrder.size() == 0) {
       return;
     }
-
-    things.sort((o1, o2) -> compare(o1, o2));
+    thingsByOrder.sort((o1, o2) -> compare(o1, o2));
     int layerAt = -1;
     int newOrder = 0;
-    for (final AbstractThing thing : things) {
+    for (final AbstractThing thing : thingsByOrder) {
       final LayerPart layer = thing.first(LayerPart.class);
       if (layer != null) {
         if (layer.z() != layerAt) {

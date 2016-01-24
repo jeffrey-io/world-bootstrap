@@ -38,11 +38,11 @@ public class RenderPolygonPart extends HasThingSpaceRendering implements Part {
     }
 
     if (fill.enabled.value()) {
-      gc.setFill(Color.valueOf(fill.color.getAsText()));
+      gc.setFill(fill.getCachedColor());
       gc.fillPolygon(cache.x, cache.y, cache.y.length);
     }
     if (edge.enabled.value()) {
-      gc.setStroke(Color.valueOf(edge.color.getAsText()));
+      gc.setStroke(edge.getCachedColor());
       gc.strokePolygon(cache.x, cache.y, cache.y.length);
     }
     if (editing.selected.value() && cache.boundingRadius > 0) {

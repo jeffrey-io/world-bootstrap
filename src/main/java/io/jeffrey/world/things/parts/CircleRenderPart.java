@@ -26,11 +26,11 @@ public class CircleRenderPart extends HasThingSpaceRendering implements Part {
   @Override
   public void draw(final GraphicsContext gc) {
     if (fill.enabled.value()) {
-      gc.setFill(Color.valueOf(fill.color.getAsText()));
+      gc.setFill(fill.getCachedColor());
       gc.fillArc(-1, -1, 2, 2, 0, 360, ArcType.ROUND);
     }
     if (edge.enabled.value()) {
-      gc.setStroke(Color.valueOf(edge.color.getAsText()));
+      gc.setStroke(edge.getCachedColor());
       gc.setLineWidth(4 / (scale.sx() + scale.sy()));
       gc.strokeArc(-1, -1, 2, 2, 0, 360, ArcType.OPEN);
     }

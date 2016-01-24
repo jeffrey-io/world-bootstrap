@@ -106,7 +106,6 @@ public class Document extends ModeledDocument {
 
   public void draw(final GraphicsContext gc, final Camera camera, final double width, final double height, final String activeLayer) {
     update();
-    container.sort();
     if (currentlyInteracting) {
       if (createBackground(width, height, camera.hashCode())) {
         GraphicsContext bgc = background.getGraphicsContext2D();
@@ -122,6 +121,7 @@ public class Document extends ModeledDocument {
       gc.drawImage(backgroundImage, 0, 0);
       drawSelection(gc, camera, width, height, activeLayer);
     } else {
+      container.sort();
       drawBackground(gc, camera, width, height, activeLayer, false);
     }
   }
@@ -368,11 +368,7 @@ public class Document extends ModeledDocument {
   }
 
   public void update() {
-    hasSomeSelection = false;
     for (final AbstractThing thing : container) {
-      if (thing.editing.selected.value()) {
-        hasSomeSelection = true;
-      }
       thing.update();
     }
   }

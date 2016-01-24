@@ -9,7 +9,8 @@ public class TestColorPart extends WorldTestFramework {
   @Test
   public void sanityCheck() {
     final PartHelper helper = new PartHelper();
-    final ColorPart colorPart = new ColorPart("food", helper.newLinkedDataMap());
+    final ColorPart colorPart = new ColorPart("food", "fff", helper.newLinkedDataMap());
+    assertEquals("fff", colorPart.color.value());
     colorPart.color.setByText("ccc");
     helper.assertWritten("food_color", "ccc");
   }

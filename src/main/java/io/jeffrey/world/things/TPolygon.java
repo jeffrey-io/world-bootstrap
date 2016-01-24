@@ -4,6 +4,7 @@ import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
+import io.jeffrey.world.things.parts.ColorPart;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.LazyPolygonPart;
 import io.jeffrey.world.things.parts.PointListEdgesPart;
@@ -18,8 +19,6 @@ import javafx.scene.shape.Polygon;
  * @author jeffrey
  */
 public class TPolygon extends PointListThing {
-  private final LazyPolygonPart lazyPolygonPart;
-  private Polygon               polygon;
 
   /**
    * @param document
@@ -36,14 +35,17 @@ public class TPolygon extends PointListThing {
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position), new EdgeEnforcer(edges, position, rotation));
     register(enforcers);
 
-    lazyPolygonPart = new LazyPolygonPart();
+    final LazyPolygonPart lazyPolygonPart = new LazyPolygonPart();
     register(lazyPolygonPart);
 
     points.subscribe(c -> {
-      TPolygon.this.polygon = new Polygon(c.inlineXYPairs);
-      lazyPolygonPart.set(polygon);
+      lazyPolygonPart.set(new Polygon(c.inlineXYPairs));
     });
 
-    register(new RenderPolygonPart(transform, container, points, list));
+    final ColorPart fill = new ColorPart("fill", "ccc", data);
+    register(fill);
+    final ColorPart edge = new ColorPart("edge", "black", data);
+    register(edge);
+    register(new RenderPolygonPart(transform, container, editing, scale, fill, edge, points, list));
   }
 }

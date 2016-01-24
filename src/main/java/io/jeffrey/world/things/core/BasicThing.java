@@ -1,6 +1,5 @@
 package io.jeffrey.world.things.core;
 
-import io.jeffrey.world.things.parts.ColorPart;
 import io.jeffrey.world.things.parts.DoodadRenderPart;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.MetadataPart;
@@ -9,7 +8,6 @@ import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
 
 public class BasicThing extends AbstractThing {
-  protected final ColorPart    fill;
   protected final LayerPart    layer;
   protected final MetadataPart metadata;
   protected final PositionPart position;
@@ -42,9 +40,6 @@ public class BasicThing extends AbstractThing {
 
     metadata = new MetadataPart("metadata_", data);
     register(metadata);
-
-    fill = new ColorPart("fill", data);
-    register(fill);
 
     register(new DoodadRenderPart(this, transform));
   }

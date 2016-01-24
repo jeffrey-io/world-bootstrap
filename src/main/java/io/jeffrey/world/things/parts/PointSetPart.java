@@ -348,7 +348,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
   @Override
   public boolean selectionIntersect(final SelectionModel model) {
     requireUpToDate();
-    boolean attemptContainment = model.isOriginCircleSelected(cache.boundingRadius);
+    final boolean attemptContainment = model.isOriginCircleSelected(cache.boundingRadius);
     boolean doUpdate = false;
     boolean isSelected = false;
     boolean anySelected = false;

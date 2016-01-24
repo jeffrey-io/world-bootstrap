@@ -23,13 +23,9 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.world.document.EditableThing;
 import io.jeffrey.world.document.Iconify;
 import io.jeffrey.world.document.ThingData;
-import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
-import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.guides.Picker;
-import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
 import io.jeffrey.world.things.parts.LayerPart;
-import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
@@ -442,44 +438,10 @@ public class WorldData extends SurfaceData {
 
   @Override
   public MouseInteraction selectByPoint(final AdjustedMouseEvent event, final SurfaceContext context) {
-    final InteractionSelectionSolver selectionSolver = new InteractionSelectionSolver(document.container.history);
-    for (final AbstractThing thing : document.container) {
-      // it's deleted, we do nothing
-      if (thing.lifetime.isDeleted()) {
-        continue;
-      }
-
-      // it's locked, we do nothing
-      if (thing.editing.locked.value()) {
-        // clear the selection
-        if (thing.editing.selected.value()) {
-          thing.editing.selected.value(false);
-        }
-        continue;
-      }
-
-      // indicate we may do a selection window (although, is this needed)
-      thing.collect(HasSelectionByWindow.class, t -> {
-        t.beginSelectionWindow();
-        return null;
-      });
-
-      final AdjustedMouseEvent cevent = event.clone();
-      thing.transform().writeToThingSpace(cevent.position);
-      selectionSolver.focus(thing, cevent);
-      for (final HasSelectionByPoint behavior : thing.collect(HasSelectionByPoint.class)) {
-        behavior.buildSelectionSolver(selectionSolver);
-      }
-      selectionSolver.unfocus();
-
-      thing.invokeAction("unselect", false);
-    }
-
-    final MouseInteraction it = selectionSolver.solve();
+    final MouseInteraction it = document.engine.selectByPoint(event);
     if (it != null) {
       return it;
     }
-
     return getGuidelineEditor(event, context);
   }
 
@@ -491,11 +453,6 @@ public class WorldData extends SurfaceData {
 
   @Override
   public void updateSelectionWindow(final SelectionWindow window) {
-    for (final AbstractThing thing : document.container) {
-      final MousePart mouse = thing.first(MousePart.class);
-      if (mouse != null) {
-        mouse.updateSelectionWindow(window);
-      }
-    }
+    document.engine.updateSelectionWindow(window);
   }
 }

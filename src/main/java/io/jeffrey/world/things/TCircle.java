@@ -18,20 +18,14 @@ import io.jeffrey.world.things.parts.MousePart;
  */
 public class TCircle extends BasicThing {
 
-  /**
-   * @param document
-   *          the owning document
-   * @param node
-   *          where the data is
-   */
-  public TCircle(final Container document, final LinkedDataMap data) {
-    super(document, data);
+  public TCircle(final Container container, final LinkedDataMap data) {
+    super(container, data);
     register(new CirclePart());
     final ColorPart fill = new ColorPart("fill", "ccc", data);
     register(fill);
     final ColorPart edge = new ColorPart("edge", "black", data);
     register(edge);
-    register(new CircleRenderPart(transform, document, fill, edge, scale, editing));
+    register(new CircleRenderPart(transform, container, fill, edge, scale, editing));
     final EnforcersPart enforcers = new EnforcersPart(new OriginEnforcer(position));
     register(enforcers);
     register(new GenericMoverPart(position, rotation, editing));

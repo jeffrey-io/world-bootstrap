@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 import io.jeffrey.vector.VectorRegister3;
-import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
@@ -28,21 +27,8 @@ import io.jeffrey.world.things.interactions.ThingSnapper;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.meta.GuideLine;
-import javafx.scene.shape.Polygon;
 
 public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoint {
-
-  public static Polygon transformSelectionWindow(final SelectionWindow window, final Transform transform) {
-    final double[] adjusted = window.rect();
-    final VectorRegister3 scratch = new VectorRegister8();
-    for (int k = 0; k < 8; k += 2) {
-      scratch.set_0(adjusted[k], adjusted[k + 1]);
-      transform.writeToThingSpace(scratch);
-      adjusted[k] = scratch.x_1;
-      adjusted[k + 1] = scratch.y_1;
-    }
-    return new Polygon(adjusted);
-  }
 
   private final EditingPart   editing;
   private final LayerPart     layer;
@@ -164,9 +150,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
     if (lifetime.isDeleted()) {
       return;
     }
-    final Polygon polygon = transformSelectionWindow(window, transform);
-    final SelectionModel model = new SelectionModel(polygon, window.mode);
-
+    final SelectionModel model = new SelectionModel(window, transform, window.mode);
     boolean touches = false;
     for (final boolean mayTouch : thing.collect(IsSelectable.class, t -> t.selectionIntersect(model))) {
       if (mayTouch) {

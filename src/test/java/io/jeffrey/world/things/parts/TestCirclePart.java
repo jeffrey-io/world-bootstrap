@@ -22,15 +22,11 @@ public class TestCirclePart extends WorldTestFramework {
     assertTrue(circle.doesMouseEventPreserveExistingSelection(mouse.get()));
     mouse.move(2, 1);
     assertFalse(circle.doesMouseEventPreserveExistingSelection(mouse.get()));
-
     mouse.go(-1, -1);
     SelectionWindow window = mouse.dragTo(-0.9, -0.9);
-    final Polygon notTouching = MousePart.transformSelectionWindow(window, new IdentityTransform());
-    assertFalse(circle.selectionIntersect(new SelectionModel(notTouching, Mode.Add)));
-
+    assertFalse(circle.selectionIntersect(new SelectionModel(window, new IdentityTransform(), Mode.Add)));
     window = mouse.dragTo(1, 1);
-    final Polygon touching = MousePart.transformSelectionWindow(window, new IdentityTransform());
-    assertTrue(circle.selectionIntersect(new SelectionModel(touching, Mode.Add)));
+    assertTrue(circle.selectionIntersect(new SelectionModel(window, new IdentityTransform(), Mode.Add)));
 
   }
 }

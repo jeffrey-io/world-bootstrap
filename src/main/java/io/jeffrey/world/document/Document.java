@@ -20,6 +20,7 @@ import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasWorldSpaceRendering;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.AdaptThingSpaceDoodadsIntoWorldSpace;
+import io.jeffrey.world.things.core.ContainerQueryEngine;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.LifetimePart;
@@ -33,13 +34,16 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Document extends ModeledDocument {
-  public final Camera camera;
-  private boolean     hasSomeSelection = false;
-  private int         id;
+  public final Camera               camera;
+  public final ContainerQueryEngine engine;
+
+  private boolean                   hasSomeSelection = false;
+  private int                       id;
 
   public Document(final Camera camera, final WorldData owner) {
     super(camera, owner);
     this.camera = camera;
+    engine = new ContainerQueryEngine(container);
     id = 0;
   }
 
@@ -116,7 +120,7 @@ public class Document extends ModeledDocument {
   }
 
   /*
-  
+
   */
 
   public boolean hasSelection() {

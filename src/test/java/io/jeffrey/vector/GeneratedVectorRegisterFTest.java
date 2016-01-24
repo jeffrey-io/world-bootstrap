@@ -24,6 +24,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_0);
     assertEquals(6 + 2 * 10, x.dot_14_0());
     x.set_0(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_0());
   }
 
   @Test
@@ -45,6 +46,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_1);
     assertEquals(6 + 2 * 10, x.dot_14_1());
     x.set_1(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_1());
   }
 
   @Test
@@ -66,6 +68,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_10);
     assertEquals(6 + 2 * 10, x.dot_14_10());
     x.set_10(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_10());
   }
 
   @Test
@@ -87,6 +90,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_11);
     assertEquals(6 + 2 * 10, x.dot_14_11());
     x.set_11(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_11());
   }
 
   @Test
@@ -108,6 +112,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_12);
     assertEquals(6 + 2 * 10, x.dot_14_12());
     x.set_12(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_12());
   }
 
   @Test
@@ -129,6 +134,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_13);
     assertEquals(6 + 2 * 10, x.dot_14_13());
     x.set_13(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_13());
   }
 
   @Test
@@ -150,6 +156,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_0_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_0_14());
   }
 
   @Test
@@ -171,6 +178,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_1_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_1_14());
   }
 
   @Test
@@ -192,6 +200,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_10_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_10_14());
   }
 
   @Test
@@ -213,6 +222,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_11_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_11_14());
   }
 
   @Test
@@ -234,6 +244,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_12_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_12_14());
   }
 
   @Test
@@ -255,6 +266,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_13_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_13_14());
   }
 
   @Test
@@ -276,6 +288,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_2_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_2_14());
   }
 
   @Test
@@ -297,6 +310,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_3_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_3_14());
   }
 
   @Test
@@ -318,6 +332,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_4_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_4_14());
   }
 
   @Test
@@ -339,6 +354,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_5_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_5_14());
   }
 
   @Test
@@ -360,6 +376,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_6_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_6_14());
   }
 
   @Test
@@ -381,6 +398,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_7_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_7_14());
   }
 
   @Test
@@ -402,6 +420,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_8_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_8_14());
   }
 
   @Test
@@ -423,6 +442,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_14);
     assertEquals(6 + 2 * 10, x.dot_9_14());
     x.set_14(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_9_14());
   }
 
   @Test
@@ -444,6 +464,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_2);
     assertEquals(6 + 2 * 10, x.dot_14_2());
     x.set_2(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_2());
   }
 
   @Test
@@ -465,6 +486,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_3);
     assertEquals(6 + 2 * 10, x.dot_14_3());
     x.set_3(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_3());
   }
 
   @Test
@@ -486,6 +508,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_4);
     assertEquals(6 + 2 * 10, x.dot_14_4());
     x.set_4(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_4());
   }
 
   @Test
@@ -507,6 +530,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_5);
     assertEquals(6 + 2 * 10, x.dot_14_5());
     x.set_5(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_5());
   }
 
   @Test
@@ -528,6 +552,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_6);
     assertEquals(6 + 2 * 10, x.dot_14_6());
     x.set_6(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_6());
   }
 
   @Test
@@ -549,6 +574,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_7);
     assertEquals(6 + 2 * 10, x.dot_14_7());
     x.set_7(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_7());
   }
 
   @Test
@@ -570,6 +596,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_8);
     assertEquals(6 + 2 * 10, x.dot_14_8());
     x.set_8(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_8());
   }
 
   @Test
@@ -591,6 +618,7 @@ public class GeneratedVectorRegisterFTest extends CommonVectorTestingBase {
     assertEquals(10, x.y_9);
     assertEquals(6 + 2 * 10, x.dot_14_9());
     x.set_9(1, 2);
+    assertEquals(0, x.planer_cross_at_zero_14_9());
   }
 
   @Test

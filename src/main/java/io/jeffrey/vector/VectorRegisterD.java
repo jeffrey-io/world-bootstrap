@@ -1131,6 +1131,126 @@ public class VectorRegisterD extends VectorRegisterC {
     return true;
   }
 
+  /** return the dot product between the 12 and 0 vectors */
+  public double planer_cross_at_zero_0_12() {
+    return x_0 * y_12 - y_0 * x_12;
+  }
+
+  /** return the dot product between the 12 and 1 vectors */
+  public double planer_cross_at_zero_1_12() {
+    return x_1 * y_12 - y_1 * x_12;
+  }
+
+  /** return the dot product between the 12 and 10 vectors */
+  public double planer_cross_at_zero_10_12() {
+    return x_10 * y_12 - y_10 * x_12;
+  }
+
+  /** return the dot product between the 12 and 11 vectors */
+  public double planer_cross_at_zero_11_12() {
+    return x_11 * y_12 - y_11 * x_12;
+  }
+
+  /** return the dot product between the 0 and 12 vectors */
+  public double planer_cross_at_zero_12_0() {
+    return x_12 * y_0 - y_12 * x_0;
+  }
+
+  /** return the dot product between the 1 and 12 vectors */
+  public double planer_cross_at_zero_12_1() {
+    return x_12 * y_1 - y_12 * x_1;
+  }
+
+  /** return the dot product between the 10 and 12 vectors */
+  public double planer_cross_at_zero_12_10() {
+    return x_12 * y_10 - y_12 * x_10;
+  }
+
+  /** return the dot product between the 11 and 12 vectors */
+  public double planer_cross_at_zero_12_11() {
+    return x_12 * y_11 - y_12 * x_11;
+  }
+
+  /** return the dot product between the 2 and 12 vectors */
+  public double planer_cross_at_zero_12_2() {
+    return x_12 * y_2 - y_12 * x_2;
+  }
+
+  /** return the dot product between the 3 and 12 vectors */
+  public double planer_cross_at_zero_12_3() {
+    return x_12 * y_3 - y_12 * x_3;
+  }
+
+  /** return the dot product between the 4 and 12 vectors */
+  public double planer_cross_at_zero_12_4() {
+    return x_12 * y_4 - y_12 * x_4;
+  }
+
+  /** return the dot product between the 5 and 12 vectors */
+  public double planer_cross_at_zero_12_5() {
+    return x_12 * y_5 - y_12 * x_5;
+  }
+
+  /** return the dot product between the 6 and 12 vectors */
+  public double planer_cross_at_zero_12_6() {
+    return x_12 * y_6 - y_12 * x_6;
+  }
+
+  /** return the dot product between the 7 and 12 vectors */
+  public double planer_cross_at_zero_12_7() {
+    return x_12 * y_7 - y_12 * x_7;
+  }
+
+  /** return the dot product between the 8 and 12 vectors */
+  public double planer_cross_at_zero_12_8() {
+    return x_12 * y_8 - y_12 * x_8;
+  }
+
+  /** return the dot product between the 9 and 12 vectors */
+  public double planer_cross_at_zero_12_9() {
+    return x_12 * y_9 - y_12 * x_9;
+  }
+
+  /** return the dot product between the 12 and 2 vectors */
+  public double planer_cross_at_zero_2_12() {
+    return x_2 * y_12 - y_2 * x_12;
+  }
+
+  /** return the dot product between the 12 and 3 vectors */
+  public double planer_cross_at_zero_3_12() {
+    return x_3 * y_12 - y_3 * x_12;
+  }
+
+  /** return the dot product between the 12 and 4 vectors */
+  public double planer_cross_at_zero_4_12() {
+    return x_4 * y_12 - y_4 * x_12;
+  }
+
+  /** return the dot product between the 12 and 5 vectors */
+  public double planer_cross_at_zero_5_12() {
+    return x_5 * y_12 - y_5 * x_12;
+  }
+
+  /** return the dot product between the 12 and 6 vectors */
+  public double planer_cross_at_zero_6_12() {
+    return x_6 * y_12 - y_6 * x_12;
+  }
+
+  /** return the dot product between the 12 and 7 vectors */
+  public double planer_cross_at_zero_7_12() {
+    return x_7 * y_12 - y_7 * x_12;
+  }
+
+  /** return the dot product between the 12 and 8 vectors */
+  public double planer_cross_at_zero_8_12() {
+    return x_8 * y_12 - y_8 * x_12;
+  }
+
+  /** return the dot product between the 12 and 9 vectors */
+  public double planer_cross_at_zero_9_12() {
+    return x_9 * y_12 - y_9 * x_12;
+  }
+
   /** set the 12-vector to the given (x,y) */
   public void set_12(final double x, final double y) {
     x_12 = x;

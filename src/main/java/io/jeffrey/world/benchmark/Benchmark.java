@@ -45,13 +45,13 @@ public class Benchmark {
 
   public static void main(final String[] args) {
     final Benchmark benchmark = new Benchmark();
-    benchmark.register("select-1000-circles-by-window", new BenchmarkTask() {
+    benchmark.register("select-1000-sparse-circles-by-window", new BenchmarkTask() {
 
       @Override
       public Runnable setup() {
         final Container container = createContainer();
         for (int k = 0; k < 1000; k++) {
-          container.add(new TCircle(container, data()));
+          container.add(new TCircle(container, data("x", Double.toString(k * 100))));
         }
         final ContainerQueryEngine engine = new ContainerQueryEngine(container);
         final SelectionWindow window = new SelectionWindow();

@@ -9,11 +9,8 @@ import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 
 public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelectable {
-  private static final Circle          CIRCLE = new Circle(1);
   private static final ControlDoodad[] DOODADS;
 
   static {
@@ -50,6 +47,6 @@ public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelect
 
   @Override
   public boolean selectionIntersect(final SelectionModel model) {
-    return Shape.intersect(CIRCLE, model.getPolygon()).getBoundsInLocal().getWidth() > 0;
+    return model.isOriginCircleSelected(1);
   }
 }

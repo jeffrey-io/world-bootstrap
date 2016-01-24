@@ -867,6 +867,96 @@ public class VectorRegisterA extends VectorRegister9 {
     return true;
   }
 
+  /** return the dot product between the 9 and 0 vectors */
+  public double planer_cross_at_zero_0_9() {
+    return x_0 * y_9 - y_0 * x_9;
+  }
+
+  /** return the dot product between the 9 and 1 vectors */
+  public double planer_cross_at_zero_1_9() {
+    return x_1 * y_9 - y_1 * x_9;
+  }
+
+  /** return the dot product between the 9 and 2 vectors */
+  public double planer_cross_at_zero_2_9() {
+    return x_2 * y_9 - y_2 * x_9;
+  }
+
+  /** return the dot product between the 9 and 3 vectors */
+  public double planer_cross_at_zero_3_9() {
+    return x_3 * y_9 - y_3 * x_9;
+  }
+
+  /** return the dot product between the 9 and 4 vectors */
+  public double planer_cross_at_zero_4_9() {
+    return x_4 * y_9 - y_4 * x_9;
+  }
+
+  /** return the dot product between the 9 and 5 vectors */
+  public double planer_cross_at_zero_5_9() {
+    return x_5 * y_9 - y_5 * x_9;
+  }
+
+  /** return the dot product between the 9 and 6 vectors */
+  public double planer_cross_at_zero_6_9() {
+    return x_6 * y_9 - y_6 * x_9;
+  }
+
+  /** return the dot product between the 9 and 7 vectors */
+  public double planer_cross_at_zero_7_9() {
+    return x_7 * y_9 - y_7 * x_9;
+  }
+
+  /** return the dot product between the 9 and 8 vectors */
+  public double planer_cross_at_zero_8_9() {
+    return x_8 * y_9 - y_8 * x_9;
+  }
+
+  /** return the dot product between the 0 and 9 vectors */
+  public double planer_cross_at_zero_9_0() {
+    return x_9 * y_0 - y_9 * x_0;
+  }
+
+  /** return the dot product between the 1 and 9 vectors */
+  public double planer_cross_at_zero_9_1() {
+    return x_9 * y_1 - y_9 * x_1;
+  }
+
+  /** return the dot product between the 2 and 9 vectors */
+  public double planer_cross_at_zero_9_2() {
+    return x_9 * y_2 - y_9 * x_2;
+  }
+
+  /** return the dot product between the 3 and 9 vectors */
+  public double planer_cross_at_zero_9_3() {
+    return x_9 * y_3 - y_9 * x_3;
+  }
+
+  /** return the dot product between the 4 and 9 vectors */
+  public double planer_cross_at_zero_9_4() {
+    return x_9 * y_4 - y_9 * x_4;
+  }
+
+  /** return the dot product between the 5 and 9 vectors */
+  public double planer_cross_at_zero_9_5() {
+    return x_9 * y_5 - y_9 * x_5;
+  }
+
+  /** return the dot product between the 6 and 9 vectors */
+  public double planer_cross_at_zero_9_6() {
+    return x_9 * y_6 - y_9 * x_6;
+  }
+
+  /** return the dot product between the 7 and 9 vectors */
+  public double planer_cross_at_zero_9_7() {
+    return x_9 * y_7 - y_9 * x_7;
+  }
+
+  /** return the dot product between the 8 and 9 vectors */
+  public double planer_cross_at_zero_9_8() {
+    return x_9 * y_8 - y_9 * x_8;
+  }
+
   /** set the 9-vector to the given (x,y) */
   public void set_9(final double x, final double y) {
     x_9 = x;

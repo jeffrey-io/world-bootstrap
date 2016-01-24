@@ -1043,6 +1043,116 @@ public class VectorRegisterC extends VectorRegisterB {
     return true;
   }
 
+  /** return the dot product between the 11 and 0 vectors */
+  public double planer_cross_at_zero_0_11() {
+    return x_0 * y_11 - y_0 * x_11;
+  }
+
+  /** return the dot product between the 11 and 1 vectors */
+  public double planer_cross_at_zero_1_11() {
+    return x_1 * y_11 - y_1 * x_11;
+  }
+
+  /** return the dot product between the 11 and 10 vectors */
+  public double planer_cross_at_zero_10_11() {
+    return x_10 * y_11 - y_10 * x_11;
+  }
+
+  /** return the dot product between the 0 and 11 vectors */
+  public double planer_cross_at_zero_11_0() {
+    return x_11 * y_0 - y_11 * x_0;
+  }
+
+  /** return the dot product between the 1 and 11 vectors */
+  public double planer_cross_at_zero_11_1() {
+    return x_11 * y_1 - y_11 * x_1;
+  }
+
+  /** return the dot product between the 10 and 11 vectors */
+  public double planer_cross_at_zero_11_10() {
+    return x_11 * y_10 - y_11 * x_10;
+  }
+
+  /** return the dot product between the 2 and 11 vectors */
+  public double planer_cross_at_zero_11_2() {
+    return x_11 * y_2 - y_11 * x_2;
+  }
+
+  /** return the dot product between the 3 and 11 vectors */
+  public double planer_cross_at_zero_11_3() {
+    return x_11 * y_3 - y_11 * x_3;
+  }
+
+  /** return the dot product between the 4 and 11 vectors */
+  public double planer_cross_at_zero_11_4() {
+    return x_11 * y_4 - y_11 * x_4;
+  }
+
+  /** return the dot product between the 5 and 11 vectors */
+  public double planer_cross_at_zero_11_5() {
+    return x_11 * y_5 - y_11 * x_5;
+  }
+
+  /** return the dot product between the 6 and 11 vectors */
+  public double planer_cross_at_zero_11_6() {
+    return x_11 * y_6 - y_11 * x_6;
+  }
+
+  /** return the dot product between the 7 and 11 vectors */
+  public double planer_cross_at_zero_11_7() {
+    return x_11 * y_7 - y_11 * x_7;
+  }
+
+  /** return the dot product between the 8 and 11 vectors */
+  public double planer_cross_at_zero_11_8() {
+    return x_11 * y_8 - y_11 * x_8;
+  }
+
+  /** return the dot product between the 9 and 11 vectors */
+  public double planer_cross_at_zero_11_9() {
+    return x_11 * y_9 - y_11 * x_9;
+  }
+
+  /** return the dot product between the 11 and 2 vectors */
+  public double planer_cross_at_zero_2_11() {
+    return x_2 * y_11 - y_2 * x_11;
+  }
+
+  /** return the dot product between the 11 and 3 vectors */
+  public double planer_cross_at_zero_3_11() {
+    return x_3 * y_11 - y_3 * x_11;
+  }
+
+  /** return the dot product between the 11 and 4 vectors */
+  public double planer_cross_at_zero_4_11() {
+    return x_4 * y_11 - y_4 * x_11;
+  }
+
+  /** return the dot product between the 11 and 5 vectors */
+  public double planer_cross_at_zero_5_11() {
+    return x_5 * y_11 - y_5 * x_11;
+  }
+
+  /** return the dot product between the 11 and 6 vectors */
+  public double planer_cross_at_zero_6_11() {
+    return x_6 * y_11 - y_6 * x_11;
+  }
+
+  /** return the dot product between the 11 and 7 vectors */
+  public double planer_cross_at_zero_7_11() {
+    return x_7 * y_11 - y_7 * x_11;
+  }
+
+  /** return the dot product between the 11 and 8 vectors */
+  public double planer_cross_at_zero_8_11() {
+    return x_8 * y_11 - y_8 * x_11;
+  }
+
+  /** return the dot product between the 11 and 9 vectors */
+  public double planer_cross_at_zero_9_11() {
+    return x_9 * y_11 - y_9 * x_11;
+  }
+
   /** set the 11-vector to the given (x,y) */
   public void set_11(final double x, final double y) {
     x_11 = x;

@@ -71,6 +71,18 @@ public class VectorAlgebraFunctions extends VectorSourcePrintStream {
           println("}");
           untab();
         }
+
+        if (start("planer_cross_at_zero_", s(j), "_", s(k))) {
+          println();
+          tab();
+          println("/** return the dot product between the " + k + " and " + j + " vectors */");
+          println("public double ", "planer_cross_at_zero_", s(j), "_", s(k), "() {");
+          tab();
+          println("return ", atX(j), " * ", atY(k), " - ", atY(j), " * ", atX(k), ";");
+          untab();
+          println("}");
+          untab();
+        }
       }
     }
   }
@@ -98,8 +110,9 @@ public class VectorAlgebraFunctions extends VectorSourcePrintStream {
           println("x.sub_", s(j), "_from_", s(k), "();");
           println("assertEquals(6, x.x_", s(k), ");");
           println("assertEquals(10, x.y_", s(k), ");");
-          println("assertEquals(6+2*10,x.dot_", s(j), "_", s(k), "());");
+          println("assertEquals(6+2*10, x.dot_", s(j), "_", s(k), "());");
           println("x.set_", s(k), "(1,2);");
+          println("assertEquals(0, x.planer_cross_at_zero_", s(j), "_", s(k), "());");
           endTest();
         }
       }

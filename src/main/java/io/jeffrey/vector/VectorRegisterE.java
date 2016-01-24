@@ -1219,6 +1219,136 @@ public class VectorRegisterE extends VectorRegisterD {
     return true;
   }
 
+  /** return the dot product between the 13 and 0 vectors */
+  public double planer_cross_at_zero_0_13() {
+    return x_0 * y_13 - y_0 * x_13;
+  }
+
+  /** return the dot product between the 13 and 1 vectors */
+  public double planer_cross_at_zero_1_13() {
+    return x_1 * y_13 - y_1 * x_13;
+  }
+
+  /** return the dot product between the 13 and 10 vectors */
+  public double planer_cross_at_zero_10_13() {
+    return x_10 * y_13 - y_10 * x_13;
+  }
+
+  /** return the dot product between the 13 and 11 vectors */
+  public double planer_cross_at_zero_11_13() {
+    return x_11 * y_13 - y_11 * x_13;
+  }
+
+  /** return the dot product between the 13 and 12 vectors */
+  public double planer_cross_at_zero_12_13() {
+    return x_12 * y_13 - y_12 * x_13;
+  }
+
+  /** return the dot product between the 0 and 13 vectors */
+  public double planer_cross_at_zero_13_0() {
+    return x_13 * y_0 - y_13 * x_0;
+  }
+
+  /** return the dot product between the 1 and 13 vectors */
+  public double planer_cross_at_zero_13_1() {
+    return x_13 * y_1 - y_13 * x_1;
+  }
+
+  /** return the dot product between the 10 and 13 vectors */
+  public double planer_cross_at_zero_13_10() {
+    return x_13 * y_10 - y_13 * x_10;
+  }
+
+  /** return the dot product between the 11 and 13 vectors */
+  public double planer_cross_at_zero_13_11() {
+    return x_13 * y_11 - y_13 * x_11;
+  }
+
+  /** return the dot product between the 12 and 13 vectors */
+  public double planer_cross_at_zero_13_12() {
+    return x_13 * y_12 - y_13 * x_12;
+  }
+
+  /** return the dot product between the 2 and 13 vectors */
+  public double planer_cross_at_zero_13_2() {
+    return x_13 * y_2 - y_13 * x_2;
+  }
+
+  /** return the dot product between the 3 and 13 vectors */
+  public double planer_cross_at_zero_13_3() {
+    return x_13 * y_3 - y_13 * x_3;
+  }
+
+  /** return the dot product between the 4 and 13 vectors */
+  public double planer_cross_at_zero_13_4() {
+    return x_13 * y_4 - y_13 * x_4;
+  }
+
+  /** return the dot product between the 5 and 13 vectors */
+  public double planer_cross_at_zero_13_5() {
+    return x_13 * y_5 - y_13 * x_5;
+  }
+
+  /** return the dot product between the 6 and 13 vectors */
+  public double planer_cross_at_zero_13_6() {
+    return x_13 * y_6 - y_13 * x_6;
+  }
+
+  /** return the dot product between the 7 and 13 vectors */
+  public double planer_cross_at_zero_13_7() {
+    return x_13 * y_7 - y_13 * x_7;
+  }
+
+  /** return the dot product between the 8 and 13 vectors */
+  public double planer_cross_at_zero_13_8() {
+    return x_13 * y_8 - y_13 * x_8;
+  }
+
+  /** return the dot product between the 9 and 13 vectors */
+  public double planer_cross_at_zero_13_9() {
+    return x_13 * y_9 - y_13 * x_9;
+  }
+
+  /** return the dot product between the 13 and 2 vectors */
+  public double planer_cross_at_zero_2_13() {
+    return x_2 * y_13 - y_2 * x_13;
+  }
+
+  /** return the dot product between the 13 and 3 vectors */
+  public double planer_cross_at_zero_3_13() {
+    return x_3 * y_13 - y_3 * x_13;
+  }
+
+  /** return the dot product between the 13 and 4 vectors */
+  public double planer_cross_at_zero_4_13() {
+    return x_4 * y_13 - y_4 * x_13;
+  }
+
+  /** return the dot product between the 13 and 5 vectors */
+  public double planer_cross_at_zero_5_13() {
+    return x_5 * y_13 - y_5 * x_13;
+  }
+
+  /** return the dot product between the 13 and 6 vectors */
+  public double planer_cross_at_zero_6_13() {
+    return x_6 * y_13 - y_6 * x_13;
+  }
+
+  /** return the dot product between the 13 and 7 vectors */
+  public double planer_cross_at_zero_7_13() {
+    return x_7 * y_13 - y_7 * x_13;
+  }
+
+  /** return the dot product between the 13 and 8 vectors */
+  public double planer_cross_at_zero_8_13() {
+    return x_8 * y_13 - y_8 * x_13;
+  }
+
+  /** return the dot product between the 13 and 9 vectors */
+  public double planer_cross_at_zero_9_13() {
+    return x_9 * y_13 - y_9 * x_13;
+  }
+
   /** set the 13-vector to the given (x,y) */
   public void set_13(final double x, final double y) {
     x_13 = x;

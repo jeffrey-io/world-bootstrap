@@ -251,6 +251,26 @@ public class VectorRegister3 extends VectorRegister2 {
     return true;
   }
 
+  /** return the dot product between the 2 and 0 vectors */
+  public double planer_cross_at_zero_0_2() {
+    return x_0 * y_2 - y_0 * x_2;
+  }
+
+  /** return the dot product between the 2 and 1 vectors */
+  public double planer_cross_at_zero_1_2() {
+    return x_1 * y_2 - y_1 * x_2;
+  }
+
+  /** return the dot product between the 0 and 2 vectors */
+  public double planer_cross_at_zero_2_0() {
+    return x_2 * y_0 - y_2 * x_0;
+  }
+
+  /** return the dot product between the 1 and 2 vectors */
+  public double planer_cross_at_zero_2_1() {
+    return x_2 * y_1 - y_2 * x_1;
+  }
+
   /** set the 2-vector to the given (x,y) */
   public void set_2(final double x, final double y) {
     x_2 = x;

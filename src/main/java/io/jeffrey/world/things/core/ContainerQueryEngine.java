@@ -17,7 +17,7 @@ public class ContainerQueryEngine {
     this.container = container;
   }
 
-  public boolean contains(AbstractThing thing, final double x, final double y) {
+  public boolean contains(final AbstractThing thing, final double x, final double y) {
     final VectorRegister3 scratch = new VectorRegister3();
     scratch.set_0(x, y);
     thing.transform().writeToThingSpace(scratch);
@@ -27,15 +27,6 @@ public class ContainerQueryEngine {
       }
     }
     return false;
-  }
-
-  public AbstractThing selectFirstVisible(final double x, final double y) {
-    for (final AbstractThing thing : container) {
-      if (contains(thing, x, y)) {
-        return thing;
-      }
-    }
-    return null;
   }
 
   public MouseInteraction selectByPoint(final AdjustedMouseEvent event) {
@@ -75,6 +66,15 @@ public class ContainerQueryEngine {
     final MouseInteraction it = selectionSolver.solve();
     if (it != null) {
       return it;
+    }
+    return null;
+  }
+
+  public AbstractThing selectFirstVisible(final double x, final double y) {
+    for (final AbstractThing thing : container) {
+      if (contains(thing, x, y)) {
+        return thing;
+      }
     }
     return null;
   }

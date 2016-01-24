@@ -603,6 +603,66 @@ public class VectorRegister7 extends VectorRegister6 {
     return true;
   }
 
+  /** return the dot product between the 6 and 0 vectors */
+  public double planer_cross_at_zero_0_6() {
+    return x_0 * y_6 - y_0 * x_6;
+  }
+
+  /** return the dot product between the 6 and 1 vectors */
+  public double planer_cross_at_zero_1_6() {
+    return x_1 * y_6 - y_1 * x_6;
+  }
+
+  /** return the dot product between the 6 and 2 vectors */
+  public double planer_cross_at_zero_2_6() {
+    return x_2 * y_6 - y_2 * x_6;
+  }
+
+  /** return the dot product between the 6 and 3 vectors */
+  public double planer_cross_at_zero_3_6() {
+    return x_3 * y_6 - y_3 * x_6;
+  }
+
+  /** return the dot product between the 6 and 4 vectors */
+  public double planer_cross_at_zero_4_6() {
+    return x_4 * y_6 - y_4 * x_6;
+  }
+
+  /** return the dot product between the 6 and 5 vectors */
+  public double planer_cross_at_zero_5_6() {
+    return x_5 * y_6 - y_5 * x_6;
+  }
+
+  /** return the dot product between the 0 and 6 vectors */
+  public double planer_cross_at_zero_6_0() {
+    return x_6 * y_0 - y_6 * x_0;
+  }
+
+  /** return the dot product between the 1 and 6 vectors */
+  public double planer_cross_at_zero_6_1() {
+    return x_6 * y_1 - y_6 * x_1;
+  }
+
+  /** return the dot product between the 2 and 6 vectors */
+  public double planer_cross_at_zero_6_2() {
+    return x_6 * y_2 - y_6 * x_2;
+  }
+
+  /** return the dot product between the 3 and 6 vectors */
+  public double planer_cross_at_zero_6_3() {
+    return x_6 * y_3 - y_6 * x_3;
+  }
+
+  /** return the dot product between the 4 and 6 vectors */
+  public double planer_cross_at_zero_6_4() {
+    return x_6 * y_4 - y_6 * x_4;
+  }
+
+  /** return the dot product between the 5 and 6 vectors */
+  public double planer_cross_at_zero_6_5() {
+    return x_6 * y_5 - y_6 * x_5;
+  }
+
   /** set the 6-vector to the given (x,y) */
   public void set_6(final double x, final double y) {
     x_6 = x;

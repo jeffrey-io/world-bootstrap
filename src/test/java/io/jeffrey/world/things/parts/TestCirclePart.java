@@ -7,7 +7,6 @@ import io.jeffrey.world.WorldTestFramework;
 import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SelectionWindow.Mode;
-import javafx.scene.shape.Polygon;
 
 public class TestCirclePart extends WorldTestFramework {
   @Test

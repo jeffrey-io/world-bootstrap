@@ -165,6 +165,16 @@ public class VectorRegister2 extends VectorRegister1 {
     return true;
   }
 
+  /** return the dot product between the 1 and 0 vectors */
+  public double planer_cross_at_zero_0_1() {
+    return x_0 * y_1 - y_0 * x_1;
+  }
+
+  /** return the dot product between the 0 and 1 vectors */
+  public double planer_cross_at_zero_1_0() {
+    return x_1 * y_0 - y_1 * x_0;
+  }
+
   /** set the 1-vector to the given (x,y) */
   public void set_1(final double x, final double y) {
     x_1 = x;

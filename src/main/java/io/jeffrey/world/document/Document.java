@@ -120,7 +120,7 @@ public class Document extends ModeledDocument {
   }
 
   /*
-
+  
   */
 
   public boolean hasSelection() {

@@ -515,6 +515,56 @@ public class VectorRegister6 extends VectorRegister5 {
     return true;
   }
 
+  /** return the dot product between the 5 and 0 vectors */
+  public double planer_cross_at_zero_0_5() {
+    return x_0 * y_5 - y_0 * x_5;
+  }
+
+  /** return the dot product between the 5 and 1 vectors */
+  public double planer_cross_at_zero_1_5() {
+    return x_1 * y_5 - y_1 * x_5;
+  }
+
+  /** return the dot product between the 5 and 2 vectors */
+  public double planer_cross_at_zero_2_5() {
+    return x_2 * y_5 - y_2 * x_5;
+  }
+
+  /** return the dot product between the 5 and 3 vectors */
+  public double planer_cross_at_zero_3_5() {
+    return x_3 * y_5 - y_3 * x_5;
+  }
+
+  /** return the dot product between the 5 and 4 vectors */
+  public double planer_cross_at_zero_4_5() {
+    return x_4 * y_5 - y_4 * x_5;
+  }
+
+  /** return the dot product between the 0 and 5 vectors */
+  public double planer_cross_at_zero_5_0() {
+    return x_5 * y_0 - y_5 * x_0;
+  }
+
+  /** return the dot product between the 1 and 5 vectors */
+  public double planer_cross_at_zero_5_1() {
+    return x_5 * y_1 - y_5 * x_1;
+  }
+
+  /** return the dot product between the 2 and 5 vectors */
+  public double planer_cross_at_zero_5_2() {
+    return x_5 * y_2 - y_5 * x_2;
+  }
+
+  /** return the dot product between the 3 and 5 vectors */
+  public double planer_cross_at_zero_5_3() {
+    return x_5 * y_3 - y_5 * x_3;
+  }
+
+  /** return the dot product between the 4 and 5 vectors */
+  public double planer_cross_at_zero_5_4() {
+    return x_5 * y_4 - y_5 * x_4;
+  }
+
   /** set the 5-vector to the given (x,y) */
   public void set_5(final double x, final double y) {
     x_5 = x;

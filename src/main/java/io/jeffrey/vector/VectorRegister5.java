@@ -427,6 +427,46 @@ public class VectorRegister5 extends VectorRegister4 {
     return true;
   }
 
+  /** return the dot product between the 4 and 0 vectors */
+  public double planer_cross_at_zero_0_4() {
+    return x_0 * y_4 - y_0 * x_4;
+  }
+
+  /** return the dot product between the 4 and 1 vectors */
+  public double planer_cross_at_zero_1_4() {
+    return x_1 * y_4 - y_1 * x_4;
+  }
+
+  /** return the dot product between the 4 and 2 vectors */
+  public double planer_cross_at_zero_2_4() {
+    return x_2 * y_4 - y_2 * x_4;
+  }
+
+  /** return the dot product between the 4 and 3 vectors */
+  public double planer_cross_at_zero_3_4() {
+    return x_3 * y_4 - y_3 * x_4;
+  }
+
+  /** return the dot product between the 0 and 4 vectors */
+  public double planer_cross_at_zero_4_0() {
+    return x_4 * y_0 - y_4 * x_0;
+  }
+
+  /** return the dot product between the 1 and 4 vectors */
+  public double planer_cross_at_zero_4_1() {
+    return x_4 * y_1 - y_4 * x_1;
+  }
+
+  /** return the dot product between the 2 and 4 vectors */
+  public double planer_cross_at_zero_4_2() {
+    return x_4 * y_2 - y_4 * x_2;
+  }
+
+  /** return the dot product between the 3 and 4 vectors */
+  public double planer_cross_at_zero_4_3() {
+    return x_4 * y_3 - y_4 * x_3;
+  }
+
   /** set the 4-vector to the given (x,y) */
   public void set_4(final double x, final double y) {
     x_4 = x;

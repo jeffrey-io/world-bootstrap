@@ -81,6 +81,7 @@ public class WorldData extends SurfaceData {
 
   @Override
   public void add(final String type, final SurfaceContext context) {
+    // benchmarkAdd(type, context);
     addSingle(type, context);
   }
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import io.jeffrey.zer.AdjustedMouseEvent;
 
-public class MultiThingInteraction extends ThingInteraction {
+public class MultiThingInteraction implements ThingInteraction {
 
   private final ArrayList<ThingInteraction> interactions;
 

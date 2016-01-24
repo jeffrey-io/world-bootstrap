@@ -10,7 +10,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class ThingMover extends ThingInteraction {
+public class ThingMover implements ThingInteraction {
   private final double       angle;
   private final EditingPart  editing;
   private final double       ix;

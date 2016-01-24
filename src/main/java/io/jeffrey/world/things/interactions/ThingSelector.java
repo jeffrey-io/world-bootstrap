@@ -3,7 +3,7 @@ package io.jeffrey.world.things.interactions;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
-public class ThingSelector extends ThingInteraction {
+public class ThingSelector implements ThingInteraction {
 
   private final EditingPart editing;
 

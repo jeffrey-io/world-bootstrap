@@ -7,11 +7,11 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public abstract class ThingInteraction {
+public interface ThingInteraction {
   /**
    * abort the interaction
    */
-  public abstract void cancel();
+  public void cancel();
 
   /**
    * the mouse has moved
@@ -19,7 +19,7 @@ public abstract class ThingInteraction {
    * @param event
    *          the event in the thing space
    */
-  public abstract void moved(AdjustedMouseEvent event);
+  public void moved(AdjustedMouseEvent event);
 
-  public abstract void select();
+  public void select();
 }

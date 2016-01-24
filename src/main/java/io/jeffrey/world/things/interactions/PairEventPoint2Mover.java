@@ -9,7 +9,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class PairEventPoint2Mover extends ThingInteraction {
+public class PairEventPoint2Mover implements ThingInteraction {
   private final EventedPoint2Mover a;
   private final EventedPoint2Mover b;
 

@@ -10,7 +10,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class ThingScaler extends ThingInteraction {
+public class ThingScaler implements ThingInteraction {
   private final EditingPart editing;
   private final double      ix;
   private final double      iy;

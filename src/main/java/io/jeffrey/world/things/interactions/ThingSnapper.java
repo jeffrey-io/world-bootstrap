@@ -12,7 +12,7 @@ import io.jeffrey.zer.meta.GuideLine;
  *
  * @author jeffrey
  */
-public class ThingSnapper extends ThingInteraction {
+public class ThingSnapper implements ThingInteraction {
   private final Camera                camera;
   private final ThingInteraction      delegate;
   private final Collection<GuideLine> lines;

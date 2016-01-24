@@ -12,7 +12,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public class ThingRotater extends ThingInteraction {
+public class ThingRotater implements ThingInteraction {
   private static final double   RADIANS_TO_DEGREES = 57.2957795;
   private final double          angle;
   private final EditingPart     editing;

@@ -1,8 +1,8 @@
 package io.jeffrey.world.things.behaviors;
 
-import io.jeffrey.world.things.interactions.SelectionSolver;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
 
 public interface HasSelectionByPoint {
 
-  public boolean buildSelectionSolver(SelectionSolver solver);
+  public boolean buildSelectionSolver(InteractionSelectionSolver solver);
 }

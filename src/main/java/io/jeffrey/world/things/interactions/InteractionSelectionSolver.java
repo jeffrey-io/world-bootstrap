@@ -12,7 +12,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;
 import io.jeffrey.zer.SetMover;
 
-public class SelectionSolver {
+public class InteractionSelectionSolver {
 
   private class AdaptThingToMouse implements Supplier<MouseInteraction> {
 
@@ -93,7 +93,7 @@ public class SelectionSolver {
   private Supplier<ThingInteraction>             proposedSupplier;
   private boolean                                setEnabled;
 
-  public SelectionSolver(final History history) {
+  public InteractionSelectionSolver(final History history) {
     this.history = history;
     event = null;
     possibilites = new HashMap<>();

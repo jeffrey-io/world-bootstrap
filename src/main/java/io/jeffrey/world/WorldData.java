@@ -27,7 +27,7 @@ import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.guides.Picker;
-import io.jeffrey.world.things.interactions.SelectionSolver;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
 import io.jeffrey.world.things.parts.LayerPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
@@ -426,7 +426,7 @@ public class WorldData extends SurfaceData {
 
   @Override
   public MouseInteraction selectByPoint(final AdjustedMouseEvent event, final SurfaceContext context) {
-    final SelectionSolver selectionSolver = new SelectionSolver(document.container.history);
+    final InteractionSelectionSolver selectionSolver = new InteractionSelectionSolver(document.container.history);
     for (final AbstractThing thing : document.container) {
       // it's deleted, we do nothing
       if (thing.lifetime.isDeleted()) {

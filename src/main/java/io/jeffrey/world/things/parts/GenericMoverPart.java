@@ -2,8 +2,8 @@ package io.jeffrey.world.things.parts;
 
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.core.Part;
-import io.jeffrey.world.things.interactions.SelectionSolver;
-import io.jeffrey.world.things.interactions.SelectionSolver.Rule;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver.Rule;
 import io.jeffrey.world.things.interactions.ThingMover;
 
 public class GenericMoverPart implements Part, HasSelectionByPoint {
@@ -19,7 +19,7 @@ public class GenericMoverPart implements Part, HasSelectionByPoint {
   }
 
   @Override
-  public boolean buildSelectionSolver(final SelectionSolver solver) {
+  public boolean buildSelectionSolver(final InteractionSelectionSolver solver) {
     if (editing.selected.value()) {
       solver.propose(Rule.AlreadySelectedItemButNotInvolved, () -> new ThingMover(solver.event, position, rotation, editing));
       return true;

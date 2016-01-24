@@ -9,8 +9,8 @@ import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.interactions.PairEventPoint2Mover;
-import io.jeffrey.world.things.interactions.SelectionSolver;
-import io.jeffrey.world.things.interactions.SelectionSolver.Rule;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver.Rule;
 import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.edits.EditBoolean;
@@ -34,7 +34,7 @@ public class EdgeMoverPart implements Part, HasSelectionByPoint {
   }
 
   @Override
-  public boolean buildSelectionSolver(final SelectionSolver solver) {
+  public boolean buildSelectionSolver(final InteractionSelectionSolver solver) {
     final boolean selected = editing.selected.value();
 
     final VectorRegister3 W = new VectorRegister3();

@@ -17,8 +17,8 @@ import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.enforcer.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.SerialEnforcer;
-import io.jeffrey.world.things.interactions.SelectionSolver;
-import io.jeffrey.world.things.interactions.SelectionSolver.Rule;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingRotater;
@@ -72,7 +72,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
   }
 
   @Override
-  public boolean buildSelectionSolver(final SelectionSolver solver) {
+  public boolean buildSelectionSolver(final InteractionSelectionSolver solver) {
     if (produceDoodad(solver)) {
       return true;
     } else if (contains(solver.event)) {
@@ -108,7 +108,7 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
     }
   }
 
-  private boolean produceDoodad(final SelectionSolver solver) {
+  private boolean produceDoodad(final InteractionSelectionSolver solver) {
     if (!editing.selected.value()) {
       return false;
     }

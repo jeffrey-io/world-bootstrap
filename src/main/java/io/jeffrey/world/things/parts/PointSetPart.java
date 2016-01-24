@@ -21,8 +21,8 @@ import io.jeffrey.world.things.core.SharedActionSpace;
 import io.jeffrey.world.things.core.Subscribers;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.interactions.MultiThingInteraction;
-import io.jeffrey.world.things.interactions.SelectionSolver;
-import io.jeffrey.world.things.interactions.SelectionSolver.Rule;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingSelector;
@@ -159,7 +159,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
   }
 
   @Override
-  public boolean buildSelectionSolver(final SelectionSolver solver) {
+  public boolean buildSelectionSolver(final InteractionSelectionSolver solver) {
     final boolean overPoint = doesMouseEventPreserveExistingSelection(solver.event, true);
     final PointSetMoverModel mover = new PointSetMoverModel(solver.event);
     if (mover.should()) { // any points selected

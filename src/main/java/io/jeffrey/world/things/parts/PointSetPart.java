@@ -47,8 +47,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
       requireUpToDate();
       all = true;
       any = false;
-      System.out.println("Building model:");
-
       for (final SelectablePoint2 point : points) {
         point.alreadySelected = point.selected;
         if (point.selected) {
@@ -167,7 +165,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
       if (overPoint) {
         rule = Rule.AlreadySelectedFacetAndPointPreserves;
       }
-      System.out.println("pointset should /w rule: " + rule);
       solver.propose(rule, mover);
       return true;
     } else if (overPoint) {

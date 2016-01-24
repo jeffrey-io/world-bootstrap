@@ -1,25 +1,11 @@
 package io.jeffrey.world;
 
-import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.things.behaviors.HasColorsToEmit;
-import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.AbstractThing;
 import javafx.scene.paint.Color;
 
 public class AbstractThingHelpers {
-
-  public static boolean contains(final AbstractThing thing, final double x, final double y) {
-    final VectorRegister3 scratch = new VectorRegister3();
-    scratch.set_0(x, y);
-    thing.transform().writeToThingSpace(scratch);
-    for (final IsSelectable selectable : thing.collect(IsSelectable.class)) {
-      if (selectable.contains(scratch.x_1, scratch.y_1)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   public static Color query(final AbstractThing thing, final double x, final double y) {
     final VectorRegister6 W = new VectorRegister6();

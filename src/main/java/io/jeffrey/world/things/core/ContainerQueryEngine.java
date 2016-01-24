@@ -1,7 +1,9 @@
 package io.jeffrey.world.things.core;
 
+import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
+import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.MouseInteraction;
@@ -13,6 +15,27 @@ public class ContainerQueryEngine {
 
   public ContainerQueryEngine(final Container container) {
     this.container = container;
+  }
+
+  public boolean contains(AbstractThing thing, final double x, final double y) {
+    final VectorRegister3 scratch = new VectorRegister3();
+    scratch.set_0(x, y);
+    thing.transform().writeToThingSpace(scratch);
+    for (final IsSelectable selectable : thing.collect(IsSelectable.class)) {
+      if (selectable.contains(scratch.x_1, scratch.y_1)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public AbstractThing selectFirstVisible(final double x, final double y) {
+    for (final AbstractThing thing : container) {
+      if (contains(thing, x, y)) {
+        return thing;
+      }
+    }
+    return null;
   }
 
   public MouseInteraction selectByPoint(final AdjustedMouseEvent event) {

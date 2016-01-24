@@ -265,12 +265,7 @@ public class Document extends ModeledDocument {
   }
 
   public AbstractThing selectFirstVisible(final double x, final double y) {
-    for (final AbstractThing thing : container) {
-      if (AbstractThingHelpers.contains(thing, x, y)) {
-        return thing;
-      }
-    }
-    return null;
+    return engine.selectFirstVisible(x, y);
   }
 
   public String snapshotSelection() throws Exception {

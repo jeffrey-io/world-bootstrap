@@ -7,7 +7,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
  *
  * @author jeffrey
  */
-public abstract class ThingInteraction  {
+public abstract class ThingInteraction {
   /**
    * abort the interaction
    */

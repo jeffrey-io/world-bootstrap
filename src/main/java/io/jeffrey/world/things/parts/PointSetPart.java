@@ -217,7 +217,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
     return doesMouseEventPreserveExistingSelection(event, false);
   }
 
-  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event, boolean shouldSelect) {
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event, final boolean shouldSelect) {
     requireUpToDate();
     final VectorRegister3 W = new VectorRegister3();
     if (container != null) {

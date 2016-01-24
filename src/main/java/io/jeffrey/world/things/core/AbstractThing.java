@@ -92,7 +92,7 @@ public abstract class AbstractThing {
   }
 
   public <T> T first(final Class<T> clazz) {
-    List<T> list = collect(clazz);
+    final List<T> list = collect(clazz);
     if (list.size() == 0) {
       return null;
     }

@@ -9,17 +9,17 @@ import io.jeffrey.vector.VectorRegister8;
  *
  */
 public class AdjustedMouseEvent {
+  private final boolean        altdown;
   private final Camera         camera;
   public final double          clientX;
   public final double          clientY;
-  public final boolean         locked_angle;
 
+  private final boolean        ctrldown;
+  public final boolean         locked_angle;
   public final VectorRegister8 position;
   public final boolean         respect_aspect_scaling;
   public final boolean         selective_addititive_mode;
   public final boolean         selective_subtractive_mode;
-  private final boolean altdown;
-  private final boolean ctrldown;
 
   /**
    * @param camera
@@ -40,9 +40,10 @@ public class AdjustedMouseEvent {
     this.altdown = altdown;
     this.ctrldown = ctrldown;
   }
-  
+
+  @Override
   public AdjustedMouseEvent clone() {
-     return new AdjustedMouseEvent(camera, clientX, clientY, altdown, ctrldown);
+    return new AdjustedMouseEvent(camera, clientX, clientY, altdown, ctrldown);
   }
 
   /**

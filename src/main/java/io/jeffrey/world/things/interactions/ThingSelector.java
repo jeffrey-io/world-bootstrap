@@ -6,7 +6,7 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 public class ThingSelector extends ThingInteraction {
 
   private final EditingPart editing;
-  
+
   public ThingSelector(final EditingPart editing) {
     this.editing = editing;
   }
@@ -16,7 +16,7 @@ public class ThingSelector extends ThingInteraction {
   }
 
   @Override
-  public void moved(AdjustedMouseEvent event) {
+  public void moved(final AdjustedMouseEvent event) {
   }
 
   @Override

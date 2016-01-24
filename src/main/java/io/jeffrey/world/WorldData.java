@@ -448,15 +448,14 @@ public class WorldData extends SurfaceData {
         return null;
       });
 
-
-      AdjustedMouseEvent cevent = event.clone();
+      final AdjustedMouseEvent cevent = event.clone();
       thing.transform().writeToThingSpace(cevent.position);
       selectionSolver.focus(thing, cevent);
       for (final HasSelectionByPoint behavior : thing.collect(HasSelectionByPoint.class)) {
         behavior.buildSelectionSolver(selectionSolver);
       }
       selectionSolver.unfocus();
-      
+
       thing.invokeAction("unselect", false);
     }
 
@@ -473,7 +472,6 @@ public class WorldData extends SurfaceData {
     this.file = file;
     return this.file != null;
   }
-
 
   @Override
   public void updateSelectionWindow(final SelectionWindow window) {

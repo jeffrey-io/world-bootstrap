@@ -23,6 +23,8 @@ public interface IsSelectable {
    */
   public boolean contains(final double x, final double y);
 
+  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event);
+
   /**
    * @param polygon
    *          the shape test
@@ -31,6 +33,4 @@ public interface IsSelectable {
    * @return does the given polygon (selection pattern) intersect the given
    */
   public boolean selectionIntersect(final Polygon polygon, final Mode mode);
-
-  public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event);
 }

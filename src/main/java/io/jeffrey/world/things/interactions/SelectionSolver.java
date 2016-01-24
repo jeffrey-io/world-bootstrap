@@ -32,6 +32,10 @@ public class SelectionSolver {
     }
   }
 
+  private static enum GroupingRule {
+    Doodad, Item, Nothing, Set
+  }
+
   private class Possibily {
     private final ArrayList<Supplier<MouseInteraction>> suppliers;
 
@@ -52,32 +56,26 @@ public class SelectionSolver {
     }
   }
 
-  private static enum GroupingRule {
-    Doodad, Item, Set, Nothing
-  }
-
   public static enum Rule {
-    Doodad(0, GroupingRule.Doodad, false), // highest precedence
+    AlreadySelectedFacetAndPointPreserves(100, GroupingRule.Set, true), // highest precedence
 
-    NotAlreadySelectedAndPointIsFacet(10, GroupingRule.Item, false), // the point is inside and we are not selected
-    NotAlreadySelectedAndPointIsInSubset(11, GroupingRule.Item, false), // the point is inside and we are not selected
-    NotAlreadySelectedAndPointIsInItem(12, GroupingRule.Item, false), // we are not selected, but the point touches a sub selection
-
-    AlreadySelectedFacetAndPointPreserves(100, GroupingRule.Set, true),
+    AlreadySelectedItemAndPointPreserves(300, GroupingRule.Set, true), // the point is inside and we are not selected
+    AlreadySelectedItemButNotInvolved(301, GroupingRule.Set, false), // the point is inside and we are not selected
+    AlreadySelectedSubsetAndPointPreserves(201, GroupingRule.Set, true), // we are not selected, but the point touches a sub selection
 
     AlreadySelectedSubsetButNotInvolved(200, GroupingRule.Set, false),
-    AlreadySelectedSubsetAndPointPreserves(201, GroupingRule.Set, true),
-    
-    AlreadySelectedItemAndPointPreserves(300, GroupingRule.Set, true),
-    AlreadySelectedItemButNotInvolved(301, GroupingRule.Set, false),
-    
+
+    Doodad(0, GroupingRule.Doodad, false), NotAlreadySelectedAndPointIsFacet(10, GroupingRule.Item, false),
+
+    NotAlreadySelectedAndPointIsInItem(12, GroupingRule.Item, false), NotAlreadySelectedAndPointIsInSubset(11, GroupingRule.Item, false),
+
     Nothing(Integer.MAX_VALUE, GroupingRule.Nothing, false);
 
-    public final int           precedence;
     private final GroupingRule group;
-    private final boolean togglesSet;
+    public final int           precedence;
+    private final boolean      togglesSet;
 
-    private Rule(int precedence, GroupingRule group, boolean togglesSet) {
+    private Rule(final int precedence, final GroupingRule group, final boolean togglesSet) {
       this.precedence = precedence;
       this.group = group;
       this.togglesSet = togglesSet;
@@ -85,34 +83,39 @@ public class SelectionSolver {
   }
 
   private AbstractThing                          currentThing;
-  public AdjustedMouseEvent                event;
+  public AdjustedMouseEvent                      event;
   private final History                          history;
 
   private final HashMap<GroupingRule, Possibily> possibilites;
 
+  private Rule                                   proposedRule;
+
+  private Supplier<ThingInteraction>             proposedSupplier;
+  private boolean                                setEnabled;
+
   public SelectionSolver(final History history) {
     this.history = history;
-    this.event = null;
+    event = null;
     possibilites = new HashMap<>();
     currentThing = null;
-    this.setEnabled = false;
+    setEnabled = false;
   }
 
-  private Rule                       proposedRule;
-  private Supplier<ThingInteraction> proposedSupplier;
-  private boolean setEnabled;
+  private void accept() {
+    final AdaptThingToMouse adapted = new AdaptThingToMouse(currentThing, proposedSupplier);
+    get(proposedRule.group).suppliers.add(adapted);
 
-  public void propose(final Rule rule, final Supplier<ThingInteraction> supplier) {
-    if (rule.precedence < proposedRule.precedence) {
-      this.proposedRule = rule;
-      this.proposedSupplier = supplier;
-    }
-    if (rule.togglesSet) {
-      setEnabled = true;
-    }
+    System.out.println("accepted:" + proposedRule + " on " + currentThing.getClass());
   }
 
-  private Possibily get(GroupingRule group) {
+  public void focus(final AbstractThing thing, final AdjustedMouseEvent event) {
+    this.event = event;
+    currentThing = thing;
+    proposedRule = Rule.Nothing;
+    proposedSupplier = null;
+  }
+
+  private Possibily get(final GroupingRule group) {
     Possibily possibilty = possibilites.get(group);
     if (possibilty == null) {
       possibilty = new Possibily();
@@ -121,22 +124,14 @@ public class SelectionSolver {
     return possibilty;
   }
 
-  private void accept() {
-    AdaptThingToMouse adapted = new AdaptThingToMouse(currentThing, proposedSupplier);
-    get(proposedRule.group).suppliers.add(adapted);
-    
-    System.out.println("accepted:" + proposedRule + " on " + currentThing.getClass());
-  }
-
-  public void focus(final AbstractThing thing, AdjustedMouseEvent event) {
-    this.event = event;
-    currentThing = thing;
-    this.proposedRule = Rule.Nothing;
-    this.proposedSupplier = null;
-  }
-
-  public void unfocus() {
-    accept();
+  public void propose(final Rule rule, final Supplier<ThingInteraction> supplier) {
+    if (rule.precedence < proposedRule.precedence) {
+      proposedRule = rule;
+      proposedSupplier = supplier;
+    }
+    if (rule.togglesSet) {
+      setEnabled = true;
+    }
   }
 
   public MouseInteraction solve() {
@@ -166,5 +161,9 @@ public class SelectionSolver {
       return possibilites.get(GroupingRule.Set).all();
     }
     return null;
+  }
+
+  public void unfocus() {
+    accept();
   }
 }

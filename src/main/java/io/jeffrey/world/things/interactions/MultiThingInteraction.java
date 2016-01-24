@@ -1,7 +1,6 @@
 package io.jeffrey.world.things.interactions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import io.jeffrey.zer.AdjustedMouseEvent;
 

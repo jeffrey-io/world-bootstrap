@@ -5,7 +5,6 @@ import io.jeffrey.vector.VectorRegister6;
 import io.jeffrey.world.things.behaviors.HasColorsToEmit;
 import io.jeffrey.world.things.behaviors.IsSelectable;
 import io.jeffrey.world.things.core.AbstractThing;
-import io.jeffrey.zer.AdjustedMouseEvent;
 import javafx.scene.paint.Color;
 
 public class AbstractThingHelpers {

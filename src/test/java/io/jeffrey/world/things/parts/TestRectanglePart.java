@@ -9,7 +9,7 @@ public class TestRectanglePart extends WorldTestFramework {
 
   @Test
   public void verify() {
-    RectanglePart rectangle = new RectanglePart(new IdentityTransform(), DoodadControls.All);
+    final RectanglePart rectangle = new RectanglePart(new IdentityTransform(), DoodadControls.All);
     rectangle.set(0, 1, 3, 4);
     assertFalse(rectangle.contains(-1, -1));
     assertTrue(rectangle.contains(2, 2));

@@ -17,26 +17,27 @@ import javafx.scene.shape.Shape;
 
 public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDoodadsInThingSpace, IsSelectable {
 
-  private final ControlDoodad[] doodads;
-  private Rectangle             rect;
-  private final Transform       transform;
-  private final DoodadControls  controls;
-
   public static enum DoodadControls {
-    All(8, true, true), Scale(4, true, false), Rotation(4, false, true), None(0, false, false);
+    All(8, true, true), None(0, false, false), Rotation(4, false, true), Scale(4, true, false);
 
-    public final boolean scale;
     public final boolean rotation;
+    public final boolean scale;
     public final int     size;
 
-    private DoodadControls(int size, boolean scale, boolean rotation) {
+    private DoodadControls(final int size, final boolean scale, final boolean rotation) {
       this.size = size;
       this.scale = scale;
       this.rotation = rotation;
     }
   }
 
-  public RectanglePart(final Transform transform, DoodadControls controls) {
+  private final DoodadControls  controls;
+  private final ControlDoodad[] doodads;
+  private Rectangle             rect;
+
+  private final Transform       transform;
+
+  public RectanglePart(final Transform transform, final DoodadControls controls) {
     this.transform = transform;
     this.controls = controls;
     rect = new Rectangle(-1, -1, 2, 2);

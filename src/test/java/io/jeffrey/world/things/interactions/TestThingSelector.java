@@ -11,10 +11,10 @@ public class TestThingSelector extends WorldTestFramework {
 
   @Test
   public void verify() {
-    LinkedDataMap data = data();
-    SimulatedMouse mouse = new SimulatedMouse();
-    EditingPart editing = new EditingPart(data);
-    ThingSelector selector = new ThingSelector(editing);
+    final LinkedDataMap data = data();
+    final SimulatedMouse mouse = new SimulatedMouse();
+    final EditingPart editing = new EditingPart(data);
+    final ThingSelector selector = new ThingSelector(editing);
     mouse.add(selector);
     mouse.move(1, 1);
     selector.cancel();

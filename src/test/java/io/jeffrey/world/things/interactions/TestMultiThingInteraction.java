@@ -16,16 +16,16 @@ public class TestMultiThingInteraction extends WorldTestFramework {
 
   @Test
   public void verify() {
-    LinkedDataMap data = data();
-    SimulatedMouse mouse = new SimulatedMouse();
-    PositionPart position = new PositionPart(data, new RoundingSnap());
-    RotationPart rotation = new RotationPart(data);
-    EditingPart editing = new EditingPart(data);
+    final LinkedDataMap data = data();
+    final SimulatedMouse mouse = new SimulatedMouse();
+    final PositionPart position = new PositionPart(data, new RoundingSnap());
+    final RotationPart rotation = new RotationPart(data);
+    final EditingPart editing = new EditingPart(data);
     position.x(1);
     position.y(2);
     mouse.go(2.5, 3.5);
-    EditingPart editing2 = new EditingPart(data);
-    MultiThingInteraction multi = wrap(new ThingMover(mouse.get(), position, rotation, editing), new ThingSelector(editing2));
+    final EditingPart editing2 = new EditingPart(data);
+    final MultiThingInteraction multi = wrap(new ThingMover(mouse.get(), position, rotation, editing), new ThingSelector(editing2));
     mouse.add(multi);
     assertEquals(1, position.x());
     assertEquals(2, position.y());
@@ -41,11 +41,10 @@ public class TestMultiThingInteraction extends WorldTestFramework {
     assertEquals(1, position.x());
     assertEquals(2, position.y());
   }
-  
-  
-  private MultiThingInteraction wrap(ThingInteraction... its) {
-    ArrayList<ThingInteraction> list = new ArrayList<>();
-    for (ThingInteraction it : its) {
+
+  private MultiThingInteraction wrap(final ThingInteraction... its) {
+    final ArrayList<ThingInteraction> list = new ArrayList<>();
+    for (final ThingInteraction it : its) {
       list.add(it);
     }
     return new MultiThingInteraction(list);

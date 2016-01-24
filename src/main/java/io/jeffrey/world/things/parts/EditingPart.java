@@ -45,6 +45,6 @@ public class EditingPart implements Part, HasActions {
       actionsAvailable.add("select");
     }
     actionsAvailable.add("inverse_selection");
-    
+
   }
 }

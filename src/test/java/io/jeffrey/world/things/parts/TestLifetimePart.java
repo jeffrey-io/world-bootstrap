@@ -42,7 +42,7 @@ public class TestLifetimePart extends WorldTestFramework {
     assertTrue(actions.contains("undelete"));
     assertFalse(actions.contains("templatize"));
     actions.clear();
-    
+
     lifetime.undelete();
     lifetime.listActions(actions);
     assertFalse(lifetime.deleted.value());

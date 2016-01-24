@@ -66,7 +66,7 @@ public class TestEditingPart extends WorldTestFramework {
     assertFalse(actions.contains("unselect"));
     assertTrue(actions.contains("inverse_selection"));
     actions.clear();
-    
+
     editing.invokeAction("inverse_selection", null);
     editing.listActions(actions);
     assertTrue(editing.selected.value());
@@ -77,7 +77,7 @@ public class TestEditingPart extends WorldTestFramework {
     assertTrue(actions.contains("unselect"));
     assertTrue(actions.contains("inverse_selection"));
     actions.clear();
-    
+
     editing.invokeAction("inverse_selection", null);
     editing.listActions(actions);
     assertFalse(editing.selected.value());
@@ -88,6 +88,6 @@ public class TestEditingPart extends WorldTestFramework {
     assertFalse(actions.contains("unselect"));
     assertTrue(actions.contains("inverse_selection"));
     actions.clear();
-    
+
   }
 }

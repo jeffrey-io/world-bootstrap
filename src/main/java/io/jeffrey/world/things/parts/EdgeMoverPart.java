@@ -11,8 +11,8 @@ import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
-import io.jeffrey.world.things.interactions.MultiThingInteraction;
 import io.jeffrey.world.things.interactions.InteractionSelectionSolver.Rule;
+import io.jeffrey.world.things.interactions.MultiThingInteraction;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingSelector;
 import io.jeffrey.world.things.points.EventedPoint2;
@@ -70,7 +70,7 @@ public class EdgeMoverPart implements Part, HasSelectionByPoint {
               rule = Rule.AlreadySelectedSubsetAndPointPreserves;
             }
             solver.propose(rule, () -> {
-              ArrayList<ThingInteraction> its = new ArrayList<>();
+              final ArrayList<ThingInteraction> its = new ArrayList<>();
               begin.selected = true;
               end.selected = true;
               its.add(new EventedPoint2Mover(new EventedPoint2(begin, update), solver.event));

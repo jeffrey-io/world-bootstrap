@@ -14,15 +14,15 @@ public class TestThingMover extends WorldTestFramework {
 
   @Test
   public void verify() {
-    LinkedDataMap data = data();
-    SimulatedMouse mouse = new SimulatedMouse();
-    PositionPart position = new PositionPart(data, new RoundingSnap());
-    RotationPart rotation = new RotationPart(data);
-    EditingPart editing = new EditingPart(data);
+    final LinkedDataMap data = data();
+    final SimulatedMouse mouse = new SimulatedMouse();
+    final PositionPart position = new PositionPart(data, new RoundingSnap());
+    final RotationPart rotation = new RotationPart(data);
+    final EditingPart editing = new EditingPart(data);
     position.x(1);
     position.y(2);
     mouse.go(2.5, 3.5);
-    ThingMover mover = new ThingMover(mouse.get(), position, rotation, editing);
+    final ThingMover mover = new ThingMover(mouse.get(), position, rotation, editing);
     mouse.add(mover);
     assertEquals(1, position.x());
     assertEquals(2, position.y());
@@ -36,17 +36,17 @@ public class TestThingMover extends WorldTestFramework {
     assertEquals(1, position.x());
     assertEquals(2, position.y());
   }
-  
+
   @Test
   public void verifyWithRotation() {
-    LinkedDataMap data = data();
-    SimulatedMouse mouse = new SimulatedMouse();
-    PositionPart position = new PositionPart(data, new RoundingSnap());
-    EditingPart editing = new EditingPart(data);
+    final LinkedDataMap data = data();
+    final SimulatedMouse mouse = new SimulatedMouse();
+    final PositionPart position = new PositionPart(data, new RoundingSnap());
+    final EditingPart editing = new EditingPart(data);
     position.x(1);
     position.y(2);
     mouse.go(2.5, 3.5);
-    ThingMover mover = new ThingMover(mouse.get(), position, null, editing);
+    final ThingMover mover = new ThingMover(mouse.get(), position, null, editing);
     mouse.add(mover);
     assertEquals(1, position.x());
     assertEquals(2, position.y());

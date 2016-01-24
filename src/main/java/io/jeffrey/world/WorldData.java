@@ -20,6 +20,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import io.jeffrey.vector.VectorRegister2;
 import io.jeffrey.world.document.Document;
+import io.jeffrey.world.document.DocumentInteractionCapture;
 import io.jeffrey.world.document.EditableThing;
 import io.jeffrey.world.document.Iconify;
 import io.jeffrey.world.document.ThingData;
@@ -441,7 +442,7 @@ public class WorldData extends SurfaceData {
   public MouseInteraction selectByPoint(final AdjustedMouseEvent event, final SurfaceContext context) {
     final MouseInteraction it = document.engine.selectByPoint(event);
     if (it != null) {
-      return it;
+      return new DocumentInteractionCapture(document, it);
     }
     return getGuidelineEditor(event, context);
   }

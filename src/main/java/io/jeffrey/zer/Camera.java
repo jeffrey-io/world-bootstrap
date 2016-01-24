@@ -108,4 +108,9 @@ public class Camera {
     tX = -((bounds.x_1 + bounds.x_0) / 2.0 * scale - context.width / 2.0);
     tY = -((bounds.y_1 + bounds.y_0) / 2.0 * scale - context.height / 2.0);
   }
+  
+  @Override
+  public int hashCode() {
+    return Double.hashCode((scale * 31 + tY * 17 + tY));
+  }
 }

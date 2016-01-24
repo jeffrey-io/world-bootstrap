@@ -105,7 +105,7 @@ public class WorldTestFramework {
   public class SimpleAbstractThing extends AbstractThing {
 
     public SimpleAbstractThing() {
-      super(makeSimpleContainer(), emptyData());
+      super(makeSimpleContainer(), data());
     }
 
     public void externalRegister(final Part part) {
@@ -141,12 +141,20 @@ public class WorldTestFramework {
     Assert.assertFalse(b);
   }
 
+  public void assertNull(final Object obj) {
+    Assert.assertNull(obj);
+  }
+
   public void assertTrue(final boolean b) {
     Assert.assertTrue(b);
   }
 
-  public LinkedDataMap emptyData() {
-    return new LinkedDataMap(new ObjectDataMap(new HashMap<>()));
+  public LinkedDataMap data(final String... keysAndValues) {
+    final HashMap<String, String> map = new HashMap<>();
+    for (int k = 0; k + 1 < keysAndValues.length; k += 2) {
+      map.put(keysAndValues[k], keysAndValues[k + 1]);
+    }
+    return new LinkedDataMap(new ObjectDataMap(map));
   }
 
   public void fail() {

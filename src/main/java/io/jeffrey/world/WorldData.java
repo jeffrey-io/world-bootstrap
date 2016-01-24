@@ -88,18 +88,6 @@ public class WorldData extends SurfaceData {
     addSingle(type, context);
   }
 
-  public void benchmarkAdd(final String type, final SurfaceContext context) {
-    double resetx = context.cursor_x;
-    for (int j = 0; j < 25; j++) {
-      context.cursor_x = resetx;
-      for (int k = 0; k < 25; k++) {
-        addSingle(type, context);
-        context.cursor_x += 100;
-      }
-      context.cursor_y += 100;
-    }
-  }
-
   public void addSingle(final String type, final SurfaceContext context) {
     ThingData data = null;
     final double at_x = context.cursor_x;
@@ -196,6 +184,18 @@ public class WorldData extends SurfaceData {
       return document.container.history.canRedo();
     }
     return true;
+  }
+
+  public void benchmarkAdd(final String type, final SurfaceContext context) {
+    final double resetx = context.cursor_x;
+    for (int j = 0; j < 25; j++) {
+      context.cursor_x = resetx;
+      for (int k = 0; k < 25; k++) {
+        addSingle(type, context);
+        context.cursor_x += 100;
+      }
+      context.cursor_y += 100;
+    }
   }
 
   @Override

@@ -10,6 +10,7 @@ import io.jeffrey.world.things.behaviors.HasGuideLineEnforcers;
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasSelectionByWindow;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
@@ -164,8 +165,10 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
       return;
     }
     final Polygon polygon = transformSelectionWindow(window, transform);
+    final SelectionModel model = new SelectionModel(polygon, window.mode);
+
     boolean touches = false;
-    for (final boolean mayTouch : thing.collect(IsSelectable.class, t -> t.selectionIntersect(polygon, window.mode))) {
+    for (final boolean mayTouch : thing.collect(IsSelectable.class, t -> t.selectionIntersect(model))) {
       if (mayTouch) {
         touches = true;
       }

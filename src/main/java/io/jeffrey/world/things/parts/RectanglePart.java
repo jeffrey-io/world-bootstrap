@@ -5,13 +5,12 @@ import io.jeffrey.vector.VectorRegister8;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasEdgesInWorldSpace;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import io.jeffrey.zer.SelectionWindow.Mode;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -88,8 +87,8 @@ public class RectanglePart implements Part, HasEdgesInWorldSpace, HasControlDood
   }
 
   @Override
-  public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
-    return Shape.intersect(rect, polygon).getBoundsInLocal().getWidth() > 0;
+  public boolean selectionIntersect(final SelectionModel model) {
+    return Shape.intersect(rect, model.getPolygon()).getBoundsInLocal().getWidth() > 0;
   }
 
   public void set(final double x, final double y, final double width, final double height) {

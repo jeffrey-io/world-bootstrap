@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
 public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelectable {
@@ -50,7 +49,7 @@ public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelect
   }
 
   @Override
-  public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
-    return Shape.intersect(CIRCLE, polygon).getBoundsInLocal().getWidth() > 0;
+  public boolean selectionIntersect(final SelectionModel model) {
+    return Shape.intersect(CIRCLE, model.getPolygon()).getBoundsInLocal().getWidth() > 0;
   }
 }

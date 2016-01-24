@@ -1,8 +1,7 @@
 package io.jeffrey.world.things.behaviors;
 
+import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import io.jeffrey.zer.SelectionWindow.Mode;
-import javafx.scene.shape.Polygon;
 
 /**
  * Denotes whether or not the item is selectable or not
@@ -32,5 +31,5 @@ public interface IsSelectable {
    *          the mode of selection
    * @return does the given polygon (selection pattern) intersect the given
    */
-  public boolean selectionIntersect(final Polygon polygon, final Mode mode);
+  public boolean selectionIntersect(SelectionModel model);
 }

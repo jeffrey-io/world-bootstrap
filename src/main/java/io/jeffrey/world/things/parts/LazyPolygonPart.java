@@ -1,9 +1,9 @@
 package io.jeffrey.world.things.parts;
 
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.zer.AdjustedMouseEvent;
-import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
@@ -33,11 +33,11 @@ public class LazyPolygonPart implements Part, IsSelectable {
   }
 
   @Override
-  public boolean selectionIntersect(final Polygon incoming, final Mode mode) {
+  public boolean selectionIntersect(final SelectionModel model) {
     if (polygon == null) {
       return false;
     }
-    return Shape.intersect(incoming, polygon).getBoundsInLocal().getWidth() > 0;
+    return Shape.intersect(model.getPolygon(), polygon).getBoundsInLocal().getWidth() > 0;
   }
 
   public void set(final Polygon polygon) {

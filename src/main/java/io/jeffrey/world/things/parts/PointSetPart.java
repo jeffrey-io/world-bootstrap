@@ -12,6 +12,7 @@ import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
@@ -33,7 +34,6 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.edits.EditBoolean;
 import io.jeffrey.zer.edits.EditString;
-import javafx.scene.shape.Polygon;
 
 public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSelectable, HasActions, HasUpdate, HasSelectionByPoint {
 
@@ -346,20 +346,20 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
   }
 
   @Override
-  public boolean selectionIntersect(final Polygon polygon, final Mode mode) {
+  public boolean selectionIntersect(final SelectionModel model) {
     requireUpToDate();
     boolean doUpdate = false;
     boolean isSelected = false;
     boolean anySelected = false;
     for (final SelectablePoint2 point : points) {
       final boolean old = point.selected;
-      if (polygon.contains(point.x, point.y)) {
+      if (model.getPolygon().contains(point.x, point.y)) {
         point.selected = true;
         isSelected = true;
       } else {
         point.selected = false;
       }
-      point.selected = mode.selected(point.alreadySelected, point.selected);
+      point.selected = model.mode.selected(point.alreadySelected, point.selected);
       if (old != point.selected) {
         doUpdate = true;
       }
@@ -370,7 +370,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
     if (doUpdate) {
       update();
     }
-    if (mode == Mode.Subtract && anySelected) {
+    if (model.mode == Mode.Subtract && anySelected) {
       return false;
     }
     return isSelected;

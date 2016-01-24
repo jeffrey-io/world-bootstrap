@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import io.jeffrey.world.SimulatedMouse;
 import io.jeffrey.world.WorldTestFramework;
+import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import javafx.scene.shape.Polygon;
@@ -25,11 +26,11 @@ public class TestCirclePart extends WorldTestFramework {
     mouse.go(-1, -1);
     SelectionWindow window = mouse.dragTo(-0.9, -0.9);
     final Polygon notTouching = MousePart.transformSelectionWindow(window, new IdentityTransform());
-    assertFalse(circle.selectionIntersect(notTouching, Mode.Add));
+    assertFalse(circle.selectionIntersect(new SelectionModel(notTouching, Mode.Add)));
 
     window = mouse.dragTo(1, 1);
     final Polygon touching = MousePart.transformSelectionWindow(window, new IdentityTransform());
-    assertTrue(circle.selectionIntersect(touching, Mode.Add));
+    assertTrue(circle.selectionIntersect(new SelectionModel(touching, Mode.Add)));
 
   }
 }

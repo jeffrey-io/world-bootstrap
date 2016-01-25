@@ -12,9 +12,9 @@ import io.jeffrey.zer.AdjustedMouseEvent;
 
 public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelectable {
   private static final ControlDoodad[] DOODADS_ALL;
+  private static final ControlDoodad[] DOODADS_NONE;
   private static final ControlDoodad[] DOODADS_ROTATE;
   private static final ControlDoodad[] DOODADS_SCALE;
-  private static final ControlDoodad[] DOODADS_NONE;
 
   static {
     final ArrayList<ControlDoodad> doodads_all = new ArrayList<>();
@@ -44,8 +44,8 @@ public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelect
 
   private final ControlDoodad[] doodads;
 
-  public CirclePart(DoodadControls controls) {
-    switch(controls) {
+  public CirclePart(final DoodadControls controls) {
+    switch (controls) {
       case All:
         doodads = DOODADS_ALL;
         break;

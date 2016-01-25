@@ -18,11 +18,11 @@ public class TestGenericMoverPart extends WorldTestFramework {
     final LinkedDataMap data = data();
     final PositionPart position = new PositionPart(data, new IdentitySnap());
     final RotationPart rotation = new RotationPart(data);
-    EditingPart editing = new EditingPart(data);
-    GenericMoverPart mover = new GenericMoverPart(position, rotation, editing);
-    SimulatedMouse mouse = new SimulatedMouse();
-    ArrayList<Rule> proposals = new ArrayList<>();
-    BasicThing thing = new BasicThing(makeSimpleContainer(), data);
+    final EditingPart editing = new EditingPart(data);
+    final GenericMoverPart mover = new GenericMoverPart(position, rotation, editing);
+    final SimulatedMouse mouse = new SimulatedMouse();
+    final ArrayList<Rule> proposals = new ArrayList<>();
+    final BasicThing thing = new BasicThing(makeSimpleContainer(), data);
     mover.buildSelectionSolver(prepareSolver(mouse, thing, proposals, true));
     assertEquals(0, proposals.size());
     editing.selected.value(true);

@@ -30,8 +30,11 @@ import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
 import io.jeffrey.world.things.interactions.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.list.Property;
+import io.jeffrey.world.things.points.list.SelectablePoint2List;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
+import io.jeffrey.zer.edits.EditString;
 import io.jeffrey.zer.edits.ObjectDataMap;
 import io.jeffrey.zer.meta.GuideLine;
 import io.jeffrey.zer.meta.WorldFileSystem;
@@ -230,12 +233,20 @@ public class WorldTestFramework {
     return String.join(",", new TreeSet<>(set));
   }
 
+  protected SelectablePoint2List listOf(final EditString points, final Property... properties) {
+    return new SelectablePoint2List(points, properties);
+  }
+
   public <T> List<T> listOf(final Iterable<T> iterable) {
     final ArrayList<T> list = new ArrayList<>();
     for (final T t : iterable) {
       list.add(t);
     }
     return list;
+  }
+
+  protected SelectablePoint2List listOf(final String points, final Property... properties) {
+    return new SelectablePoint2List(new EditString("points", points), properties);
   }
 
   public Container makeSimpleContainer() {
@@ -257,7 +268,7 @@ public class WorldTestFramework {
     return prepareSolver(mouse, thing, new ArrayList<>(), false);
   }
 
-  public InteractionSelectionSolver prepareSolver(final SimulatedMouse mouse, final AbstractThing thing, final ArrayList<Rule> proposalRecord, boolean evaluate) {
+  public InteractionSelectionSolver prepareSolver(final SimulatedMouse mouse, final AbstractThing thing, final ArrayList<Rule> proposalRecord, final boolean evaluate) {
     final InteractionSelectionSolver solver = new InteractionSelectionSolver(new History()) {
       @Override
       public void propose(final Rule rule, final java.util.function.Supplier<ThingInteraction> supplier) {
@@ -276,5 +287,4 @@ public class WorldTestFramework {
   public void witness() {
 
   }
-
 }

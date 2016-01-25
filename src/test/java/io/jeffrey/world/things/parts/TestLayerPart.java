@@ -12,16 +12,16 @@ public class TestLayerPart extends WorldTestFramework {
 
   @Test
   public void verify() {
-    Container container = makeSimpleContainer();
-    LayerPart layer1 = new LayerPart(container, data("order", "2"));
-    LayerPart layer2 = new LayerPart(container, data("order", "7"));
+    final Container container = makeSimpleContainer();
+    final LayerPart layer1 = new LayerPart(container, data("order", "2"));
+    final LayerPart layer2 = new LayerPart(container, data("order", "7"));
     layer1.layer.value("foo");
     assertTrue(layer1.compareTo(layer2) < 0);
     assertTrue(layer2.compareTo(layer1) > 0);
     assertTrue(layer1.compareTo(layer1) == 0);
     assertTrue(layer2.compareTo(layer2) == 0);
     assertNull(layer1.getLayerProperties());
-    LayerProperties lp = new LayerProperties("z", "k");
+    final LayerProperties lp = new LayerProperties("z", "k");
     lp.zorder.value(10);
     container.layers.put("foo", lp);
     assertNull(layer1.getLayerProperties());
@@ -40,7 +40,7 @@ public class TestLayerPart extends WorldTestFramework {
     layer1.ignoreSnap.value(true);
     assertEquals(123.12, layer1.x(123.12));
     assertEquals(123.12, layer1.y(123.12));
-    HashSet<String> actions = new HashSet<>();
+    final HashSet<String> actions = new HashSet<>();
     layer1.listActions(actions);
     assertTrue(actions.contains("order_push_down"));
     assertTrue(actions.contains("order_push_up"));

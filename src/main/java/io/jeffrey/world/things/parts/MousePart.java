@@ -129,8 +129,6 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
   private Supplier<ThingInteraction> snap(final Supplier<ThingInteraction> delegate) {
     return () -> {
       ThingInteraction interaction = delegate.get();
-
-      // TODO; to this as a higher level
       if (interaction != null && layer != null && interaction instanceof ThingMover) {
         final Collection<GuideLine> lines = thing.container.getGuideLines(layer.layer.getAsText());
         if (lines.size() > 0) {
@@ -140,7 +138,6 @@ public class MousePart implements Part, HasSelectionByWindow, HasSelectionByPoin
           }
         }
       }
-
       return interaction;
     };
   }

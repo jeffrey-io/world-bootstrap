@@ -110,14 +110,6 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     beginSAM().select(1, 7).expect(SegmentSelectMode.SelectedAndBoundary, "");
   }
 
-  private SelectablePoint2List listOf(final EditString points, final Property... properties) {
-    return new SelectablePoint2List(points, properties);
-  }
-
-  private SelectablePoint2List listOf(final String points, final Property... properties) {
-    return new SelectablePoint2List(new EditString("points", points), properties);
-  }
-
   @Test
   public void testAddition() {
     final SelectablePoint2List list = listOf("1,2,3,4,5,6");

@@ -10,6 +10,14 @@ import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SelectionWindow.Mode;
 
 public class TestCirclePart extends WorldTestFramework {
+  private void sanityCheck(final CirclePart circle, final int count, final ControlDoodad.Type type) {
+    assertEquals(count, circle.getDoodadsInThingSpace().length);
+    for (final ControlDoodad doodad : circle.getDoodadsInThingSpace()) {
+      assertEquals(type, doodad.type);
+    }
+
+  }
+
   @Test
   public void verify() {
     data();
@@ -28,15 +36,7 @@ public class TestCirclePart extends WorldTestFramework {
     window = mouse.dragTo(1, 1);
     assertTrue(circle.selectionIntersect(new SelectionModel(window, new IdentityTransform(), Mode.Add)));
   }
-  
-  private void sanityCheck(CirclePart circle, int count, ControlDoodad.Type type) {
-    assertEquals(count, circle.getDoodadsInThingSpace().length);
-    for (ControlDoodad doodad : circle.getDoodadsInThingSpace()) {
-      assertEquals(type, doodad.type);
-    }
-    
-  }
-  
+
   @Test
   public void verifyModes() {
     sanityCheck(new CirclePart(DoodadControls.None), 0, null);

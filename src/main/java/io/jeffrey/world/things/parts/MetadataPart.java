@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
-import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.edits.EditString;
 
 public class MetadataPart implements Part {
@@ -23,16 +22,11 @@ public class MetadataPart implements Part {
     }
   }
 
-  public Edit metadataOf(final String key, final String defaultValue) {
-    final EditString ed = metadata.get(key);
+  public EditString metadataOf(final String key, final String defaultValue) {
+    EditString ed = metadata.get(key);
     if (ed == null) {
-      return new EditString(prefix + key, defaultValue) {
-        @Override
-        public boolean setByTextWithPublishing(final String txt) {
-          metadata.put(key, data.getString(prefix + key, txt));
-          return super.setByText(txt);
-        };
-      };
+      ed = data.getString(prefix + key, defaultValue);
+      metadata.put(key, ed);
     }
     return ed;
   }

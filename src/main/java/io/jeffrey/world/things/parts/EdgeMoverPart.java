@@ -63,7 +63,7 @@ public class EdgeMoverPart implements Part, HasSelectionByPoint {
         // set where we are
         reg.set_2(solver.event.position.x_0, solver.event.position.y_0);
         final double distance = Lines.minimalDistanceV2toLineSegmentV0V1_Destructive(reg);
-        if (distance > 0) {
+        if (distance >= 0) {
           if (solver.event.doodadDistance(reg.x_0, reg.y_0) <= container.edgeWidthSize) {
             Rule rule = Rule.NotAlreadySelectedAndPointIsInSubset;
             if (selected || begin.selected && end.selected) {

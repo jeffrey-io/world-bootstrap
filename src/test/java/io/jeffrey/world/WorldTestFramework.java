@@ -12,8 +12,10 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import io.jeffrey.vector.VectorRegister3;
+import io.jeffrey.world.document.history.History;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
+import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.Container;
@@ -24,7 +26,10 @@ import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
 import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.enforcer.GuideLineEnforcer;
+import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
+import io.jeffrey.world.things.interactions.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
+import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.edits.ObjectDataMap;
@@ -66,6 +71,20 @@ public class WorldTestFramework {
     @Override
     public ControlDoodad[] getDoodadsInThingSpace() {
       return doodads;
+    }
+  }
+
+  public class HasSelectableEdgesMock implements HasSelectableEdges {
+
+    public ArrayList<SelectablePoint2[]> edges;
+
+    public HasSelectableEdgesMock() {
+      edges = new ArrayList<>();
+    }
+
+    @Override
+    public Iterable<SelectablePoint2[]> getSelectableEdges() {
+      return edges;
     }
   }
 
@@ -183,6 +202,10 @@ public class WorldTestFramework {
     Assert.assertFalse(b);
   }
 
+  public void assertNotNull(final Object obj) {
+    Assert.assertNotNull(obj);
+  }
+
   public void assertNull(final Object obj) {
     Assert.assertNull(obj);
   }
@@ -230,8 +253,25 @@ public class WorldTestFramework {
     });
   }
 
+  public InteractionSelectionSolver prepareSolver(final SimulatedMouse mouse, final AbstractThing thing) {
+    return prepareSolver(mouse, thing, new ArrayList<>());
+  }
+
+  public InteractionSelectionSolver prepareSolver(final SimulatedMouse mouse, final AbstractThing thing, final ArrayList<Rule> proposalRecord) {
+    final InteractionSelectionSolver solver = new InteractionSelectionSolver(new History()) {
+      @Override
+      public void propose(final Rule rule, final java.util.function.Supplier<ThingInteraction> supplier) {
+        super.propose(rule, supplier);
+        proposalRecord.add(rule);
+      };
+    };
+    solver.focus(thing, mouse.get());
+    return solver;
+  }
+
   @Before
   public void witness() {
 
   }
+
 }

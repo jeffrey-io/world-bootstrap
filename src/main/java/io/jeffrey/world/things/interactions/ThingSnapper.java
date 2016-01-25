@@ -43,6 +43,7 @@ public class ThingSnapper implements ThingInteraction {
 
   @Override
   public void commit() {
+    delegate.commit();
   }
 
   /**

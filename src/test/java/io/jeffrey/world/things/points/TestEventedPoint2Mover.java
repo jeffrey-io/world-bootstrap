@@ -26,5 +26,6 @@ public class TestEventedPoint2Mover extends WorldTestFramework {
     point.selected = false;
     mover.select();
     assertTrue(point.selected);
+    mover.commit();
   }
 }

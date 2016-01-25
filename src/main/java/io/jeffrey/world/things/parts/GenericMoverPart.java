@@ -3,7 +3,7 @@ package io.jeffrey.world.things.parts;
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
-import io.jeffrey.world.things.interactions.InteractionSelectionSolver.Rule;
+import io.jeffrey.world.things.interactions.Rule;
 import io.jeffrey.world.things.interactions.ThingMover;
 
 public class GenericMoverPart implements Part, HasSelectionByPoint {

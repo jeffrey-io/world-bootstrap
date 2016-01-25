@@ -18,7 +18,7 @@ import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.world.things.enforcer.GuideLineEnforcer;
 import io.jeffrey.world.things.enforcer.SerialEnforcer;
 import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
-import io.jeffrey.world.things.interactions.InteractionSelectionSolver.Rule;
+import io.jeffrey.world.things.interactions.Rule;
 import io.jeffrey.world.things.interactions.ThingInteraction;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.interactions.ThingRotater;

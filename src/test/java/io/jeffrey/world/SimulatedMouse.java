@@ -10,10 +10,9 @@ import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SelectionWindow.Mode;
 
 public class SimulatedMouse {
-  private final boolean                                 altdown;
-
+  public boolean                                        altdown;
   public final Camera                                   camera;
-  private final boolean                                 ctrldown;
+  public boolean                                        ctrldown;
   private final ArrayList<Consumer<AdjustedMouseEvent>> listeners;
   private double                                        x;
   private double                                        y;

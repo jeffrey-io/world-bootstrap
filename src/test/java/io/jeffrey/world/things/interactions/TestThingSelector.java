@@ -18,6 +18,7 @@ public class TestThingSelector extends WorldTestFramework {
     mouse.add(selector);
     mouse.move(1, 1);
     selector.cancel();
+    selector.commit();
     assertFalse(editing.selected.value());
     selector.select();
     assertTrue(editing.selected.value());

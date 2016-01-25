@@ -110,6 +110,10 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     beginSAM().select(1, 7).expect(SegmentSelectMode.SelectedAndBoundary, "");
   }
 
+  private SelectablePoint2List listOf(final EditString points, final Property... properties) {
+    return new SelectablePoint2List(points, properties);
+  }
+
   private SelectablePoint2List listOf(final String points, final Property... properties) {
     return new SelectablePoint2List(new EditString("points", points), properties);
   }
@@ -154,6 +158,16 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     }
     list.apply(rem);
     assertEquals("1.0,2.0,5.0,6.0", list.toString());
+  }
+
+  @Test
+  public void verifyDownstream() {
+    final EditString es = new EditString("points", "1,2");
+    final SelectablePoint2List list = listOf(es);
+    assertEquals(1.0, list.iterator().next().x);
+    es.value("2.000,-1");
+    assertEquals(2.0, list.iterator().next().x);
+    assertEquals(-1.0, list.iterator().next().y);
   }
 
   @Test
@@ -248,6 +262,16 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     list.set("1,2,3,4");
     assertEquals(2, list.size());
     assertEquals("1.0,2.0,3.0,4.0", list.toString());
+  }
+
+  @Test
+  public void verifyUpstream() {
+    final EditString es = new EditString("points", "1,2,3,4,5,6");
+    final SelectablePoint2List list = listOf(es);
+    list.iterator().next().x += 1;
+    assertEquals("1,2,3,4,5,6", es.value());
+    list.informPointsChanged();
+    assertEquals("2.0,2.0,3.0,4.0,5.0,6.0", es.value());
   }
 
 }

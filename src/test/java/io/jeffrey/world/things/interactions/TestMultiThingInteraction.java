@@ -38,6 +38,7 @@ public class TestMultiThingInteraction extends WorldTestFramework {
     assertTrue(editing.selected.value());
     assertTrue(editing2.selected.value());
     multi.cancel();
+    multi.commit();
     assertEquals(1, position.x());
     assertEquals(2, position.y());
   }

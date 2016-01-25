@@ -23,8 +23,12 @@ import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
 import io.jeffrey.world.things.core.Transform;
+import io.jeffrey.world.things.enforcer.GuideLineEnforcer;
+import io.jeffrey.world.things.interactions.ThingInteraction;
+import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.edits.ObjectDataMap;
+import io.jeffrey.zer.meta.GuideLine;
 import io.jeffrey.zer.meta.WorldFileSystem;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -100,6 +104,44 @@ public class WorldTestFramework {
       reg.copy_from_0_to_1();
     }
 
+  }
+
+  public class NoOpGuidelineEnforcer implements GuideLineEnforcer {
+
+    public int attemptSnapToCallsMade = 0;
+
+    @Override
+    public void attemptSnapTo(final Camera camera, final GuideLine line) {
+      attemptSnapToCallsMade++;
+    }
+  }
+
+  public class NoOpThingInteraction implements ThingInteraction {
+
+    public int cancelCalls = 0;
+    public int commitCalls = 0;
+    public int movedCalls  = 0;
+    public int selectCalls = 0;
+
+    @Override
+    public void cancel() {
+      cancelCalls++;
+    }
+
+    @Override
+    public void commit() {
+      commitCalls++;
+    }
+
+    @Override
+    public void moved(final AdjustedMouseEvent event) {
+      movedCalls++;
+    }
+
+    @Override
+    public void select() {
+      selectCalls++;
+    }
   }
 
   public class SimpleAbstractThing extends AbstractThing {

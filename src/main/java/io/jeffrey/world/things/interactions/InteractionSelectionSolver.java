@@ -32,10 +32,6 @@ public class InteractionSelectionSolver {
     }
   }
 
-  private static enum GroupingRule {
-    Doodad, Item, Nothing, Set
-  }
-
   private class Possibily {
     private final ArrayList<Supplier<MouseInteraction>> suppliers;
 
@@ -53,32 +49,6 @@ public class InteractionSelectionSolver {
 
     public MouseInteraction last() {
       return suppliers.get(suppliers.size() - 1).get();
-    }
-  }
-
-  public static enum Rule {
-    AlreadySelectedFacetAndPointPreserves(100, GroupingRule.Set, true), // highest precedence
-
-    AlreadySelectedItemAndPointPreserves(300, GroupingRule.Set, true), // the point is inside and we are not selected
-    AlreadySelectedItemButNotInvolved(301, GroupingRule.Set, false), // the point is inside and we are not selected
-    AlreadySelectedSubsetAndPointPreserves(201, GroupingRule.Set, true), // we are not selected, but the point touches a sub selection
-
-    AlreadySelectedSubsetButNotInvolved(200, GroupingRule.Set, false),
-
-    Doodad(0, GroupingRule.Doodad, false), NotAlreadySelectedAndPointIsFacet(10, GroupingRule.Item, false),
-
-    NotAlreadySelectedAndPointIsInItem(12, GroupingRule.Item, false), NotAlreadySelectedAndPointIsInSubset(11, GroupingRule.Item, false),
-
-    Nothing(Integer.MAX_VALUE, GroupingRule.Nothing, false);
-
-    private final GroupingRule group;
-    public final int           precedence;
-    private final boolean      togglesSet;
-
-    private Rule(final int precedence, final GroupingRule group, final boolean togglesSet) {
-      this.precedence = precedence;
-      this.group = group;
-      this.togglesSet = togglesSet;
     }
   }
 
@@ -145,14 +115,11 @@ public class InteractionSelectionSolver {
     if (doodad != null) {
       return doodad.last();
     }
-
     final Possibily item = possibilites.get(GroupingRule.Item);
     if (item != null) {
       return item.last();
     }
-
-    final Possibily already = possibilites.get(GroupingRule.Set);
-    if (already != null && setEnabled) {
+    if (setEnabled) {
       return possibilites.get(GroupingRule.Set).all();
     }
     return null;

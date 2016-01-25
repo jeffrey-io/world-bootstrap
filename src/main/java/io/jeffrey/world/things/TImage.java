@@ -5,12 +5,12 @@ import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.enforcer.EdgeEnforcer;
 import io.jeffrey.world.things.enforcer.OriginEnforcer;
+import io.jeffrey.world.things.parts.DoodadControls;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.GenericMoverPart;
 import io.jeffrey.world.things.parts.ImageRenderPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.RectanglePart;
-import io.jeffrey.world.things.parts.RectanglePart.DoodadControls;
 import io.jeffrey.world.things.parts.UriPart;
 
 /**

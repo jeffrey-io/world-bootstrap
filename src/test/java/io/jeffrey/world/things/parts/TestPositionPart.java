@@ -16,5 +16,8 @@ public class TestPositionPart extends WorldTestFramework {
     assertEquals(1, position.x());
     position.y(2.7);
     assertEquals(3, position.y());
+    position.move(2, 7);
+    assertEquals(3, position.x());
+    assertEquals(10, position.y());
   }
 }

@@ -7,6 +7,7 @@ import io.jeffrey.world.things.enforcer.OriginEnforcer;
 import io.jeffrey.world.things.parts.CirclePart;
 import io.jeffrey.world.things.parts.CircleRenderPart;
 import io.jeffrey.world.things.parts.ColorPart;
+import io.jeffrey.world.things.parts.DoodadControls;
 import io.jeffrey.world.things.parts.EnforcersPart;
 import io.jeffrey.world.things.parts.GenericMoverPart;
 import io.jeffrey.world.things.parts.MousePart;
@@ -20,7 +21,7 @@ public class TCircle extends BasicThing {
 
   public TCircle(final Container container, final LinkedDataMap data) {
     super(container, data);
-    register(new CirclePart());
+    register(new CirclePart(DoodadControls.All));
     final ColorPart fill = new ColorPart("fill", "ccc", data);
     register(fill);
     final ColorPart edge = new ColorPart("edge", "black", data);

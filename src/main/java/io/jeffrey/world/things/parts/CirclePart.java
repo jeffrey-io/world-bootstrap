@@ -11,22 +11,55 @@ import io.jeffrey.world.things.core.Part;
 import io.jeffrey.zer.AdjustedMouseEvent;
 
 public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelectable {
-  private static final ControlDoodad[] DOODADS;
+  private static final ControlDoodad[] DOODADS_ALL;
+  private static final ControlDoodad[] DOODADS_ROTATE;
+  private static final ControlDoodad[] DOODADS_SCALE;
+  private static final ControlDoodad[] DOODADS_NONE;
 
   static {
-    final ArrayList<ControlDoodad> doodads = new ArrayList<>();
-    doodads.add(new ControlDoodad(Type.Rotate, -1.05, 0));
-    doodads.add(new ControlDoodad(Type.Rotate, 1.05, 0));
-    doodads.add(new ControlDoodad(Type.Rotate, 0, -1.05));
-    doodads.add(new ControlDoodad(Type.Rotate, 0, 1.05));
-    doodads.add(new ControlDoodad(Type.Scale, 0.7, 0.7));
-    doodads.add(new ControlDoodad(Type.Scale, 0.7, -0.7));
-    doodads.add(new ControlDoodad(Type.Scale, -0.7, 0.7));
-    doodads.add(new ControlDoodad(Type.Scale, -0.7, -0.7));
-    DOODADS = doodads.toArray(new ControlDoodad[doodads.size()]);
+    final ArrayList<ControlDoodad> doodads_all = new ArrayList<>();
+    final ArrayList<ControlDoodad> doodads_scale = new ArrayList<>();
+    final ArrayList<ControlDoodad> doodads_rotate = new ArrayList<>();
+    doodads_all.add(new ControlDoodad(Type.Rotate, -1.05, 0));
+    doodads_all.add(new ControlDoodad(Type.Rotate, 1.05, 0));
+    doodads_all.add(new ControlDoodad(Type.Rotate, 0, -1.05));
+    doodads_all.add(new ControlDoodad(Type.Rotate, 0, 1.05));
+    doodads_rotate.add(new ControlDoodad(Type.Rotate, -1.05, 0));
+    doodads_rotate.add(new ControlDoodad(Type.Rotate, 1.05, 0));
+    doodads_rotate.add(new ControlDoodad(Type.Rotate, 0, -1.05));
+    doodads_rotate.add(new ControlDoodad(Type.Rotate, 0, 1.05));
+    doodads_all.add(new ControlDoodad(Type.Scale, 0.7, 0.7));
+    doodads_all.add(new ControlDoodad(Type.Scale, 0.7, -0.7));
+    doodads_all.add(new ControlDoodad(Type.Scale, -0.7, 0.7));
+    doodads_all.add(new ControlDoodad(Type.Scale, -0.7, -0.7));
+    doodads_scale.add(new ControlDoodad(Type.Scale, 0.7, 0.7));
+    doodads_scale.add(new ControlDoodad(Type.Scale, 0.7, -0.7));
+    doodads_scale.add(new ControlDoodad(Type.Scale, -0.7, 0.7));
+    doodads_scale.add(new ControlDoodad(Type.Scale, -0.7, -0.7));
+    DOODADS_ALL = doodads_all.toArray(new ControlDoodad[doodads_all.size()]);
+    DOODADS_ROTATE = doodads_rotate.toArray(new ControlDoodad[doodads_rotate.size()]);
+    DOODADS_SCALE = doodads_scale.toArray(new ControlDoodad[doodads_scale.size()]);
+    DOODADS_NONE = new ControlDoodad[0];
   }
 
-  public CirclePart() {
+  private final ControlDoodad[] doodads;
+
+  public CirclePart(DoodadControls controls) {
+    switch(controls) {
+      case All:
+        doodads = DOODADS_ALL;
+        break;
+      case Rotation:
+        doodads = DOODADS_ROTATE;
+        break;
+      case Scale:
+        doodads = DOODADS_SCALE;
+        break;
+      case None:
+      default:
+        doodads = DOODADS_NONE;
+        break;
+    }
   }
 
   @Override
@@ -42,7 +75,7 @@ public class CirclePart implements Part, HasControlDoodadsInThingSpace, IsSelect
 
   @Override
   public ControlDoodad[] getDoodadsInThingSpace() {
-    return DOODADS;
+    return doodads;
   }
 
   @Override

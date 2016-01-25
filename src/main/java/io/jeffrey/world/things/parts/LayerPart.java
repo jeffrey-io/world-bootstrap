@@ -38,8 +38,7 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
   }
 
   private Double getEstimatedSortingKey() {
-    final int z = cachedLayerProperties.zorder.value();
-    return z * container.size() + order.value();
+    return z() * (1 + container.size()) + order.value();
   }
 
   public LayerProperties getLayerProperties() {
@@ -48,11 +47,11 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
 
   @Override
   public void invokeAction(final String action, final SharedActionSpace space) {
-    if ("push.down".equals(action)) {
+    if ("order_push_down".equals(action)) {
       order.value(order.value() - 1.5);
       return;
     }
-    if ("bring.up".equals(action)) {
+    if ("order_push_up".equals(action)) {
       order.value(order.value() + 1.5);
       return;
     }
@@ -60,8 +59,8 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
 
   @Override
   public void listActions(final Set<String> actionsAvailable) {
-    actionsAvailable.add("bring.up");
-    actionsAvailable.add("push.down");
+    actionsAvailable.add("order_push_up");
+    actionsAvailable.add("order_push_down");
   }
 
   /**
@@ -91,7 +90,7 @@ public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions,
 
   @Override
   public void update() {
-    cachedLayerProperties = container.layers.get(layer.getAsText());
+    cachedLayerProperties = container.layers.get(layer.value());
   }
 
   @Override

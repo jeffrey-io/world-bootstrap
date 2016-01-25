@@ -13,5 +13,8 @@ public class TestColorPart extends WorldTestFramework {
     assertEquals("fff", colorPart.color.value());
     colorPart.color.setByText("ccc");
     helper.assertWritten("food_color", "ccc");
+    assertNotNull(colorPart.getCachedColor());
+    colorPart.color.setByText("dogfood");
+    assertNotNull(colorPart.getCachedColor());
   }
 }

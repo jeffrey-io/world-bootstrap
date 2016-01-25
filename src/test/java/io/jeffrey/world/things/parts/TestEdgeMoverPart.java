@@ -27,7 +27,7 @@ public class TestEdgeMoverPart extends WorldTestFramework {
     final EdgeMoverPart edgeMover = new EdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     mouse.go(0.5, 0.0);
-    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed);
+    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
     edgeMover.buildSelectionSolver(solver);
     solver.unfocus();
     assertNotNull(solver.solve());
@@ -48,7 +48,7 @@ public class TestEdgeMoverPart extends WorldTestFramework {
     final EdgeMoverPart edgeMover = new EdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     mouse.go(0.5, 0.0);
-    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed);
+    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
     edgeMover.buildSelectionSolver(solver);
     solver.unfocus();
     assertNotNull(solver.solve());
@@ -70,7 +70,7 @@ public class TestEdgeMoverPart extends WorldTestFramework {
     final EdgeMoverPart edgeMover = new EdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     mouse.go(0.5, 0.0);
-    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed);
+    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
     edgeMover.buildSelectionSolver(solver);
     solver.unfocus();
     assertNotNull(solver.solve());
@@ -91,7 +91,7 @@ public class TestEdgeMoverPart extends WorldTestFramework {
     final EdgeMoverPart edgeMover = new EdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     mouse.go(20, 2);
-    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed);
+    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
     edgeMover.buildSelectionSolver(solver);
     solver.unfocus();
     assertNull(solver.solve());

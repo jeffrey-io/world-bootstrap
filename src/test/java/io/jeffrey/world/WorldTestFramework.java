@@ -254,14 +254,17 @@ public class WorldTestFramework {
   }
 
   public InteractionSelectionSolver prepareSolver(final SimulatedMouse mouse, final AbstractThing thing) {
-    return prepareSolver(mouse, thing, new ArrayList<>());
+    return prepareSolver(mouse, thing, new ArrayList<>(), false);
   }
 
-  public InteractionSelectionSolver prepareSolver(final SimulatedMouse mouse, final AbstractThing thing, final ArrayList<Rule> proposalRecord) {
+  public InteractionSelectionSolver prepareSolver(final SimulatedMouse mouse, final AbstractThing thing, final ArrayList<Rule> proposalRecord, boolean evaluate) {
     final InteractionSelectionSolver solver = new InteractionSelectionSolver(new History()) {
       @Override
       public void propose(final Rule rule, final java.util.function.Supplier<ThingInteraction> supplier) {
         super.propose(rule, supplier);
+        if (evaluate) {
+          assertNotNull(supplier.get());
+        }
         proposalRecord.add(rule);
       };
     };

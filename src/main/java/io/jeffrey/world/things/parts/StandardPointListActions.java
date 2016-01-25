@@ -78,6 +78,7 @@ public class StandardPointListActions implements Part, HasActions {
     } else if ("springize".equals(action)) {
       Springize.perform(list);
     }
+    list.informPointsChanged();
   }
 
   /**

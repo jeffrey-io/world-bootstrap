@@ -16,6 +16,10 @@ public class ThingSelector implements ThingInteraction {
   }
 
   @Override
+  public void commit() {
+  }
+
+  @Override
   public void moved(final AdjustedMouseEvent event) {
   }
 

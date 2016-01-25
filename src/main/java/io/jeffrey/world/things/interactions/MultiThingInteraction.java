@@ -20,6 +20,13 @@ public class MultiThingInteraction implements ThingInteraction {
   }
 
   @Override
+  public void commit() {
+    for (final ThingInteraction ti : interactions) {
+      ti.commit();
+    }
+  }
+
+  @Override
   public void moved(final AdjustedMouseEvent event) {
     for (final ThingInteraction interaction : interactions) {
       interaction.moved(event);
@@ -32,5 +39,4 @@ public class MultiThingInteraction implements ThingInteraction {
       ti.select();
     }
   }
-
 }

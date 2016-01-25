@@ -42,6 +42,10 @@ public class ThingRotater implements ThingInteraction {
     rotation.angle(angle);
   }
 
+  @Override
+  public void commit() {
+  }
+
   /**
    * {@inheritDoc}
    */

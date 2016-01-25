@@ -34,6 +34,10 @@ public class EventedPoint2Mover implements ThingInteraction {
     point.reset();
   }
 
+  @Override
+  public void commit() {
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -46,5 +50,4 @@ public class EventedPoint2Mover implements ThingInteraction {
   public void select() {
     point.data.selected = true;
   }
-
 }

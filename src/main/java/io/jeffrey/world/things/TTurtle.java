@@ -2,7 +2,6 @@ package io.jeffrey.world.things;
 
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
-import io.jeffrey.world.things.descriptive.TurtleCompiler;
 import io.jeffrey.zer.edits.EditString;
 
 public class TTurtle extends TPolygon {
@@ -13,6 +12,6 @@ public class TTurtle extends TPolygon {
     super(container, data);
 
     script = data.getString("script", "forward 50;left 90; forward 50; left 90; forward 50; left 45; forward 100");
-    script.subscribe((t, value) -> points.vertices.setByText(TurtleCompiler.compile(value)));
+    // script.subscribe((t, value) -> points.vertices.setByText(TurtleCompiler.compile(value)));
   }
 }

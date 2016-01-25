@@ -254,9 +254,11 @@ public class WorldData extends SurfaceData {
     }
     if (action == SurfaceAction.Undo) {
       document.container.history.undo();
+      document.update();
     }
     if (action == SurfaceAction.Redo) {
       document.container.history.redo();
+      document.update();
     }
     if (action == SurfaceAction.Save) {
       try {

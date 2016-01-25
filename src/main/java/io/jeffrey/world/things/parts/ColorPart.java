@@ -7,11 +7,11 @@ import io.jeffrey.zer.edits.EditString;
 import javafx.scene.paint.Color;
 
 public class ColorPart implements Part {
+  private Color            cached;
   public final EditString  color;
   public final EditBoolean enabled;
-  public final EditBoolean lock;
 
-  private Color            cached;
+  public final EditBoolean lock;
 
   public ColorPart(final String prefix, final String initial, final LinkedDataMap data) {
     color = data.getString(prefix + "_color", initial);
@@ -25,14 +25,14 @@ public class ColorPart implements Part {
     refresh();
   }
 
+  public Color getCachedColor() {
+    return cached;
+  }
+
   private void refresh() {
     try {
       cached = Color.valueOf(color.value());
-    } catch (Exception err) {
+    } catch (final Exception err) {
     }
-  }
-
-  public Color getCachedColor() {
-    return cached;
   }
 }

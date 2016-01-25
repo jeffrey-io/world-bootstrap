@@ -55,8 +55,14 @@ public class ContainerQueryEngine {
       final AdjustedMouseEvent cevent = event.clone();
       thing.transform().writeToThingSpace(cevent.position);
       selectionSolver.focus(thing, cevent);
+      boolean shouldRegister = false;
       for (final HasSelectionByPoint behavior : thing.collect(HasSelectionByPoint.class)) {
-        behavior.buildSelectionSolver(selectionSolver);
+        if (behavior.buildSelectionSolver(selectionSolver)) {
+          shouldRegister = true;
+        }
+      }
+      if (shouldRegister) {
+        container.history.register(thing);
       }
       selectionSolver.unfocus();
 
@@ -65,7 +71,24 @@ public class ContainerQueryEngine {
 
     final MouseInteraction it = selectionSolver.solve();
     if (it != null) {
-      return it;
+      return new MouseInteraction() {
+
+        @Override
+        public void cancel() {
+          it.cancel();
+        }
+
+        @Override
+        public void commit() {
+          it.commit();
+          container.history.capture();
+        }
+
+        @Override
+        public void moved(final AdjustedMouseEvent event) {
+          it.moved(event);
+        }
+      };
     }
     return null;
   }

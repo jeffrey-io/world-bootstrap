@@ -37,8 +37,8 @@ public class HistoryMouseInteractionTrapper implements MouseInteraction {
    */
   @Override
   public void commit() {
-    history.capture();
     delegate.commit();
+    history.capture();
   }
 
   /**

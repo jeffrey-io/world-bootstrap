@@ -8,6 +8,7 @@ import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.zer.edits.EditString;
 
 public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelectablePoints {
   /**
@@ -31,16 +32,27 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
   }
 
   public final boolean                      finite;
+
+  private final EditString                  link;
   public final boolean                      looped;
 
   private final ArrayList<SelectablePoint2> points;
+  private boolean                           upstreamChange;
 
   /**
    * @param raw
    *          the serialized form of the points
    */
-  public SelectablePoint2List(final String raw, final Property... properties) {
-    points = parse(raw);
+  public SelectablePoint2List(final EditString link, final Property... properties) {
+    this.link = link;
+    points = parse(link.value());
+    link.subscribe((t, u) -> {
+      if (upstreamChange) {
+        return;
+      }
+      points.clear();
+      points.addAll(parse(u));
+    });
     boolean _looped = false;
     boolean _finite = false;
     for (final Property property : properties) {
@@ -223,6 +235,13 @@ public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelect
       p.cachedIndex = k;
       k++;
     }
+  }
+
+  @Override
+  public void informPointsChanged() {
+    upstreamChange = true;
+    link.value(toString());
+    upstreamChange = false;
   }
 
   /**

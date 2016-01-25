@@ -52,6 +52,10 @@ public class ThingMover implements ThingInteraction {
     }
   }
 
+  @Override
+  public void commit() {
+  }
+
   /**
    * {@inheritDoc}
    */

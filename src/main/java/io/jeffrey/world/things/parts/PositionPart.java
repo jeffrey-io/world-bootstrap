@@ -16,6 +16,11 @@ public class PositionPart implements Part {
     this.snap = snap;
   }
 
+  public void move(final double dx, final double dy) {
+    x.value(x.value() + dx);
+    y.value(y.value() + dy);
+  }
+
   /**
    * @return the current x coordinate value
    */

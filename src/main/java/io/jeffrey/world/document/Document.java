@@ -37,19 +37,25 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 public class Document extends ModeledDocument {
+  private final Canvas              background;
+  private WritableImage             backgroundImage      = null;
+
   public final Camera               camera;
+  private boolean                   currentlyInteracting = false;
   public final ContainerQueryEngine engine;
 
-  private boolean                   hasSomeSelection = false;
+  private int                       expectedHash         = 0;
+
+  private final boolean             hasSomeSelection     = false;
+
   private int                       id;
-  private Canvas                    background;
 
   public Document(final Camera camera, final WorldData owner) {
     super(camera, owner);
     this.camera = camera;
     engine = new ContainerQueryEngine(container);
     id = 0;
-    this.background = new Canvas();
+    background = new Canvas();
   }
 
   public void addThing(final AbstractThing thing) {
@@ -70,21 +76,8 @@ public class Document extends ModeledDocument {
     return value;
   }
 
-  public void deleteSelection() {
-    container.history.capture();
-    for (final AbstractThing thing : container) {
-      if (thing.editing.selected.value()) {
-        thing.invokeAction("delete", false);
-      }
-    }
-    container.history.capture();
-  }
-
-  private boolean currentlyInteracting = false;
-  private int     expectedHash         = 0;
-
-  private boolean createBackground(double width, double height, int cameraHash) {
-    int hash = Double.hashCode(width) * 31 + Double.hashCode(height) * 17 + cameraHash;
+  private boolean createBackground(final double width, final double height, final int cameraHash) {
+    final int hash = Double.hashCode(width) * 31 + Double.hashCode(height) * 17 + cameraHash;
     if (hash == expectedHash) {
       return false;
     } else {
@@ -95,26 +88,27 @@ public class Document extends ModeledDocument {
     }
   }
 
-  public void setInteracting(boolean it) {
-    this.currentlyInteracting = it;
-    if (!it) {
-      this.expectedHash = 0;
+  public void deleteSelection() {
+    container.history.capture();
+    for (final AbstractThing thing : container) {
+      if (thing.editing.selected.value()) {
+        thing.invokeAction("delete", false);
+      }
     }
+    container.history.capture();
   }
-  
-  private WritableImage backgroundImage = null;
 
   public void draw(final GraphicsContext gc, final Camera camera, final double width, final double height, final String activeLayer) {
     update();
     if (currentlyInteracting) {
       if (createBackground(width, height, camera.hashCode())) {
-        GraphicsContext bgc = background.getGraphicsContext2D();
+        final GraphicsContext bgc = background.getGraphicsContext2D();
         bgc.setFill(Color.TRANSPARENT);
         bgc.clearRect(0, 0, width, height);
         drawBackground(bgc, camera, width, height, activeLayer, true);
         final SnapshotParameters sp = new SnapshotParameters();
         sp.setFill(Color.TRANSPARENT);
-        final WritableImage wi = new WritableImage((int)width, (int)height);
+        final WritableImage wi = new WritableImage((int) width, (int) height);
         backgroundImage = wi;
         background.snapshot(sp, wi);
       }
@@ -126,20 +120,7 @@ public class Document extends ModeledDocument {
     }
   }
 
-  public void drawSelection(final GraphicsContext gc, final Camera camera, final double width, final double height, final String activeLayer) {
-    for (final AbstractThing thing : container) {
-      final LifetimePart lifetime = thing.lifetime;
-      final EditingPart editing = thing.editing;
-      boolean show = !lifetime.isDeleted() && editing.selected.value();
-      if (show) {
-        for (final HasWorldSpaceRendering renderer : thing.collect(HasWorldSpaceRendering.class)) {
-          renderer.render(gc);
-        }
-      }
-    }
-  }
-
-  public void drawBackground(final GraphicsContext gc, final Camera camera, final double width, final double height, final String activeLayer, boolean dontShowSelected) {
+  public void drawBackground(final GraphicsContext gc, final Camera camera, final double width, final double height, final String activeLayer, final boolean dontShowSelected) {
     gc.save();
     gc.setLineWidth(2);
     gc.setStroke(Color.RED);
@@ -186,13 +167,26 @@ public class Document extends ModeledDocument {
     gc.restore();
   }
 
-  /*
-  
-  */
+  public void drawSelection(final GraphicsContext gc, final Camera camera, final double width, final double height, final String activeLayer) {
+    for (final AbstractThing thing : container) {
+      final LifetimePart lifetime = thing.lifetime;
+      final EditingPart editing = thing.editing;
+      final boolean show = !lifetime.isDeleted() && editing.selected.value();
+      if (show) {
+        for (final HasWorldSpaceRendering renderer : thing.collect(HasWorldSpaceRendering.class)) {
+          renderer.render(gc);
+        }
+      }
+    }
+  }
 
   public boolean hasSelection() {
     return hasSomeSelection;
   }
+
+  /*
+
+  */
 
   public void load(final File file) throws Exception {
     final byte[] data = Files.readAllBytes(Paths.get(file.toURI()));
@@ -333,6 +327,13 @@ public class Document extends ModeledDocument {
 
   public AbstractThing selectFirstVisible(final double x, final double y) {
     return engine.selectFirstVisible(x, y);
+  }
+
+  public void setInteracting(final boolean it) {
+    currentlyInteracting = it;
+    if (!it) {
+      expectedHash = 0;
+    }
   }
 
   public String snapshotSelection() throws Exception {

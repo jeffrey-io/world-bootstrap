@@ -43,6 +43,10 @@ public class ThingScaler implements ThingInteraction {
     scale.sy(sy);
   }
 
+  @Override
+  public void commit() {
+  }
+
   /**
    * {@inheritDoc}
    */

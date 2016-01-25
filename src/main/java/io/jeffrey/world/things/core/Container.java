@@ -42,10 +42,6 @@ public class Container implements Iterable<AbstractThing> {
     layers.put("_", new LayerProperties("_", "Foreground"));
   }
 
-  public Iterable<AbstractThing> getThingsByPersistenceOrder() {
-    return thingsByPersistence;
-  }
-
   public void add(final AbstractThing thing) {
     history.capture();
     thingsByOrder.add(thing);
@@ -81,6 +77,10 @@ public class Container implements Iterable<AbstractThing> {
       return lp.guides;
     }
     return new HashSet<>();
+  }
+
+  public Iterable<AbstractThing> getThingsByPersistenceOrder() {
+    return thingsByPersistence;
   }
 
   @Override

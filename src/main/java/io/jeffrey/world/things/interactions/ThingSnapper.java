@@ -41,6 +41,10 @@ public class ThingSnapper implements ThingInteraction {
     delegate.cancel();
   }
 
+  @Override
+  public void commit() {
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -56,5 +60,4 @@ public class ThingSnapper implements ThingInteraction {
   public void select() {
     delegate.select();
   }
-
 }

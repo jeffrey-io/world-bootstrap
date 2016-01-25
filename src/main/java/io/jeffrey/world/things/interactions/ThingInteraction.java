@@ -13,6 +13,8 @@ public interface ThingInteraction {
    */
   public void cancel();
 
+  public void commit();
+
   /**
    * the mouse has moved
    *

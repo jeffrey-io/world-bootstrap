@@ -40,6 +40,7 @@ public class ThingInteractionToMouseIteractionAdapter implements MouseInteractio
    */
   @Override
   public void commit() {
+    interaction.commit();
   }
 
   /**

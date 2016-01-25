@@ -30,10 +30,10 @@ import io.jeffrey.world.things.interactions.ThingSelector;
 import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.world.things.points.EventedPoint2Mover;
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.world.things.points.SelectablePointsCommitment;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
 import io.jeffrey.zer.edits.EditBoolean;
-import io.jeffrey.zer.edits.EditString;
 
 public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSelectable, HasActions, HasUpdate, HasSelectionByPoint {
 
@@ -72,6 +72,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
             its.add(new EventedPoint2Mover(new EventedPoint2(point, PointSetPart.this), event));
           }
         }
+        its.add(new SelectablePointsCommitment(points));
         return new MultiThingInteraction(its);
       } else {
         return null;
@@ -116,10 +117,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
 
   private final RotationPart                    rotation;
   private final ScalePart                       scale;
-
   private final Transform                       transform;
-
-  public final EditString                       vertices;
 
   public PointSetPart(final LinkedDataMap data, final Container container, final Transform transform, final PositionPart position, final ScalePart scale, final RotationPart rotation, final HasSelectablePoints points, final EditingPart editing) {
     lock = data.getBoolean("vlock", false);
@@ -136,7 +134,6 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
     outOfDate = true;
     notification = new Subscribers<>();
 
-    vertices = data.getString("points", "0,-1,1,1,-1,1");
     update();
   }
 
@@ -199,8 +196,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
       p.x -= cx;
       p.y -= cy;
     }
-
-    // TODO: figure out how to translate the parent by a meaningful amount
+    position.move(cx, cy);
     update();
   }
 
@@ -263,6 +259,7 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
 
   @Override
   public ControlDoodad[] getDoodadsInThingSpace() {
+    requireUpToDate();
     return doodads;
   }
 

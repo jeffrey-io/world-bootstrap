@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import io.jeffrey.world.WorldTestFramework;
 import io.jeffrey.world.things.points.SelectablePoint2;
+import io.jeffrey.zer.edits.EditString;
 
 public class TestSelectablePoint2List extends WorldTestFramework {
 
@@ -14,7 +15,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     private final List<SelectablePoint2> points;
 
     private SegmentAssertionModel(final Property... properties) {
-      list = new SelectablePoint2List("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18", properties);
+      list = listOf("1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18", properties);
       points = listOf(list);
     }
 
@@ -109,9 +110,13 @@ public class TestSelectablePoint2List extends WorldTestFramework {
     beginSAM().select(1, 7).expect(SegmentSelectMode.SelectedAndBoundary, "");
   }
 
+  private SelectablePoint2List listOf(final String points, final Property... properties) {
+    return new SelectablePoint2List(new EditString("points", points), properties);
+  }
+
   @Test
   public void testAddition() {
-    final SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6");
+    final SelectablePoint2List list = listOf("1,2,3,4,5,6");
     final PointAddition add = new PointAddition();
     final SelectablePoint2 a = new SelectablePoint2(-10, -9);
     a.cachedIndex = 0;
@@ -128,7 +133,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
 
   @Test
   public void testMultipleRemoves() {
-    final SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6,7,8,9,10");
+    final SelectablePoint2List list = listOf("1,2,3,4,5,6,7,8,9,10");
     final IndexRemoval rem = new IndexRemoval();
     rem.denote(1);
     rem.denote(2);
@@ -139,7 +144,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
 
   @Test
   public void testRemoval() {
-    final SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6");
+    final SelectablePoint2List list = listOf("1,2,3,4,5,6");
     final IndexRemoval rem = new IndexRemoval();
     rem.denote(1);
     try {
@@ -153,7 +158,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
 
   @Test
   public void verifyEdgesLooped() {
-    final SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6", Property.Looped);
+    final SelectablePoint2List list = listOf("1,2,3,4,5,6", Property.Looped);
     final List<SelectablePoint2[]> edges = listOf(list.getSelectableEdges());
     final double[] edges2 = list.getThingSpaceEdges();
     assertEquals(12, edges2.length);
@@ -186,7 +191,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
 
   @Test
   public void verifyEdgesPath() {
-    final SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6");
+    final SelectablePoint2List list = listOf("1,2,3,4,5,6");
     final List<SelectablePoint2[]> edges = listOf(list.getSelectableEdges());
     final double[] edges2 = list.getThingSpaceEdges();
     assertEquals(8, edges2.length);
@@ -212,7 +217,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
 
   @Test
   public void verifyFinite() {
-    final SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6", Property.Looped, Property.Finite);
+    final SelectablePoint2List list = listOf("1,2,3,4,5,6", Property.Looped, Property.Finite);
     try {
       list.apply(new IndexRemoval());
       fail();
@@ -229,7 +234,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
 
   @Test
   public void verifyListUnpackAndIteration() {
-    final SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6");
+    final SelectablePoint2List list = listOf("1,2,3,4,5,6");
     assertEquals(3, list.size());
     assertEquals(3, list.getNumberSelectablePoints());
     assertEquals("1.0,2.0,3.0,4.0,5.0,6.0", list.toString());
@@ -237,7 +242,7 @@ public class TestSelectablePoint2List extends WorldTestFramework {
 
   @Test
   public void verifyMutation() {
-    final SelectablePoint2List list = new SelectablePoint2List("1,2,3,4,5,6", Property.Looped);
+    final SelectablePoint2List list = listOf("1,2,3,4,5,6", Property.Looped);
     assertEquals(3, list.size());
     assertEquals(3, list.getNumberSelectablePoints());
     list.set("1,2,3,4");

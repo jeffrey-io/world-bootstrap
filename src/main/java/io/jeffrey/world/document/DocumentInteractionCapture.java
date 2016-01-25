@@ -5,10 +5,10 @@ import io.jeffrey.zer.MouseInteraction;
 
 public class DocumentInteractionCapture implements MouseInteraction {
 
-  private final Document         document;
   private final MouseInteraction delegate;
+  private final Document         document;
 
-  public DocumentInteractionCapture(Document document, MouseInteraction delegate) {
+  public DocumentInteractionCapture(final Document document, final MouseInteraction delegate) {
     this.document = document;
     this.delegate = delegate;
     document.setInteracting(true);
@@ -27,7 +27,7 @@ public class DocumentInteractionCapture implements MouseInteraction {
   }
 
   @Override
-  public void moved(AdjustedMouseEvent event) {
+  public void moved(final AdjustedMouseEvent event) {
     delegate.moved(event);
   }
 }

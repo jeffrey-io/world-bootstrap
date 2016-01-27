@@ -186,7 +186,7 @@ public abstract class AbstractThing {
    * @param part
    *          the part
    */
-  protected synchronized <T extends Part> void register(final T part) {
+  public synchronized <T extends Part> void register(final T part) {
     sequencer++;
     parts.add(part);
     cache.clear();

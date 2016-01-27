@@ -33,7 +33,9 @@ public class ImageRenderPart extends HasThingSpaceRendering implements Part, Has
   @Override
   public void draw(final GraphicsContext gc) {
     update();
-    gc.drawImage(img, -img.getWidth() / 2.0, -img.getHeight() / 2.0);
+    if (img != null) {
+      gc.drawImage(img, -img.getWidth() / 2.0, -img.getHeight() / 2.0);
+    }
     if (editing.selected.value()) {
       gc.save();
       gc.setStroke(Color.RED);

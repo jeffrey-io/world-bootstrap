@@ -68,7 +68,7 @@ public class WorldTestFramework {
     }
   }
 
-  public class HasControlDoodadsInThingSpaceMock implements HasControlDoodadsInThingSpace {
+  public class HasControlDoodadsInThingSpaceMock implements Part, HasControlDoodadsInThingSpace {
     public ControlDoodad[] doodads = new ControlDoodad[0];
 
     @Override

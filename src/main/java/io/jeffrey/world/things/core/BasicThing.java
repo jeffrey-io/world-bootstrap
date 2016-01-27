@@ -8,12 +8,12 @@ import io.jeffrey.world.things.parts.RotationPart;
 import io.jeffrey.world.things.parts.ScalePart;
 
 public class BasicThing extends AbstractThing {
-  protected final LayerPart    layer;
-  protected final MetadataPart metadata;
-  public final PositionPart    position;
-  public final RotationPart    rotation;
-  public final ScalePart       scale;
-  public final Transform       transform;
+  public final LayerPart    layer;
+  public final MetadataPart metadata;
+  public final PositionPart position;
+  public final RotationPart rotation;
+  public final ScalePart    scale;
+  public final Transform    transform;
 
   /**
    * @param document
@@ -41,7 +41,7 @@ public class BasicThing extends AbstractThing {
     metadata = new MetadataPart("metadata_", data);
     register(metadata);
 
-    register(new DoodadRenderPart(this, transform));
+    register(new DoodadRenderPart(this));
   }
 
   @Override

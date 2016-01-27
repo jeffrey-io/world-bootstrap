@@ -11,7 +11,6 @@ import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ControlDoodad;
 import io.jeffrey.world.things.core.ControlDoodad.Type;
 import io.jeffrey.world.things.core.Part;
-import io.jeffrey.world.things.core.Transform;
 import io.jeffrey.zer.Camera;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -22,7 +21,7 @@ public class DoodadRenderPart implements Part, HasWorldSpaceRendering {
   private final LifetimePart                                                            lifetime;
   private final AbstractThing                                                           thing;
 
-  public DoodadRenderPart(final AbstractThing thing, final Transform transform) {
+  public DoodadRenderPart(final AbstractThing thing) {
     this.thing = thing;
     lifetime = thing.first(LifetimePart.class);
     editing = thing.first(EditingPart.class);
@@ -30,7 +29,7 @@ public class DoodadRenderPart implements Part, HasWorldSpaceRendering {
     doodadCaches = new AbstractThingSingleItemCache<Set<AdaptThingSpaceDoodadsIntoWorldSpace>>(thing) {
       @Override
       protected Set<AdaptThingSpaceDoodadsIntoWorldSpace> compute() {
-        return thing.collect(HasControlDoodadsInThingSpace.class, child -> new AdaptThingSpaceDoodadsIntoWorldSpace(transform, child));
+        return thing.collect(HasControlDoodadsInThingSpace.class, child -> new AdaptThingSpaceDoodadsIntoWorldSpace(thing.transform(), child));
       }
     };
   }

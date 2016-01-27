@@ -5,6 +5,7 @@ import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 
 public class LazyPolygonPart implements Part, IsSelectable {
 
@@ -38,12 +39,8 @@ public class LazyPolygonPart implements Part, IsSelectable {
       return false;
     }
     if (model.isOriginCircleSelected(boundingRadius)) {
-      return true;
+      return Shape.intersect(model.getPolygon(), polygon).getBoundsInLocal().getWidth() > 0;
     }
-    // return Shape.intersect(model.getPolygon(), polygon).getBoundsInLocal().getWidth() > 0;
-    /*
-     * if (model.isOriginCircleSelected(boundingRadius)) { return Shape.intersect(model.getPolygon(), polygon).getBoundsInLocal().getWidth() > 0; }
-     */
     return false;
   }
 

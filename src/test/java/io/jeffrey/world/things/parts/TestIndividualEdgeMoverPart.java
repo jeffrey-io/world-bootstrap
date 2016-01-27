@@ -12,7 +12,7 @@ import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
 import io.jeffrey.world.things.interactions.Rule;
 import io.jeffrey.world.things.points.SelectablePoint2;
 
-public class TestEdgeMoverPart extends WorldTestFramework {
+public class TestIndividualEdgeMoverPart extends WorldTestFramework {
 
   @Test
   public void verifyFound() {
@@ -24,7 +24,7 @@ public class TestEdgeMoverPart extends WorldTestFramework {
     final SelectablePoint2[] points = new SelectablePoint2[] { new SelectablePoint2(0, 0), new SelectablePoint2(1, 0), };
     edges.edges.add(points);
     points[1].selected = true;
-    final EdgeMoverPart edgeMover = new EdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
+    final IndividualEdgeMoverPart edgeMover = new IndividualEdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     mouse.go(0.5, 0.0);
     final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
@@ -45,7 +45,7 @@ public class TestEdgeMoverPart extends WorldTestFramework {
     final SelectablePoint2[] points = new SelectablePoint2[] { new SelectablePoint2(0, 0), new SelectablePoint2(1, 0), };
     edges.edges.add(points);
     thing.editing.selected.value(true);
-    final EdgeMoverPart edgeMover = new EdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
+    final IndividualEdgeMoverPart edgeMover = new IndividualEdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     mouse.go(0.5, 0.0);
     final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
@@ -67,7 +67,7 @@ public class TestEdgeMoverPart extends WorldTestFramework {
     edges.edges.add(points);
     points[0].selected = true;
     points[1].selected = true;
-    final EdgeMoverPart edgeMover = new EdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
+    final IndividualEdgeMoverPart edgeMover = new IndividualEdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     mouse.go(0.5, 0.0);
     final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
@@ -88,7 +88,7 @@ public class TestEdgeMoverPart extends WorldTestFramework {
     final SelectablePoint2[] points = new SelectablePoint2[] { new SelectablePoint2(0, 0), new SelectablePoint2(1, 0), };
     edges.edges.add(points);
     points[0].selected = true;
-    final EdgeMoverPart edgeMover = new EdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
+    final IndividualEdgeMoverPart edgeMover = new IndividualEdgeMoverPart(container, new IdentityTransform(), edges, thing.editing.locked, update, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     mouse.go(20, 2);
     final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);

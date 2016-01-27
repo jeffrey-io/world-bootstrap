@@ -20,7 +20,7 @@ import io.jeffrey.world.things.points.EventedPoint2Mover;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.zer.edits.EditBoolean;
 
-public class EdgeMoverPart implements Part, HasSelectionByPoint {
+public class IndividualEdgeMoverPart implements Part, HasSelectionByPoint {
 
   private final Container          container;
   private final HasSelectableEdges edges;
@@ -29,7 +29,7 @@ public class EdgeMoverPart implements Part, HasSelectionByPoint {
   private final Transform          transform;
   private final HasUpdate          update;
 
-  public EdgeMoverPart(final Container container, final Transform transform, final HasSelectableEdges edges, final EditBoolean lock, final HasUpdate update, final EditingPart editing) {
+  public IndividualEdgeMoverPart(final Container container, final Transform transform, final HasSelectableEdges edges, final EditBoolean lock, final HasUpdate update, final EditingPart editing) {
     this.container = container;
     this.transform = transform;
     this.edges = edges;

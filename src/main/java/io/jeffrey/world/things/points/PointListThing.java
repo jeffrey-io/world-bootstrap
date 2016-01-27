@@ -3,7 +3,7 @@ package io.jeffrey.world.things.points;
 import io.jeffrey.world.things.core.BasicThing;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
-import io.jeffrey.world.things.parts.EdgeMoverPart;
+import io.jeffrey.world.things.parts.IndividualEdgeMoverPart;
 import io.jeffrey.world.things.parts.MousePart;
 import io.jeffrey.world.things.parts.PointSetPart;
 import io.jeffrey.world.things.parts.StandardPointListActions;
@@ -52,7 +52,7 @@ public class PointListThing extends BasicThing {
       points.update();
     });
     register(new StandardPointListActions(list));
-    register(new EdgeMoverPart(container, transform, list, points.lock, points, editing));
+    register(new IndividualEdgeMoverPart(container, transform, list, points.lock, points, editing));
   }
 
 }

@@ -15,26 +15,6 @@ import io.jeffrey.world.things.points.SelectablePoint2;
 public class TestMoveByEdgePart extends WorldTestFramework {
 
   @Test
-  public void verifyFoundAndNotSelected() {
-    final ArrayList<Rule> proposed = new ArrayList<>();
-    final Container container = makeSimpleContainer();
-    final BasicThing thing = new BasicThing(container, data());
-    final HasSelectableEdgesMock edges = new HasSelectableEdgesMock();
-    final SelectablePoint2[] points = new SelectablePoint2[] { new SelectablePoint2(0, 0), new SelectablePoint2(1, 0), };
-    edges.edges.add(points);
-    points[1].selected = true;
-    final MoveByEdgePart edgeMover = new MoveByEdgePart(container, new IdentityTransform(), edges, thing.editing.locked, thing.editing, thing.position, thing.rotation);
-    final SimulatedMouse mouse = new SimulatedMouse();
-    mouse.go(0.5, 0.0);
-    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
-    edgeMover.buildSelectionSolver(solver);
-    solver.unfocus();
-    assertNotNull(solver.solve());
-    assertEquals(1, proposed.size());
-    assertEquals(Rule.NotAlreadySelectedAndPointIsInItem, proposed.get(0));
-  }
-
-  @Test
   public void verifyFoundAndAlreadySelectedByObject() {
     final ArrayList<Rule> proposed = new ArrayList<>();
     final Container container = makeSimpleContainer();
@@ -52,6 +32,26 @@ public class TestMoveByEdgePart extends WorldTestFramework {
     assertNotNull(solver.solve());
     assertEquals(1, proposed.size());
     assertEquals(Rule.AlreadySelectedItemAndPointPreserves, proposed.get(0));
+  }
+
+  @Test
+  public void verifyFoundAndNotSelected() {
+    final ArrayList<Rule> proposed = new ArrayList<>();
+    final Container container = makeSimpleContainer();
+    final BasicThing thing = new BasicThing(container, data());
+    final HasSelectableEdgesMock edges = new HasSelectableEdgesMock();
+    final SelectablePoint2[] points = new SelectablePoint2[] { new SelectablePoint2(0, 0), new SelectablePoint2(1, 0), };
+    edges.edges.add(points);
+    points[1].selected = true;
+    final MoveByEdgePart edgeMover = new MoveByEdgePart(container, new IdentityTransform(), edges, thing.editing.locked, thing.editing, thing.position, thing.rotation);
+    final SimulatedMouse mouse = new SimulatedMouse();
+    mouse.go(0.5, 0.0);
+    final InteractionSelectionSolver solver = prepareSolver(mouse, thing, proposed, true);
+    edgeMover.buildSelectionSolver(solver);
+    solver.unfocus();
+    assertNotNull(solver.solve());
+    assertEquals(1, proposed.size());
+    assertEquals(Rule.NotAlreadySelectedAndPointIsInItem, proposed.get(0));
   }
 
   @Test

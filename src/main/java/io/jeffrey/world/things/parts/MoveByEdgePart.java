@@ -19,9 +19,9 @@ public class MoveByEdgePart implements Part, HasSelectionByPoint {
   private final HasSelectableEdges edges;
   private final EditingPart        editing;
   private final EditBoolean        lock;
+  private final PositionPart       position;
+  private final RotationPart       rotation;
   private final Transform          transform;
-  private final PositionPart position;
-  private final RotationPart rotation;
 
   public MoveByEdgePart(final Container container, final Transform transform, final HasSelectableEdges edges, final EditBoolean lock, final EditingPart editing, final PositionPart position, final RotationPart rotation) {
     this.container = container;

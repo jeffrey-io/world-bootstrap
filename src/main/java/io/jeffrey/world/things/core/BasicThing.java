@@ -10,10 +10,10 @@ import io.jeffrey.world.things.parts.ScalePart;
 public class BasicThing extends AbstractThing {
   protected final LayerPart    layer;
   protected final MetadataPart metadata;
-  public final PositionPart position;
-  public final RotationPart rotation;
-  public final ScalePart    scale;
-  public final Transform    transform;
+  public final PositionPart    position;
+  public final RotationPart    rotation;
+  public final ScalePart       scale;
+  public final Transform       transform;
 
   /**
    * @param document

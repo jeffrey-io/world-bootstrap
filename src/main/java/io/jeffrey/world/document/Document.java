@@ -184,10 +184,6 @@ public class Document extends ModeledDocument {
     return hasSomeSelection;
   }
 
-  /*
-
-  */
-
   public void load(final File file) throws Exception {
     final byte[] data = Files.readAllBytes(Paths.get(file.toURI()));
     final JsonNode tree = mapper.readTree(data);

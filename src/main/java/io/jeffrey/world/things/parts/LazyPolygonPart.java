@@ -39,7 +39,7 @@ public class LazyPolygonPart implements Part, IsSelectable {
       return false;
     }
     if (model.isOriginCircleSelected(boundingRadius)) {
-      return Shape.intersect(model.getPolygon(), polygon).getBoundsInLocal().getWidth() > 0;
+      return !Shape.intersect(model.getPolygon(), polygon).getBoundsInLocal().isEmpty();
     }
     return false;
   }

@@ -21,7 +21,7 @@ public class TPath extends PointListThing {
    */
   public TPath(final Container container, final LinkedDataMap data) {
     super(container, data);
-    register(new RenderPathPart(transform, container, points, list));
+    register(new RenderPathPart(transform, container, points));
   }
 
 }

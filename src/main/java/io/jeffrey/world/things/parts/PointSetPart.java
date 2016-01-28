@@ -394,10 +394,11 @@ public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSele
     return null;
   }
 
-  public void subscribe(final Consumer<SharedMutableCache> subscriber) {
+  public SharedMutableCache subscribe(final Consumer<SharedMutableCache> subscriber) {
     requireUpToDate();
     subscriber.accept(cache);
     notification.subscribe(subscriber);
+    return cache;
   }
 
   @Override

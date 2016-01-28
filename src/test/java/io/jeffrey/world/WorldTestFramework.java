@@ -17,6 +17,8 @@ import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasUpdate;
+import io.jeffrey.world.things.behaviors.IsSelectable;
+import io.jeffrey.world.things.behaviors.structs.SelectionModel;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.ControlDoodad;
@@ -124,6 +126,29 @@ public class WorldTestFramework {
     @Override
     public void writeToWorldSpace(final VectorRegister3 reg) {
       reg.copy_from_0_to_1();
+    }
+
+  }
+
+  public class IsSelectableMock implements Part, IsSelectable {
+
+    public boolean containmentReturnValue = false;
+
+    @Override
+    public boolean contains(final double x, final double y) {
+      return containmentReturnValue;
+    }
+
+    @Override
+    public boolean doesMouseEventPreserveExistingSelection(final AdjustedMouseEvent event) {
+      fail();
+      return false;
+    }
+
+    @Override
+    public boolean selectionIntersect(final SelectionModel model) {
+      fail();
+      return false;
     }
 
   }

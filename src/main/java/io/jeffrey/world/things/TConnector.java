@@ -81,7 +81,7 @@ public class TConnector extends PointListThing {
     points.update();
     points.requireUpToDate();
     dirty = true;
-    register(new RenderPathPart(transform, container, points, list));
+    register(new RenderPathPart(transform, container, points));
   }
 
   public void refresh() {

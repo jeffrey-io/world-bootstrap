@@ -46,6 +46,6 @@ public class TPolygon extends PointListThing {
     register(fill);
     final ColorPart edge = new ColorPart("edge", "black", data);
     register(edge);
-    register(new RenderPolygonPart(transform, container, editing, scale, fill, edge, points, list));
+    register(new RenderPolygonPart(transform, container, editing, scale, fill, edge, points));
   }
 }

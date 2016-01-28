@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-import io.jeffrey.zer.edits.ObjectDataMap;
+import io.jeffrey.world.data.ObjectDataMap;
 
 public class MetaClass extends AbstractMapEditorItemRequirements {
   /**

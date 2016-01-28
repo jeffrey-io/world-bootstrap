@@ -12,11 +12,11 @@ import java.util.TreeMap;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import io.jeffrey.world.WorldData;
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.Notifications;
-import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.MetaClass;
 import io.jeffrey.zer.meta.WorldFileSystem;
 import io.jeffrey.zer.plugin.Model;

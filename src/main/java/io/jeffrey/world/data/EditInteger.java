@@ -1,29 +1,20 @@
-package io.jeffrey.zer.edits;
+package io.jeffrey.world.data;
 
 /**
- * A link between text and double
+ * A link between text and an integer
  *
  * @author jeffrey
  *
  */
-public class EditDouble extends EditPrimitive<Double> {
+public class EditInteger extends EditPrimitive<Integer> {
   /**
    * @param name
    *          the unique name of the field
    * @param v
    *          the value
    */
-
-  public EditDouble(final String name, final Double v) {
+  public EditInteger(final String name, final Integer v) {
     super(name, v);
-  }
-
-  /**
-   * @param dv
-   *          the quantity added to the value
-   */
-  public void add(final double dv) {
-    value(value() + dv);
   }
 
   /**
@@ -31,7 +22,7 @@ public class EditDouble extends EditPrimitive<Double> {
    */
   @Override
   public String getAsText() {
-    return Double.toString(value());
+    return Integer.toString(value());
   }
 
   /**
@@ -40,11 +31,10 @@ public class EditDouble extends EditPrimitive<Double> {
   @Override
   public boolean setByTextWithPublishing(final String txt) {
     try {
-      this.value(Double.parseDouble(txt));
+      this.value(Integer.parseInt(txt));
       return true;
     } catch (final NumberFormatException nfe) {
       return false;
     }
   }
-
 }

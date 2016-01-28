@@ -2,11 +2,11 @@ package io.jeffrey.world.things.parts;
 
 import java.util.Set;
 
+import io.jeffrey.world.data.EditBoolean;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
-import io.jeffrey.zer.edits.EditBoolean;
 
 public class EditingPart implements Part, HasActions {
   public final EditBoolean locked;

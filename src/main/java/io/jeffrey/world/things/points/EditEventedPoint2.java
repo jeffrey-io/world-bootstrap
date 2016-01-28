@@ -1,6 +1,6 @@
 package io.jeffrey.world.things.points;
 
-import io.jeffrey.zer.edits.Edit;
+import io.jeffrey.world.data.Edit;
 
 /**
  * a linke to a vertex value in a point

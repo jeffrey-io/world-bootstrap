@@ -4,8 +4,8 @@ import java.util.TreeMap;
 
 import org.junit.Assert;
 
+import io.jeffrey.world.data.ObjectDataMap;
 import io.jeffrey.world.things.core.LinkedDataMap;
-import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class PartHelper {
   private final TreeMap<String, String> fields;

@@ -2,6 +2,9 @@ package io.jeffrey.world.things.parts;
 
 import java.util.Set;
 
+import io.jeffrey.world.data.EditBoolean;
+import io.jeffrey.world.data.EditDouble;
+import io.jeffrey.world.data.EditString;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.core.Container;
@@ -9,9 +12,6 @@ import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.SharedActionSpace;
 import io.jeffrey.world.things.core.Snap;
-import io.jeffrey.zer.edits.EditBoolean;
-import io.jeffrey.zer.edits.EditDouble;
-import io.jeffrey.zer.edits.EditString;
 import io.jeffrey.zer.meta.LayerProperties;
 
 public class LayerPart implements Part, Snap, Comparable<LayerPart>, HasActions, HasUpdate {

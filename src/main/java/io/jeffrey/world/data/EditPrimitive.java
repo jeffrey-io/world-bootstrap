@@ -1,4 +1,4 @@
-package io.jeffrey.zer.edits;
+package io.jeffrey.world.data;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;

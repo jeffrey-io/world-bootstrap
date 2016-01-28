@@ -8,7 +8,7 @@ import java.util.TreeMap;
 import org.junit.Test;
 
 import io.jeffrey.world.WorldTestFramework;
-import io.jeffrey.zer.edits.Edit;
+import io.jeffrey.world.data.Edit;
 
 public class TestAbstractThing extends WorldTestFramework {
 

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.jeffrey.vector.VectorRegister2;
-import io.jeffrey.zer.edits.ObjectDataMap;
+import io.jeffrey.world.data.ObjectDataMap;
 
 /**
  * a camera that defines the view transformation

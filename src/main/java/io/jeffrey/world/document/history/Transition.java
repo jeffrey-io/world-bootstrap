@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 
 import org.codehaus.jackson.JsonNode;
 
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.world.things.core.AbstractThing;
-import io.jeffrey.zer.edits.Edit;
 
 /**
  * A transition on a single object

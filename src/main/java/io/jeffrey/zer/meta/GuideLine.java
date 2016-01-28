@@ -1,8 +1,8 @@
 package io.jeffrey.zer.meta;
 
 import io.jeffrey.vector.VectorRegister2;
+import io.jeffrey.world.data.EditDouble;
 import io.jeffrey.zer.Camera;
-import io.jeffrey.zer.edits.EditDouble;
 
 /**
  * a guide line which objects can snap too

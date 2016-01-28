@@ -2,8 +2,8 @@ package io.jeffrey.zer.meta;
 
 import java.util.Map;
 
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.zer.Syncable;
-import io.jeffrey.zer.edits.Edit;
 
 /**
  * Isolate how items describe their builder

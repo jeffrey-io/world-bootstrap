@@ -3,9 +3,9 @@ package io.jeffrey.zer.meta;
 import java.io.File;
 import java.util.Map;
 
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.zer.Notifications;
 import io.jeffrey.zer.Syncable;
-import io.jeffrey.zer.edits.Edit;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

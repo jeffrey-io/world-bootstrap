@@ -16,16 +16,13 @@ public class TestGenericMoverPart extends WorldTestFramework {
   @Test
   public void verify() {
     final LinkedDataMap data = data();
-    final PositionPart position = new PositionPart(data, new IdentitySnap());
-    final RotationPart rotation = new RotationPart(data);
-    final EditingPart editing = new EditingPart(data);
-    final GenericMoverPart mover = new GenericMoverPart(position, rotation, editing);
+    final BasicThing thing = new BasicThing(makeSimpleContainer(), data);
+    final GenericMoverPart mover = new GenericMoverPart(thing.position, thing.rotation, thing.editing);
     final SimulatedMouse mouse = new SimulatedMouse();
     final ArrayList<Rule> proposals = new ArrayList<>();
-    final BasicThing thing = new BasicThing(makeSimpleContainer(), data);
     mover.buildSelectionSolver(prepareSolver(mouse, thing, proposals, true));
     assertEquals(0, proposals.size());
-    editing.selected.value(true);
+    thing.editing.selected.value(true);
     mover.buildSelectionSolver(prepareSolver(mouse, thing, proposals, true));
     assertEquals(1, proposals.size());
     assertEquals(Rule.AlreadySelectedItemButNotInvolved, proposals.get(0));

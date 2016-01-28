@@ -20,11 +20,11 @@ public class TestMultiThingInteraction extends WorldTestFramework {
     final SimulatedMouse mouse = new SimulatedMouse();
     final PositionPart position = new PositionPart(data, new RoundingSnap());
     final RotationPart rotation = new RotationPart(data);
-    final EditingPart editing = new EditingPart(data);
+    final EditingPart editing = new EditingPart(data());
     position.x(1);
     position.y(2);
     mouse.go(2.5, 3.5);
-    final EditingPart editing2 = new EditingPart(data);
+    final EditingPart editing2 = new EditingPart(data());
     final MultiThingInteraction multi = wrap(new ThingMover(mouse.get(), position, rotation, editing), new ThingSelector(editing2));
     mouse.add(multi);
     assertEquals(1, position.x());

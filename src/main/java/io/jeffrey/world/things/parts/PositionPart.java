@@ -1,9 +1,9 @@
 package io.jeffrey.world.things.parts;
 
+import io.jeffrey.world.data.EditDouble;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.core.Snap;
-import io.jeffrey.zer.edits.EditDouble;
 
 public class PositionPart implements Part {
   private final Snap      snap;

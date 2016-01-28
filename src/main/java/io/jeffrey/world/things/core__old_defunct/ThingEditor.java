@@ -3,11 +3,11 @@ package io.jeffrey.world.things.core__old_defunct;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.world.document.Document;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;
-import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.LayerPropertiesEditor;
 import io.jeffrey.zer.meta.MetaClass;
 import io.jeffrey.zer.meta.MetaClassEditor;

@@ -11,13 +11,13 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
 
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.world.document.history.HistoryEditTrap;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasUpdate;
 import io.jeffrey.world.things.parts.EditingPart;
 import io.jeffrey.world.things.parts.IdentityPart;
 import io.jeffrey.world.things.parts.LifetimePart;
-import io.jeffrey.zer.edits.Edit;
 
 public abstract class AbstractThing {
   private final HashMap<Class<?>, ArrayList<Object>> cache;

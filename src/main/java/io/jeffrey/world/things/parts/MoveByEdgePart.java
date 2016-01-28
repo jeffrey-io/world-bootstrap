@@ -2,6 +2,7 @@ package io.jeffrey.world.things.parts;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.math.Lines;
+import io.jeffrey.world.data.EditBoolean;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.core.Container;
@@ -11,7 +12,6 @@ import io.jeffrey.world.things.interactions.InteractionSelectionSolver;
 import io.jeffrey.world.things.interactions.Rule;
 import io.jeffrey.world.things.interactions.ThingMover;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.zer.edits.EditBoolean;
 
 public class MoveByEdgePart implements Part, HasSelectionByPoint {
 

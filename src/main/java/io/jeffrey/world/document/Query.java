@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.world.things.core.AbstractThing;
-import io.jeffrey.zer.edits.Edit;
 
 /**
  * defines the basics of the query language

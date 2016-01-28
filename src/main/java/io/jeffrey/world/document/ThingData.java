@@ -3,6 +3,7 @@ package io.jeffrey.world.document;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import io.jeffrey.world.data.ObjectDataMap;
 import io.jeffrey.world.things.TCircle;
 import io.jeffrey.world.things.TConnector;
 import io.jeffrey.world.things.TImage;
@@ -12,7 +13,6 @@ import io.jeffrey.world.things.TTurtle;
 import io.jeffrey.world.things.core.BasicThing;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
-import io.jeffrey.zer.edits.ObjectDataMap;
 
 public class ThingData extends ObjectDataMap {
 

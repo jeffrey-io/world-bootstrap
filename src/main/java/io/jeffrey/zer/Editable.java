@@ -3,7 +3,7 @@ package io.jeffrey.zer;
 import java.util.List;
 import java.util.Map;
 
-import io.jeffrey.zer.edits.Edit;
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 
 /**

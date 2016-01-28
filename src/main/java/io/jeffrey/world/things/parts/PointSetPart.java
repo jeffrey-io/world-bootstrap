@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import io.jeffrey.vector.VectorRegister3;
+import io.jeffrey.world.data.EditBoolean;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
@@ -33,7 +34,6 @@ import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.SelectablePointsCommitment;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.SelectionWindow.Mode;
-import io.jeffrey.zer.edits.EditBoolean;
 
 public class PointSetPart implements Part, HasControlDoodadsInThingSpace, IsSelectable, HasActions, HasUpdate, HasSelectionByPoint {
 

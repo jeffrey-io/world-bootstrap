@@ -1,9 +1,9 @@
 package io.jeffrey.world.things.parts;
 
+import io.jeffrey.world.data.EditBoolean;
+import io.jeffrey.world.data.EditString;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
-import io.jeffrey.zer.edits.EditBoolean;
-import io.jeffrey.zer.edits.EditString;
 import javafx.scene.paint.Color;
 
 public class ColorPart implements Part {

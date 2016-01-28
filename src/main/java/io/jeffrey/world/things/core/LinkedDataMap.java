@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.edits.EditBoolean;
-import io.jeffrey.zer.edits.EditDouble;
-import io.jeffrey.zer.edits.EditInteger;
-import io.jeffrey.zer.edits.EditString;
-import io.jeffrey.zer.edits.ObjectDataMap;
+import io.jeffrey.world.data.Edit;
+import io.jeffrey.world.data.EditBoolean;
+import io.jeffrey.world.data.EditDouble;
+import io.jeffrey.world.data.EditInteger;
+import io.jeffrey.world.data.EditString;
+import io.jeffrey.world.data.ObjectDataMap;
 
 /**
  * wraps an ObjectDataMap and keeps track of what data was created; this is then used to serialize the data and walk the data structure.
@@ -51,6 +51,9 @@ public class LinkedDataMap {
   }
 
   private <T extends Edit> T link(final String name, final T edit) {
+    if (links.containsKey(name)) {
+      throw new IllegalArgumentException("field named '" + name + "' is already linked");
+    }
     links.put(name, edit);
     return edit;
   }

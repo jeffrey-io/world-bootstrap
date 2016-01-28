@@ -5,8 +5,8 @@ import java.util.List;
 import org.junit.Test;
 
 import io.jeffrey.world.WorldTestFramework;
+import io.jeffrey.world.data.EditString;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.zer.edits.EditString;
 
 public class TestSelectablePoint2List extends WorldTestFramework {
 

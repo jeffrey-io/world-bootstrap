@@ -2,9 +2,9 @@ package io.jeffrey.world.things.parts;
 
 import java.util.UUID;
 
+import io.jeffrey.world.data.EditString;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
-import io.jeffrey.zer.edits.EditString;
 
 public class IdentityPart implements Part {
   private final EditString id;

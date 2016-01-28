@@ -3,8 +3,8 @@ package io.jeffrey.world.things.points;
 import org.junit.Test;
 
 import io.jeffrey.world.WorldTestFramework;
+import io.jeffrey.world.data.EditString;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
-import io.jeffrey.zer.edits.EditString;
 
 public class TestSelectablePointsCommitment extends WorldTestFramework {
 

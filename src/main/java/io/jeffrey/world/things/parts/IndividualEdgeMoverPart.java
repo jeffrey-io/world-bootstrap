@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.math.Lines;
+import io.jeffrey.world.data.EditBoolean;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasSelectionByPoint;
 import io.jeffrey.world.things.behaviors.HasUpdate;
@@ -18,7 +19,6 @@ import io.jeffrey.world.things.interactions.ThingSelector;
 import io.jeffrey.world.things.points.EventedPoint2;
 import io.jeffrey.world.things.points.EventedPoint2Mover;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.zer.edits.EditBoolean;
 
 public class IndividualEdgeMoverPart implements Part, HasSelectionByPoint {
 

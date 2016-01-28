@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import io.jeffrey.vector.VectorRegister3;
 import io.jeffrey.vector.VectorRegister8;
+import io.jeffrey.world.data.EditString;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core.Container;
 import io.jeffrey.world.things.core.LinkedDataMap;
@@ -12,7 +13,6 @@ import io.jeffrey.world.things.parts.RenderPathPart;
 import io.jeffrey.world.things.points.PointListThing;
 import io.jeffrey.world.things.points.SelectablePoint2;
 import io.jeffrey.world.things.points.list.Property;
-import io.jeffrey.zer.edits.EditString;
 
 /**
  * A thing that connects to other things

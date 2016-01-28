@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import io.jeffrey.world.data.Edit;
 import io.jeffrey.world.things.core.AbstractThing;
 import io.jeffrey.world.things.core__old_defunct.ThingEditor;
 import io.jeffrey.world.things.parts.MetadataPart;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;
-import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.SurfaceItemEditorBuilder;
 
 public class EditableThing implements Editable {

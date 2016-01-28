@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.jeffrey.world.data.EditString;
 import io.jeffrey.world.things.behaviors.HasSelectableEdges;
 import io.jeffrey.world.things.behaviors.HasSelectablePoints;
 import io.jeffrey.world.things.core.Part;
 import io.jeffrey.world.things.points.SelectablePoint2;
-import io.jeffrey.zer.edits.EditString;
 
 public class SelectablePoint2List implements Part, HasSelectableEdges, HasSelectablePoints {
   /**

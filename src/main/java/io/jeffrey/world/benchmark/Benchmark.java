@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import io.jeffrey.world.data.ObjectDataMap;
 import io.jeffrey.world.things.TCircle;
 import io.jeffrey.world.things.TPolygon;
 import io.jeffrey.world.things.core.Container;
@@ -13,7 +14,6 @@ import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.zer.Camera;
 import io.jeffrey.zer.SelectionWindow;
 import io.jeffrey.zer.SelectionWindow.Mode;
-import io.jeffrey.zer.edits.ObjectDataMap;
 import io.jeffrey.zer.meta.WorldFileSystem;
 
 public class Benchmark {

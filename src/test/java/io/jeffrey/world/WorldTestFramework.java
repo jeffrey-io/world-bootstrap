@@ -12,6 +12,8 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import io.jeffrey.vector.VectorRegister3;
+import io.jeffrey.world.data.EditString;
+import io.jeffrey.world.data.ObjectDataMap;
 import io.jeffrey.world.document.history.History;
 import io.jeffrey.world.things.behaviors.HasActions;
 import io.jeffrey.world.things.behaviors.HasControlDoodadsInThingSpace;
@@ -36,8 +38,6 @@ import io.jeffrey.world.things.points.list.Property;
 import io.jeffrey.world.things.points.list.SelectablePoint2List;
 import io.jeffrey.zer.AdjustedMouseEvent;
 import io.jeffrey.zer.Camera;
-import io.jeffrey.zer.edits.EditString;
-import io.jeffrey.zer.edits.ObjectDataMap;
 import io.jeffrey.zer.meta.GuideLine;
 import io.jeffrey.zer.meta.WorldFileSystem;
 import javafx.scene.canvas.GraphicsContext;

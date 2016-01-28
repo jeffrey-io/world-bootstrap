@@ -1,4 +1,4 @@
-package io.jeffrey.zer.edits;
+package io.jeffrey.world.data;
 
 /**
  * A link between two pieces of text, a text bridge so to speak

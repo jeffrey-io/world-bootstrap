@@ -1,4 +1,4 @@
-package io.jeffrey.zer.edits;
+package io.jeffrey.world.data;
 
 /**
  * The base type of something that is linkable

@@ -2,9 +2,9 @@ package io.jeffrey.world.things.parts;
 
 import java.util.HashMap;
 
+import io.jeffrey.world.data.EditString;
 import io.jeffrey.world.things.core.LinkedDataMap;
 import io.jeffrey.world.things.core.Part;
-import io.jeffrey.zer.edits.EditString;
 
 public class MetadataPart implements Part {
   private final LinkedDataMap              data;

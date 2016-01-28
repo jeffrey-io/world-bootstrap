@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import io.jeffrey.zer.edits.Edit;
-import io.jeffrey.zer.edits.EditBoolean;
-import io.jeffrey.zer.edits.EditDouble;
-import io.jeffrey.zer.edits.EditInteger;
-import io.jeffrey.zer.edits.ObjectDataMap;
+import io.jeffrey.world.data.Edit;
+import io.jeffrey.world.data.EditBoolean;
+import io.jeffrey.world.data.EditDouble;
+import io.jeffrey.world.data.EditInteger;
+import io.jeffrey.world.data.ObjectDataMap;
 
 /**
  * defines the properties of the layer

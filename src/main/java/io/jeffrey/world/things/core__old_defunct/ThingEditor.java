@@ -1,6 +1,5 @@
 package io.jeffrey.world.things.core__old_defunct;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -8,7 +7,6 @@ import io.jeffrey.world.document.Document;
 import io.jeffrey.zer.Editable;
 import io.jeffrey.zer.SurfaceData;
 import io.jeffrey.zer.Syncable;
-import io.jeffrey.zer.edits.AbstractEditList;
 import io.jeffrey.zer.edits.Edit;
 import io.jeffrey.zer.meta.LayerPropertiesEditor;
 import io.jeffrey.zer.meta.MetaClass;
@@ -122,24 +120,6 @@ public class ThingEditor {
       final SurfaceFourColumnGrid pg = builder.startFourColumnGrid();
       pg.add("From", fields.get("from"), "To", fields.get("to"));
       builder.endBorder();
-    }
-
-    if (isNotLocked(fields, "vlock")) {
-      if (fields.containsKey("points")) {
-        builder.startBorder("Vertices");
-        final Edit ed = fields.get("points");
-        final SurfaceFourColumnGrid al = builder.startFourColumnGrid();
-        if (ed instanceof AbstractEditList) {
-          // BUG: https://github.com/jeffrey-io/world-bootstrap/issues/1
-          final ArrayList<Edit> coords = ((AbstractEditList) ed).edits;
-          for (int k = 0; k + 1 < coords.size(); k += 2) {
-            final Edit _X = coords.get(k);
-            final Edit _Y = coords.get(k + 1);
-            al.add("X" + _X.name(), _X, "Y" + _Y.name(), _Y);
-          }
-        }
-        builder.endBorder();
-      }
     }
 
     if (isNotLocked(fields, "nometa")) {

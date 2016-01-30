@@ -31,7 +31,7 @@ public class TTurtle extends BasicThing {
     MoveByEdgePart mover = new MoveByEdgePart(container, transform, turtle, editing.locked, editing, position, rotation);
     register(turtle);
     register(mover);
-    register(new MousePart(this, transform));
+    register(new MousePart(this, transform)); // TODO: this belongs as part of the framework since it's highly specific
   }
 
   public class TurtlePart extends HasThingSpaceRendering implements Part, HasSelectableEdges, IsSelectable {
@@ -61,7 +61,6 @@ public class TTurtle extends BasicThing {
 
     @Override
     public void draw(GraphicsContext gc) {
-      System.out.println("Drawing:" + lines.size());
       for (TurtleLine line : lines) {
         gc.beginPath();
         gc.setStroke(line.color);

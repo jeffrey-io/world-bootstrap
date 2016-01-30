@@ -5,29 +5,44 @@ import java.util.List;
 
 public class TurtleCompiler {
 
-  public static String compile(final String script) {
+  public static List<TurtleLine> compile(final String script) {
     final Turtle turtle = new Turtle();
     for (final String[] statement : tokenizeLines(script)) {
       final String command = statement[0];
-      if (statement.length != 2) {
-        throw new IllegalStateException("NO!");
+      if (statement.length == 1) {
+        switch (command) {
+          case "push":
+            turtle.push();
+            break;
+          case "pop":
+            turtle.pop();
+            break;
+        }
       }
-      switch (command) {
-        case "forward":
-          turtle.forward(Double.parseDouble(statement[1]));
-          break;
-        case "back":
-          turtle.forward(-Double.parseDouble(statement[1]));
-          break;
-        case "left":
-          turtle.turn(-Double.parseDouble(statement[1]));
-          break;
-        case "right":
-          turtle.turn(Double.parseDouble(statement[1]));
-          break;
+      if (statement.length == 2) {
+        switch (command) {
+          case "forward":
+            turtle.forward(Double.parseDouble(statement[1]));
+            break;
+          case "back":
+            turtle.forward(-Double.parseDouble(statement[1]));
+            break;
+          case "left":
+            turtle.turn(-Double.parseDouble(statement[1]));
+            break;
+          case "right":
+            turtle.turn(Double.parseDouble(statement[1]));
+            break;
+          case "color":
+            turtle.color(statement[1]);
+            break;
+          case "draw":
+            turtle.draw(statement[1].toLowerCase().startsWith("t"));
+            break;
+        }
       }
     }
-    return turtle.toString();
+    return turtle.lines();
   }
 
   private static String[] tokenizeLine(final String line) {
@@ -53,9 +68,7 @@ public class TurtleCompiler {
         continue; // comment
       }
       final String[] parts = tokenizeLine(line);
-      if (parts.length > 0) {
-        commands.add(parts);
-      }
+      commands.add(parts);
     }
     return commands;
   }

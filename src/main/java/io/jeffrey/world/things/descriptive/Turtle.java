@@ -1,45 +1,46 @@
 package io.jeffrey.world.things.descriptive;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Stack;
 
-import io.jeffrey.vector.VectorRegister1;
+import javafx.scene.paint.Color;
 
 public class Turtle {
-  private double                           dx = 1.0;
-  private double                           dy = 0.0;
-  private final ArrayList<VectorRegister1> path;
-  private double                           x  = 0.0;
+  private Color                       color = Color.BLACK;
+  private double                      dx    = 1.0;
+  private double                      dy    = 0.0;
+  private final ArrayList<TurtleLine> lines = new ArrayList<>();
+  private double                      x     = 0.0;
+  private double                      y     = 0;
+  private boolean                     draw  = false;
+  private final Stack<Double>         stack = new Stack<>();
 
-  private double                           y  = 0;
+  public void push() {
+    stack.push(x);
+    stack.push(y);
+  }
 
-  public Turtle() {
-    path = new ArrayList<>();
-    mark();
+  public void pop() {
+    y = stack.pop();
+    x = stack.pop();
   }
 
   public void forward(final double amount) {
     x += dx * amount;
     y += dy * amount;
-    mark();
-  }
-
-  private void mark() {
-    final VectorRegister1 step = new VectorRegister1();
-    step.x_0 = x;
-    step.y_0 = y;
-    path.add(step);
-  }
-
-  @Override
-  public String toString() {
-    final String[] components = new String[2 * path.size()];
-    int at = 0;
-    for (final VectorRegister1 step : path) {
-      components[2 * at] = Double.toString(step.x_0);
-      components[2 * at + 1] = Double.toString(step.y_0);
-      at++;
+    if (draw) {
+      lines.add(new TurtleLine(color, x, y, x + dx * amount, y + dy * amount));
     }
-    return String.join(",", components);
+  }
+
+  public void draw(boolean draw) {
+    this.draw = draw;
+  }
+
+  public void color(String color) {
+    this.color = Color.valueOf(color);
   }
 
   public void turn(final double angle_degrees) {
@@ -48,5 +49,9 @@ public class Turtle {
     final double t = dx * u - dy * v;
     dy = dy * u + dx * v;
     dx = t;
+  }
+
+  public List<TurtleLine> lines() {
+    return Collections.unmodifiableList(lines);
   }
 }

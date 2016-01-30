@@ -14,7 +14,7 @@ public class Turtle {
   private final ArrayList<TurtleLine> lines = new ArrayList<>();
   private double                      x     = 0.0;
   private double                      y     = 0;
-  private boolean                     draw  = false;
+  private boolean                     draw  = true;
   private final Stack<Double>         stack = new Stack<>();
 
   public void push() {
@@ -28,11 +28,11 @@ public class Turtle {
   }
 
   public void forward(final double amount) {
-    x += dx * amount;
-    y += dy * amount;
     if (draw) {
       lines.add(new TurtleLine(color, x, y, x + dx * amount, y + dy * amount));
     }
+    x += dx * amount;
+    y += dy * amount;
   }
 
   public void draw(boolean draw) {

@@ -37,29 +37,30 @@ public class TestTurtleCompiler extends WorldTestFramework {
     }
 
     line = lines.get(0);
-    assertEquals(3.0, line.x0);
-    assertEquals(0.0, line.y0);
-    assertEquals(5.0, line.x1);
-    assertEquals(0.0, line.y1);
-    assertEquals("0x000000ff", line.color.toString());
+    assertEquals(1.0,line.x0);
+    assertEquals(0.0,line.y0);
+    assertEquals(3.0,line.x1);
+    assertEquals(0.0,line.y1);
+    assertEquals("0x000000ff",line.color.toString());
     line = lines.get(1);
-    assertEquals(1.5857860404731683, line.x0);
-    assertEquals(1.414213165219247, line.y0);
-    assertEquals(0.17157208094633658, line.x1);
-    assertEquals(2.828426330438494, line.y1);
-    assertEquals("0x000000ff", line.color.toString());
+    assertEquals(3.0,line.x0);
+    assertEquals(0.0,line.y0);
+    assertEquals(1.5857860404731683,line.x1);
+    assertEquals(1.414213165219247,line.y1);
+    assertEquals("0x000000ff",line.color.toString());
     line = lines.get(2);
-    assertEquals(4.4142139595268315, line.x0);
-    assertEquals(4.242639495657741, line.y0);
-    assertEquals(7.2426418785804945, line.x1);
-    assertEquals(7.071065826096235, line.y1);
-    assertEquals("0xffffffff", line.color.toString());
+    assertEquals(1.5857860404731683,line.x0);
+    assertEquals(1.414213165219247,line.y0);
+    assertEquals(4.4142139595268315,line.x1);
+    assertEquals(4.242639495657741,line.y1);
+    assertEquals("0xffffffff",line.color.toString());
     line = lines.get(3);
-    assertEquals(4.4142139595268315, line.x0);
-    assertEquals(4.242639495657741, line.y0);
-    assertEquals(7.2426418785804945, line.x1);
-    assertEquals(7.071065826096235, line.y1);
-    assertEquals("0xffffffff", line.color.toString());
+    assertEquals(1.5857860404731683,line.x0);
+    assertEquals(1.414213165219247,line.y0);
+    assertEquals(4.4142139595268315,line.x1);
+    assertEquals(4.242639495657741,line.y1);
+    assertEquals("0xffffffff",line.color.toString());
+
 
   }
 }
